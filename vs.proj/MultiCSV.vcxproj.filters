@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{b2aaa134-492f-490b-9d97-561ab0d713d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DarkMode">
+      <UniqueIdentifier>{146f6714-624e-42a7-a3b3-8522757015f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_NPP Framework">
+      <UniqueIdentifier>{628fe23f-ee5a-437a-a380-633547495175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialogs">
+      <UniqueIdentifier>{25a28a86-10a0-438b-9e74-82c404bd401c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resources\Bitmaps">
+      <UniqueIdentifier>{2540c7d7-6231-471f-94eb-db4c758c5e95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Icons">
+      <UniqueIdentifier>{9498d189-df14-4fcd-9db2-6a36097fc18b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\NPP\Docking.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\DockingDlgInterface.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\dockingResource.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\dpiManagerV2.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\menuCmdID.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\Notepad_plus_msgs.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\PluginInterface.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\Sci_Position.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\Scintilla.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\StaticDialog.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NPP\Window.h">
+      <Filter>_NPP Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConfigIO.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PluginDefinition.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SubmenuManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Darkmode\DarkMode.h">
+      <Filter>DarkMode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Darkmode\IatHook.h">
+      <Filter>DarkMode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Darkmode\NPP_Plugin_Darkmode.h">
+      <Filter>DarkMode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Darkmode\NppDarkMode.h">
+      <Filter>DarkMode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\AboutDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\ConfigureDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\DataExtractDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\EximFileTypeDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\FieldTypeDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\FoldStructDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\JumpToField.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\MultiCSVPanel.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\PreferencesDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\StyleDefComponent.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Dialogs\ThemeDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\control_ids.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\localization.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\MCVIZ_messages.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\SamplesMenuDefs.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\NPP\dpiManagerV2.cpp">
+      <Filter>_NPP Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NPP\StaticDialog.cpp">
+      <Filter>_NPP Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ConfigIO.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PluginDefinition.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SubmenuManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Darkmode\DarkMode.cpp">
+      <Filter>DarkMode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Darkmode\NPP_Plugin_Darkmode.cpp">
+      <Filter>DarkMode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Darkmode\NppDarkMode.cpp">
+      <Filter>DarkMode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\AboutDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\ConfigureDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\DataExtractDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\EximFileTypeDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\FieldTypeDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\FoldStructDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\JumpToField.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\MultiCSVPanel.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\PreferencesDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\StyleDefComponent.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Dialogs\ThemeDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MultiCSVMain.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resources\AboutUI.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\src\Resources\MultiCSVPlugin.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\src\Resources\MultiCSVUI.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
