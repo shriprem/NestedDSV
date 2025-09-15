@@ -43,7 +43,6 @@ private:
       wstring label{};
       wstring theme{};
       wstring eol{};
-      bool multiByte{};
       vector<RecordType> vRecTypes;
       int lineNums[ADFT_MAX]{};
       wstring regExprs[ADFT_MAX]{};

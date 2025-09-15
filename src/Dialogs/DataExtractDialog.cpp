@@ -620,8 +620,6 @@ void DataExtractDialog::extractData() {
    eolMarker = _configIO.getConfigStringA(fileType, "RecordTerminator");
    eolMarkerLen = eolMarker.length();
 
-   bool byteCols{ !_configIO.getMultiByteLexing(fileType) };
-
    bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
    const std::wregex regexTrimSpaces{ std::wregex(L"^\\s+|\\s+$") };
    wstring fieldData{};
@@ -680,14 +678,8 @@ void DataExtractDialog::extractData() {
          const RecordInfo& RI{ pRecInfoList->at(LI.recType) };
          if (static_cast<int>(regexIndex) != LI.recType) continue;
 
-         if (byteCols) {
-            sciTR.chrg.cpMin = recStartPos + RI.fieldStarts[LI.fieldType];
-            sciTR.chrg.cpMax = sciTR.chrg.cpMin + RI.fieldWidths[LI.fieldType];
-         }
-         else {
-            sciTR.chrg.cpMin = sciFunc(sciPtr, SCI_POSITIONRELATIVE, recStartPos, (LPARAM)RI.fieldStarts[LI.fieldType]);
-            sciTR.chrg.cpMax = sciFunc(sciPtr, SCI_POSITIONRELATIVE, sciTR.chrg.cpMin, (LPARAM)RI.fieldWidths[LI.fieldType]);
-         }
+         sciTR.chrg.cpMin = recStartPos + RI.fieldStarts[LI.fieldType];
+         sciTR.chrg.cpMax = sciTR.chrg.cpMin + RI.fieldWidths[LI.fieldType];
 
          if (sciTR.chrg.cpMax > eolMarkerPos || sciTR.chrg.cpMax == 0)
             sciTR.chrg.cpMax = eolMarkerPos;

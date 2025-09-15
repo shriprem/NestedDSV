@@ -98,10 +98,6 @@ INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM 
          setADFTCheckbox();
          break;
 
-      case IDC_VIZPANEL_MCBS_OVERRIDE:
-         setPanelMBCharState();
-         break;
-
       case IDC_VIZPANEL_DEFAULT_BACKGROUND:
          setDefaultBackground();
          break;
@@ -369,8 +365,6 @@ void MultiCSVPanel::initPanel() {
    loadBitmap(_hSelf, IDC_VIZPANEL_ABOUT_BUTTON, IDB_VIZ_ABOUT_BITMAP);
    addTooltip(_hSelf, IDC_VIZPANEL_ABOUT_BUTTON, L"", ABOUT_DIALOG_TITLE, TRUE);
 
-   setFont(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE_IND, fontName, 9);
-
    if constexpr(_gLanguage != LANG_ENGLISH) localize();
 }
 
@@ -382,7 +376,6 @@ void MultiCSVPanel::localize() {
    SetDlgItemText(_hSelf, IDCLOSE, VIZ_PANEL_CLOSE);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_PREFERENCES_BTN, VIZ_PANEL_PREFERENCES);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT, VIZ_PANEL_AUTO_DETECT_FT);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE, VIZ_PANEL_MCBS_OVERRIDE);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_DEFAULT_BACKGROUND, VIZPANEL_DEFAULT_BACKGROUND);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_SHOW_CALLTIP, VIZPANEL_SHOW_CALLTIP);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM, VIZ_PANEL_FIELD_COPY_TRIM);
@@ -445,8 +438,6 @@ void MultiCSVPanel::display(bool toShow) {
    CheckDlgButton(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT,
       _configIO.getPreferenceBool(PREF_ADFT) ? BST_CHECKED : BST_UNCHECKED);
 
-   initMBCharsCheckbox();
-
    CheckDlgButton(_hSelf, IDC_VIZPANEL_DEFAULT_BACKGROUND,
       _configIO.getPreferenceBool(PREF_DEF_BACKGROUND, FALSE) ? BST_CHECKED : BST_UNCHECKED);
 
@@ -491,18 +482,6 @@ void MultiCSVPanel::refreshDarkMode() {
 
    if (_aboutDlg.isCreated())
       _aboutDlg.refreshDarkMode();
-}
-
-void MultiCSVPanel::initMBCharsCheckbox() {
-   int showMCBS{ _configIO.getPreferenceBool(PREF_MBCHARS_SHOW, FALSE) ? SW_SHOW : SW_HIDE };
-   ShowWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE), showMCBS);
-   ShowWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE_IND), showMCBS);
-
-   wstring mbcState{ _configIO.getPreference(PREF_MBCHARS_STATE, "FT") };
-   if (mbcState == L"FT")
-      CheckDlgButton(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE, BST_INDETERMINATE);
-   else
-      CheckDlgButton(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE, (mbcState == L"Y") ? BST_CHECKED : BST_UNCHECKED);
 }
 
 void MultiCSVPanel::updateHopRightTip() {
@@ -649,9 +628,6 @@ void MultiCSVPanel::visualizeFile(string fileType, bool bCachedFT, bool bAutoFT,
             fileType = vFileTypes[index - 1].fileType;
       }
    }
-
-   if (IsWindowVisible(GetDlgItem(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE_IND)))
-      setPanelMBCharIndicator(fileType);
 
    if (fileType.empty()) {
       syncListFileTypes();
@@ -1189,8 +1165,6 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    eolMarker = _configIO.getConfigStringA(fileType, "RecordTerminator");
    eolMarkerLen = eolMarker.length();
 
-   bool byteCols{ !_configIO.getMultiByteLexing(fileType) };
-
    caretLine = sciFunc(sciPtr, SCI_LINEFROMPOSITION,
       sciFunc(sciPtr, SCI_GETCURRENTPOS, NULL, NULL), NULL);
 
@@ -1299,95 +1273,65 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       size_t styleIndex{};
       const vector<int>& recFieldStyles{ vRecInfo[regexIndex].fieldStyles };
 
-      if (byteCols) {
-         intptr_t unstyledLen{};
+      intptr_t unstyledLen{};
 
-         for (size_t i{}; i < fieldCount; ++i) {
-            sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-            unstyledLen = eolMarkerPos - currentPos;
-            currentPos += recFieldWidths[i];
+      for (size_t i{}; i < fieldCount; ++i) {
+         sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
+         unstyledLen = eolMarkerPos - currentPos;
+         currentPos += recFieldWidths[i];
 
-            styleIndex = (recFieldStyles[i] >= 0) ?
-               recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
+         styleIndex = (recFieldStyles[i] >= 0) ?
+            recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
 
-            if (recFieldWidths[i] < unstyledLen) {
-               sciFunc(sciPtr, SCI_SETSTYLING, recFieldWidths[i], styleIndex);
-            }
-            else {
-               sciFunc(sciPtr, SCI_SETSTYLING, unstyledLen, styleIndex);
-               unstyledLen = 0;
-
-               sciFunc(sciPtr, SCI_STARTSTYLING, eolMarkerPos, NULL);
-               sciFunc(sciPtr, SCI_SETSTYLING, eolMarkerLen, styleRangeStart - 1);
-               break;
-            }
+         if (recFieldWidths[i] < unstyledLen) {
+            sciFunc(sciPtr, SCI_SETSTYLING, recFieldWidths[i], styleIndex);
          }
+         else {
+            sciFunc(sciPtr, SCI_SETSTYLING, unstyledLen, styleIndex);
+            unstyledLen = 0;
 
-         if (fieldCount > 0 && unstyledLen > 0) {
-            sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-            sciFunc(sciPtr, SCI_SETSTYLING, (endPos - currentPos), styleRangeStart - 1);
+            sciFunc(sciPtr, SCI_STARTSTYLING, eolMarkerPos, NULL);
+            sciFunc(sciPtr, SCI_SETSTYLING, eolMarkerLen, styleRangeStart - 1);
+            break;
          }
+      }
+
+      if (fieldCount > 0 && unstyledLen > 0) {
+         sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
+         sciFunc(sciPtr, SCI_SETSTYLING, (endPos - currentPos), styleRangeStart - 1);
+      }
 
 #if FW_DEBUG_APPLIED_STYLES
-         if (currentLine == caretLine) {
-            size_t dbgStyleIndex{};
-            wstring dbgMessage{}, dbgPre{ L", " }, dbgNoPre{};
-            intptr_t dbgPos{};
+      if (currentLine == caretLine) {
+         size_t dbgStyleIndex{};
+         wstring dbgMessage{}, dbgPre{ L", " }, dbgNoPre{};
+         intptr_t dbgPos{};
 
-            dbgPos = recStartPos;
-            dbgMessage = L"Input Styles:\n";
+         dbgPos = recStartPos;
+         dbgMessage = L"Input Styles:\n";
 
-            for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
-               dbgStyleIndex = (recFieldStyles[i] >= 0) ?
-                  recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
-               dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
-                  to_wstring(recFieldWidths[i]) + L", " + to_wstring(dbgStyleIndex) + L")";
-               dbgPos += recFieldWidths[i];
-            }
-
-            dbgPos = recStartPos;
-            dbgMessage += L"\n\nApplied Styles:\n";
-
-            for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
-               dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
-                  to_wstring(recFieldWidths[i]) + L", " + to_wstring(sciFunc(sciPtr, SCI_GETSTYLEAT, dbgPos, NULL)) + L")";
-               dbgPos += recFieldWidths[i];
-            }
-
-            dbgMessage += L"\n\nDocument Length: " + to_wstring(sciFunc(sciPtr, SCI_GETLENGTH, NULL, NULL));
-            dbgMessage += L"\tEnd Styled: " + to_wstring(sciFunc(sciPtr, SCI_GETENDSTYLED, NULL, NULL));
-            MessageBox(_hSelf, dbgMessage.c_str(), L"", MB_OK);
-         }
-#endif
-      }
-      else {
-         intptr_t nextPos{};
-         for (size_t i{}; i < fieldCount; ++i) {
-            sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-            nextPos = sciFunc(sciPtr, SCI_POSITIONRELATIVE, currentPos, recFieldWidths[i]);
-
-            styleIndex = (recFieldStyles[i] >= 0) ?
+         for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
+            dbgStyleIndex = (recFieldStyles[i] >= 0) ?
                recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
-
-            if (nextPos > 0 && nextPos <= eolMarkerPos) {
-               sciFunc(sciPtr, SCI_SETSTYLING, (nextPos - currentPos), styleIndex);
-               currentPos = nextPos;
-            }
-            else {
-               sciFunc(sciPtr, SCI_SETSTYLING, (eolMarkerPos - currentPos), styleIndex);
-
-               sciFunc(sciPtr, SCI_STARTSTYLING, eolMarkerPos, NULL);
-               sciFunc(sciPtr, SCI_SETSTYLING, eolMarkerLen, styleRangeStart - 1);
-               currentPos = 0;
-               break;
-            }
+            dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
+               to_wstring(recFieldWidths[i]) + L", " + to_wstring(dbgStyleIndex) + L")";
+            dbgPos += recFieldWidths[i];
          }
 
-         if (fieldCount > 0 && currentPos > 0 && eolMarkerPos >= currentPos) {
-            sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-            sciFunc(sciPtr, SCI_SETSTYLING, (endPos - currentPos), styleRangeStart - 1);
+         dbgPos = recStartPos;
+         dbgMessage += L"\n\nApplied Styles:\n";
+
+         for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
+            dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
+               to_wstring(recFieldWidths[i]) + L", " + to_wstring(sciFunc(sciPtr, SCI_GETSTYLEAT, dbgPos, NULL)) + L")";
+            dbgPos += recFieldWidths[i];
          }
+
+         dbgMessage += L"\n\nDocument Length: " + to_wstring(sciFunc(sciPtr, SCI_GETLENGTH, NULL, NULL));
+         dbgMessage += L"\tEnd Styled: " + to_wstring(sciFunc(sciPtr, SCI_GETENDSTYLED, NULL, NULL));
+         MessageBox(_hSelf, dbgMessage.c_str(), L"", MB_OK);
       }
+#endif
    }
 }
 
@@ -1480,14 +1424,8 @@ int MultiCSVPanel::getFieldEdges(const string fileType, const int fieldIdx, cons
    int leftOffset{ FLD.fieldStarts[fieldIdx] };
    int rightOffset{ leftOffset + FLD.fieldWidths[fieldIdx] - rightPullback };
 
-   if (!_configIO.getMultiByteLexing(currFileType)) {
-      leftPos = caretRecordStartPos + leftOffset;
-      rightPos = caretRecordStartPos + rightOffset;
-   }
-   else {
-      leftPos = SendMessage(hScintilla, SCI_POSITIONRELATIVE, caretRecordStartPos, leftOffset);
-      rightPos = SendMessage(hScintilla, SCI_POSITIONRELATIVE, caretRecordStartPos, rightOffset);
-   }
+   leftPos = caretRecordStartPos + leftOffset;
+   rightPos = caretRecordStartPos + rightOffset;
 
    if (leftPos >= caretEolMarkerPos)
       leftPos = caretEolMarkerPos - 1;
@@ -1557,7 +1495,6 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
    wstring fieldInfoText{};
    intptr_t caretPos;
    intptr_t caretLine;
-   bool byteCols{ !_configIO.getMultiByteLexing(fileType) };
    wstring newLine{ L"\r\n" };
 
    caretFieldIndex = -1;
@@ -1589,14 +1526,8 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
       intptr_t caretColumn, recLength;
       int fieldCount, fieldLabelCount, cumulativeWidth{}, matchedField{ -1 };
 
-      if (byteCols) {
-         caretColumn = caretPos - caretRecordStartPos;
-         recLength = caretEolMarkerPos - caretRecordStartPos;
-      }
-      else {
-         caretColumn = SendMessage(hScintilla, SCI_COUNTCHARACTERS, caretRecordStartPos, caretPos);
-         recLength = SendMessage(hScintilla, SCI_COUNTCHARACTERS, caretRecordStartPos, caretEolMarkerPos);
-      }
+      caretColumn = caretPos - caretRecordStartPos;
+      recLength = caretEolMarkerPos - caretRecordStartPos;
 
       fieldInfoText = CUR_POS_DATA_REC_TYPE + FLD.label;
       fieldCount = static_cast<int>(FLD.fieldStarts.size());
@@ -1926,27 +1857,6 @@ void MultiCSVPanel::setADFTCheckbox() {
 
    _configIO.setPreferenceBool(PREF_ADFT, checked);
    if (checked) visualizeFile("", FALSE, TRUE, TRUE);
-}
-
-void MultiCSVPanel::setPanelMBCharState() {
-   _configIO.setPanelMBCharState(IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE));
-   visualizeFile("", TRUE, (IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT) == BST_CHECKED), TRUE);
-}
-
-void MultiCSVPanel::setPanelMBCharIndicator(string fileType) {
-   wstring indicator{};
-   UINT state{ IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE) };
-
-   if (fileType.length() < 2 || state == BST_UNCHECKED)
-      indicator = L"";
-   else if (state == BST_CHECKED)
-      indicator = L"*";
-   else if (_configIO.getConfigStringA(fileType, "MultiByteChars", "N", "") == "Y")
-      indicator = L"+";
-   else
-      indicator = L"-";
-
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_MCBS_OVERRIDE_IND, indicator.c_str());
 }
 
 void MultiCSVPanel::setDefaultBackground() {

@@ -51,7 +51,6 @@ public:
    void initPanel();
    virtual void display(bool toShow = TRUE);
    void refreshDarkMode();
-   void initMBCharsCheckbox();
    void updateHopRightTip();
    void setParent(HWND parent2set);
    void setFocusOnEditor();
@@ -140,8 +139,6 @@ private:
    void setDocFoldStructType(string foldStructType);
    void setDocFolded(bool bFolding);
    void setADFTCheckbox();
-   void setPanelMBCharState();
-   void setPanelMBCharIndicator(string fileType);
    void setDefaultBackground();
    void setShowCalltip();
    void initCalltipStyle();

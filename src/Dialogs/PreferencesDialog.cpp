@@ -13,14 +13,12 @@ void PreferencesDialog::doDialog(HINSTANCE hInst) {
 
    initCheckbox(IDC_PREF_CLEARVIZ_AUTO, PREF_CLEARVIZ_AUTO, FALSE);
    initCheckbox(IDC_PREF_CLEARVIZ_PANEL, PREF_CLEARVIZ_PANEL, FALSE);
-   initCheckbox(IDC_PREF_MBCHARS_STATE, PREF_MBCHARS_SHOW, FALSE);
    initCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_LEFT_EDGE, FALSE);
 
    using Utils::addTooltip;
 
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_AUTO, L"", PREF_CLEARVIZ_AUTO_TIP, PREF_TIP_LONG, TRUE);
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_PANEL, L"", PREF_CLEARVIZ_PANEL_TIP, PREF_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_PREF_MBCHARS_STATE, L"", PREF_MBCHARS_STATE_TIP, PREF_TIP_LONG, TRUE);
    addTooltip(_hSelf, IDC_PREF_HOP_FIELD_LEFT_EDGE, L"", PREF_HOP_RT_LEFT_EDGE_TIP, PREF_TIP_LONG, TRUE);
 
    displayFoldLineColor();
@@ -49,11 +47,6 @@ INT_PTR PreferencesDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPara
 
       case IDC_PREF_CLEARVIZ_PANEL:
          setCheckbox(IDC_PREF_CLEARVIZ_PANEL, PREF_CLEARVIZ_PANEL);
-         break;
-
-      case IDC_PREF_MBCHARS_STATE:
-         setCheckbox(IDC_PREF_MBCHARS_STATE, PREF_MBCHARS_SHOW);
-         _csvPanel.initMBCharsCheckbox();
          break;
 
       case IDC_PREF_HOP_FIELD_LEFT_EDGE:
@@ -115,7 +108,6 @@ void PreferencesDialog::localize() {
    SetWindowText(_hSelf, PREFERENCES_DIALOG_TITLE);
    SetDlgItemText(_hSelf, IDC_PREF_CLEARVIZ_AUTO, PREFERENCES_CLEARVIZ_AUTO);
    SetDlgItemText(_hSelf, IDC_PREF_CLEARVIZ_PANEL, PREFERENCES_CLEARVIZ_PANEL);
-   SetDlgItemText(_hSelf, IDC_PREF_MBCHARS_STATE, PREFERENCES_MBCHARS_STATE);
    SetDlgItemText(_hSelf, IDC_PREF_HOP_FIELD_LEFT_EDGE, PREFERENCES_HOP_LEFT_EDGE);
    SetDlgItemText(_hSelf, IDCLOSE, PREFERENCES_CLOSE_BTN);
 }

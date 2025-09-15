@@ -250,21 +250,6 @@ void ConfigIO::setPreferenceInt(const string key, const int value) const {
    setConfigStringA("Preferences", key, to_string(value), CONFIG_FILE_PATHS[CONFIG_PREFS]);
 }
 
-void ConfigIO::setPanelMBCharState(UINT state) const {
-   setConfigStringA("Preferences", "PanelMBCharState",
-      (state == BST_INDETERMINATE) ? "FT" : ((state == BST_CHECKED) ? "Y" : "N"),
-      CONFIG_FILE_PATHS[CONFIG_PREFS]);
-}
-
-bool ConfigIO::getMultiByteLexing(string fileType) const {
-   string state{ getConfigStringA("Preferences", "PanelMBCharState", "FT", CONFIG_FILE_PATHS[CONFIG_PREFS]) };
-
-   if (state == "FT")
-      return (getConfigStringA(fileType, "MultiByteChars", "N", currentConfigFile) == "Y");
-   else
-      return (state == "Y");
-}
-
 int ConfigIO::getConfigAllSections(string& sections, string file) {
    const int bufSize{ FW_LINE_MAX_LENGTH };
    string ftBuf(bufSize, '\0');

@@ -14,8 +14,6 @@
 
 #define PREF_ADFT             "AutoDetectFileType"
 #define PREF_CARET_FLASH      "CaretFlashSeconds"
-#define PREF_MBCHARS_SHOW     "ShowMBCharsOnPanel"
-#define PREF_MBCHARS_STATE    "PanelMBCharState"
 #define PREF_JUMP_FIELD_SEQ   "ShowJumpFieldSeqNo"
 #define PREF_DEF_BACKGROUND   "DefaultBackground"
 #define PREF_SHOW_CALLTIP     "ShowCalltip"
@@ -92,9 +90,6 @@ public:
 
    int getPreferenceInt(const string key, const int defaultVal = 0) const;
    void setPreferenceInt(const string key, const int value) const;
-
-   void setPanelMBCharState(UINT state) const;
-   bool getMultiByteLexing(string fileType) const;
 
    int getConfigAllSections(string& sections, const string file);
    int getConfigAllSectionsList(vector<string>& sectionsList, const string file);
