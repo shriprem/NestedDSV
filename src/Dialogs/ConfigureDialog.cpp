@@ -24,7 +24,6 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    hRecRegex = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_REGEX_EDIT);
    hRecThemes = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_THEME_LIST);
    hFieldLabels = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FIELD_LABELS_EDIT);
-   hFieldWidths = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FIELD_WIDTHS_EDIT);
 
    for (int i{}, id{ IDC_MCVIZ_DEF_ADFT_LINE_EDIT_01 }; i < ADFT_MAX; ++i) {
       hADFTLine[i] = GetDlgItem(_hSelf, id++);
@@ -41,10 +40,8 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    SendMessage(hRecStart, EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hRecRegex, EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hFieldLabels, EM_LIMITTEXT, FW_LINE_MAX_LENGTH, NULL);
-   SendMessage(hFieldWidths, EM_LIMITTEXT, FW_LINE_MAX_LENGTH, NULL);
 
    SetWindowSubclass(hFieldLabels, procFieldEditMessages, NULL, NULL);
-   SetWindowSubclass(hFieldWidths, procFieldEditMessages, NULL, NULL);
 
    SetWindowSubclass(hADFTLine[0], procNumberEditControl, NULL, NULL);
    SetWindowSubclass(hADFTLine[1], procNumberEditControl, NULL, NULL);
@@ -280,34 +277,6 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
                enableRecSelection();
             }
             break;
-
-         case EN_SETFOCUS:
-            setFieldEditCaretOnFocus(hFieldLabels);
-            break;
-
-         case EN_VSCROLL:
-            syncFieldEditScrolling(hFieldLabels, hFieldWidths);
-            break;
-         }
-
-         break;
-
-      case IDC_MCVIZ_DEF_FIELD_WIDTHS_EDIT:
-         switch HIWORD(wParam) {
-         case EN_CHANGE:
-            if (!loadingEdits) {
-               cleanFieldVals = FALSE;
-               enableRecSelection();
-            }
-            break;
-
-         case EN_SETFOCUS:
-            setFieldEditCaretOnFocus(hFieldWidths);
-            break;
-
-         case EN_VSCROLL:
-            syncFieldEditScrolling(hFieldWidths, hFieldLabels);
-            break;
          }
 
          break;
@@ -440,8 +409,6 @@ void ConfigureDialog::localize() {
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_CLONE_BTN, MCVIZ_DEF_REC_CLONE_BTN);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_DEL_BTN, MCVIZ_DEF_REC_DEL_BTN);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_GROUP_BOX, MCVIZ_DEF_FIELD_GROUP_BOX);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_WIDTHS_TEXT, MCVIZ_DEF_FIELD_WIDTHS_TEXT);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_LABELS_TEXT, MCVIZ_DEF_FIELD_LABELS_TEXT);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN, MCVIZ_DEF_FIELD_ACCEPT_BTN);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_RESET_BTN, MCVIZ_DEF_FIELD_RESET_BTN);
    SetDlgItemText(_hSelf, IDC_MCVIZ_FIELD_TYPE_BUTTON, MCVIZ_DEF_FIELD_TYPE_BTN);
@@ -538,7 +505,6 @@ int ConfigureDialog::loadFileTypeInfo(int vIndex, const string& fileType, const 
       RT.label = _configIO.getConfigWideChar(fileType, (recType + "_Label"), "", sConfigFile);
       RT.marker = _configIO.getConfigWideChar(fileType, (recType + "_Marker"), "", sConfigFile);
       RT.theme = _configIO.getConfigWideChar(fileType, (recType + "_Theme"), "", sConfigFile);
-      RT.fieldWidths = _configIO.getConfigWideChar(fileType, (recType + "_FieldWidths"), "", sConfigFile);
       RT.fieldLabels = _configIO.getConfigWideChar(fileType, (recType + "_FieldLabels"), "", sConfigFile);
    }
 
@@ -664,8 +630,7 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
       rtConfig +=
          recTypePrefix + L"_Label=" + RT.label + new_line +
          recTypePrefix + L"_Marker=" + RT.marker + new_line +
-         recTypePrefix + L"_FieldLabels=" + RT.fieldLabels + new_line +
-         recTypePrefix + L"_FieldWidths=" + RT.fieldWidths + new_line;
+         recTypePrefix + L"_FieldLabels=" + RT.fieldLabels + new_line;
 
       if ((RT.theme != L"") && (RT.theme != MCVIZ_DEF_REC_THEME_FROM_FT) && (RT.theme != FT.theme))
          rtConfig += recTypePrefix + L"_Theme=" + RT.theme + new_line;
@@ -700,7 +665,6 @@ ConfigureDialog::RecordType ConfigureDialog::getNewRec() {
    newRec.label = L"";
    newRec.marker = L"";
    newRec.fieldLabels = L"";
-   newRec.fieldWidths = L"";
    newRec.theme = L"";
    return newRec;
 }
@@ -949,54 +913,9 @@ void ConfigureDialog::fillFieldTypes() {
    wstring fieldLabels{ regex_replace(recInfo->fieldLabels, wregex(L","), L"\r\n") };
    SetWindowText(hFieldLabels, fieldLabels.c_str());
 
-   // Field Widths
-   wstring fieldWidths{ regex_replace(recInfo->fieldWidths, wregex(L","), L"\r\n") };
-   SetWindowText(hFieldWidths, fieldWidths.c_str());
-
    cleanFieldVals = TRUE;
    enableRecSelection();
 }
-
-void ConfigureDialog::setFieldEditCaretOnFocus(HWND hEdit) {
-   DWORD startPos{}, endPos{};
-   SendMessage(hEdit, EM_GETSEL, (WPARAM)&startPos, (LPARAM)&endPos);
-
-   if (GetWindowTextLength(hEdit) == static_cast<int>(endPos) - static_cast<int>(startPos)) {
-      int caretPos = (hEdit == hFieldLabels) ? editLabelsCaret : editWidthsCaret;
-      SendMessage(hEdit, EM_SETSEL, caretPos, caretPos);
-      SendMessage(hEdit, EM_SCROLLCARET, NULL, NULL);
-   }
-
-   hiliteFieldEditPairedItem(hEdit, (hEdit == hFieldLabels) ? hFieldWidths : hFieldLabels);
-}
-
-void ConfigureDialog::hiliteFieldEditPairedItem(HWND hThis, HWND hThat) {
-   int thisLine = static_cast<int>(SendMessage(hThis, EM_LINEFROMCHAR,
-      SendMessage(hThis, EM_LINEINDEX, (WPARAM)-1, NULL), NULL));
-
-   int thatLineCount = static_cast<int>(SendMessage(hThat, EM_GETLINECOUNT, NULL, NULL));
-   if (thisLine >= thatLineCount) return;
-
-   int lineStart = static_cast<int>(SendMessage(hThat, EM_LINEINDEX, thisLine, NULL));
-   int lineLength = static_cast<int>(SendMessage(hThat, EM_LINELENGTH, lineStart, NULL));
-
-   ((hThis == hFieldLabels) ? editWidthsCaret : editLabelsCaret) = lineStart;
-
-   SendMessage(hThat, EM_SETSEL, lineStart, (lineStart + lineLength));
-   SendMessage(hThat, EM_SCROLLCARET, NULL, NULL);
-}
-
-void ConfigureDialog::syncFieldEditScrolling(HWND hThis, HWND hThat) {
-   int thisLine = static_cast<int>(SendMessage(hThis, EM_GETFIRSTVISIBLELINE, NULL, NULL));
-
-   int thatLineCount = static_cast<int>(SendMessage(hThat, EM_GETLINECOUNT, NULL, NULL));
-   if (thisLine >= thatLineCount) return;
-
-   int thatLine = static_cast<int>(SendMessage(hThat, EM_GETFIRSTVISIBLELINE, NULL, NULL));
-
-   SendMessage(hThat, EM_LINESCROLL, NULL, thisLine - thatLine);
-}
-
 
 void ConfigureDialog::fieldEditsAccept() {
    if (cleanFieldVals) return;
@@ -1021,15 +940,6 @@ void ConfigureDialog::fieldEditsAccept() {
 
    recInfo->fieldLabels = vals;
    SetWindowText(hFieldLabels, regex_replace(vals, wregex(L","), L"\r\n").c_str());
-
-   // Field Widths
-   GetWindowText(hFieldWidths, fieldValues.data(), (FW_LINE_MAX_LENGTH + 1));
-
-   // Replace any newlines with commas.
-   // No processing needed for leading & trailing spaces since this is a numeric edit control
-   vals = regex_replace(wstring(fieldValues.c_str()), wregex(L"\r\n"), L",");
-
-   recInfo->fieldWidths = vals.c_str();
 
    cleanConfigFile = FALSE;
    cleanFieldVals = TRUE;
@@ -1126,7 +1036,6 @@ void ConfigureDialog::recEditNew(bool clone) {
       newRec.label = records[idxRT].label;
       newRec.marker = records[idxRT].marker;
       newRec.fieldLabels = records[idxRT].fieldLabels;
-      newRec.fieldWidths = records[idxRT].fieldWidths;
    }
 
    records.push_back(newRec);
@@ -1301,7 +1210,6 @@ void ConfigureDialog::fileEditClone() {
       NF.vRecTypes[i].label = FT.vRecTypes[i].label;
       NF.vRecTypes[i].marker = FT.vRecTypes[i].marker;
       NF.vRecTypes[i].fieldLabels = FT.vRecTypes[i].fieldLabels;
-      NF.vRecTypes[i].fieldWidths = FT.vRecTypes[i].fieldWidths;
    }
 
    vFileTypes.push_back(NF);
@@ -1460,24 +1368,11 @@ LRESULT CALLBACK procNumberEditControl(HWND hwnd, UINT messageId, WPARAM wParam,
 }
 
 LRESULT CALLBACK procFieldEditMessages(HWND hwnd, UINT messageId, WPARAM wParam, LPARAM lParam, UINT_PTR, DWORD_PTR) {
-   HWND hThis{ hwnd == _configDlg.hFieldLabels ? _configDlg.hFieldLabels : _configDlg.hFieldWidths };
-   HWND hThat{ hwnd == _configDlg.hFieldLabels ? _configDlg.hFieldWidths : _configDlg.hFieldLabels };
-
    switch (messageId) {
    case WM_CHAR:
-      if (wParam == ',' && hwnd == _configDlg.hFieldLabels) {
+      if (wParam == ',') {
          showEditBalloonTip(hwnd, MCVIZ_DIALOG_COMMAS_TITLE, MCVIZ_DIALOG_COMMAS_MESSAGE);
       }
-      break;
-
-   case WM_KEYDOWN:
-   case WM_KEYUP:
-   case WM_LBUTTONUP:
-      _configDlg.hiliteFieldEditPairedItem(hThis, hThat);
-      break;
-
-   case WM_VSCROLL:
-      _configDlg.syncFieldEditScrolling(hThis, hThat);
       break;
    }
 
