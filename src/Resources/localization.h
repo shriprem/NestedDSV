@@ -95,7 +95,6 @@
 #define MCVIZ_DEF_FILE_MOVE_DOWN    L"Move down the selected File Type"
 #define MCVIZ_DEF_FILE_MOVE_UP      L"Move up the selected File Type"
 #define MCVIZ_DEF_FILE_DESC_LABEL   L"File Type - Label:"
-#define MCVIZ_DEF_FILE_EOL_LABEL    L"File Type - Records Terminator:"
 #define MCVIZ_DEF_ADFT_GROUP_LABEL  L"Auto-Detect File Type"
 #define MCVIZ_DEF_ADFT_LINE_LABEL   L"Line No:"
 #define MCVIZ_DEF_ADFT_REGEX_LABEL  L"Line Regex:"

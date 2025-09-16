@@ -42,7 +42,6 @@ private:
    struct FileType {
       wstring label{};
       wstring theme{};
-      wstring eol{};
       vector<RecordType> vRecTypes;
       int lineNums[ADFT_MAX]{};
       wstring regExprs[ADFT_MAX]{};
@@ -98,7 +97,7 @@ private:
    wstring configFile{};
    bool loadingEdits{}, cleanConfigFile{ true }, cleanFileVals{ true }, cleanRecVals{ true }, cleanFieldVals{ true };
 
-   HWND hFilesLB{}, hFileEOL{}, hFileThemes{}, hADFTLine[ADFT_MAX]{}, hADFTRegex[ADFT_MAX]{},
+   HWND hFilesLB{}, hFileThemes{}, hADFTLine[ADFT_MAX]{}, hADFTRegex[ADFT_MAX]{},
       hRecsLB{}, hRecStart{}, hRecRegex{}, hRecThemes{}, hFieldLabels{};
 
    vector<FileType> vFileTypes;

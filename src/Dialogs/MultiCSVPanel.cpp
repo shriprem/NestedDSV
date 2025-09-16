@@ -1156,14 +1156,10 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    shiftPerRec = (shiftPerRec < 5) ? 1 : ((shiftPerRec + 1) >> 1) - 1;
 
    string lineTextCStr(FW_LINE_MAX_LENGTH, '\0');
-   string recStartText{}, eolMarker{};
-   intptr_t caretLine, eolMarkerPos, recStartLine{}, currentPos, startPos, endPos, recStartPos{};
-   size_t eolMarkerLen;
+   string recStartText{};
+   intptr_t caretLine, recStartLine{}, currentPos, startPos, endPos, recStartPos{};
    const size_t regexedCount{ vRecInfo.size() };
    bool newRec{ TRUE };
-
-   eolMarker = _configIO.getConfigStringA(fileType, "RecordTerminator");
-   eolMarkerLen = eolMarker.length();
 
    caretLine = sciFunc(sciPtr, SCI_LINEFROMPOSITION,
       sciFunc(sciPtr, SCI_GETCURRENTPOS, NULL, NULL), NULL);
@@ -1194,23 +1190,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       if (newRec && lineText.empty())
          continue;
 
-      if (eolMarkerLen == 0) {
-         newRec = TRUE;
-         eolMarkerPos = endPos;
-      }
-      else if (lineText.length() > eolMarkerLen &&
-         (lineText.substr(lineText.length() - eolMarkerLen) == eolMarker)) {
-         newRec = TRUE;
-         eolMarkerPos = endPos - eolMarkerLen;
-      }
-      else if (currentLine < endLine) {
-         newRec = FALSE;
-         continue;
-      }
-      else {
-         eolMarkerPos = endPos;
-      }
-
+      newRec = TRUE;
       currentPos = recStartPos;
 
       int colorOffset{};
@@ -1222,7 +1202,6 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
                caretRecordRegIndex = static_cast<int>(regexIndex);
                caretRecordStartPos = static_cast<int>(recStartPos);
                caretRecordEndPos = static_cast<int>(endPos);
-               caretEolMarkerPos = static_cast<int>(eolMarkerPos);
             }
 
             break;
@@ -1262,8 +1241,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
          to_wstring(fieldCount) + L"\n";
 
       for (int i{}; i < static_cast<int>(fieldCount); ++i) {
-         dbgMessage += L" (" + to_wstring(dbgPos) + L", " +
-            to_wstring(recFieldWidths[i]) + L", " + to_wstring(eolMarkerPos - eolMarkerLen) + L"), ";
+         dbgMessage += L" (" + to_wstring(dbgPos) + L"), ";
          dbgPos += recFieldWidths[i];
       }
 
@@ -1277,7 +1255,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
 
       for (size_t i{}; i < fieldCount; ++i) {
          sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-         unstyledLen = eolMarkerPos - currentPos;
+         unstyledLen = endPos - currentPos;
          currentPos += recFieldWidths[i];
 
          styleIndex = (recFieldStyles[i] >= 0) ?
@@ -1289,9 +1267,6 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
          else {
             sciFunc(sciPtr, SCI_SETSTYLING, unstyledLen, styleIndex);
             unstyledLen = 0;
-
-            sciFunc(sciPtr, SCI_STARTSTYLING, eolMarkerPos, NULL);
-            sciFunc(sciPtr, SCI_SETSTYLING, eolMarkerLen, styleRangeStart - 1);
             break;
          }
       }
@@ -1310,7 +1285,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
          dbgPos = recStartPos;
          dbgMessage = L"Input Styles:\n";
 
-         for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
+         for (size_t i{}; (i < fieldCount) && (dbgPos < endPos); ++i) {
             dbgStyleIndex = (recFieldStyles[i] >= 0) ?
                recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
             dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
@@ -1321,7 +1296,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
          dbgPos = recStartPos;
          dbgMessage += L"\n\nApplied Styles:\n";
 
-         for (size_t i{}; (i < fieldCount) && (dbgPos < eolMarkerPos); ++i) {
+         for (size_t i{}; (i < fieldCount) && (dbgPos < endPos); ++i) {
             dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
                to_wstring(recFieldWidths[i]) + L", " + to_wstring(sciFunc(sciPtr, SCI_GETSTYLEAT, dbgPos, NULL)) + L")";
             dbgPos += recFieldWidths[i];
@@ -1427,11 +1402,11 @@ int MultiCSVPanel::getFieldEdges(const string fileType, const int fieldIdx, cons
    leftPos = caretRecordStartPos + leftOffset;
    rightPos = caretRecordStartPos + rightOffset;
 
-   if (leftPos >= caretEolMarkerPos)
-      leftPos = caretEolMarkerPos - 1;
+   if (leftPos >= caretRecordEndPos)
+      leftPos = caretRecordEndPos - 1;
 
-   if (rightPos >= caretEolMarkerPos)
-      rightPos = caretEolMarkerPos - 1;
+   if (rightPos >= caretRecordEndPos)
+      rightPos = caretRecordEndPos - 1;
 
    return 0;
 }
@@ -1443,8 +1418,8 @@ void MultiCSVPanel::moveToFieldEdge(const string fileType, const int fieldIdx, b
    intptr_t caretPos{ SendMessage(hScintilla, SCI_GETCURRENTPOS, NULL, NULL) };
 
    if (fieldIdx < 0) {
-      if (caretPos >= caretEolMarkerPos) {
-         caretPos = caretEolMarkerPos - 1;
+      if (caretPos >= caretRecordEndPos) {
+         caretPos = caretRecordEndPos - 1;
          SendMessage(hScintilla, SCI_GOTOPOS, caretPos, NULL);
       }
       return;
@@ -1455,7 +1430,7 @@ void MultiCSVPanel::moveToFieldEdge(const string fileType, const int fieldIdx, b
 
    if (!jumpTo) {
       if (rightEdge) {
-         if (caretPos == rightPos && caretPos < caretEolMarkerPos - 1)
+         if (caretPos == rightPos && caretPos < caretRecordEndPos - 1)
             if (getFieldEdges(fileType, fieldIdx + 1, 1, leftPos, rightPos) < 0) return;
       }
       else {
@@ -1518,7 +1493,7 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
    else if (caretPos == caretRecordEndPos) {
       fieldInfoText = CUR_POS_DATA_REC_END;
    }
-   else if (caretPos >= caretEolMarkerPos) {
+   else if (caretPos >= caretRecordEndPos) {
       fieldInfoText = CUR_POS_DATA_REC_TERM;
    }
    else {
@@ -1527,7 +1502,7 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
       int fieldCount, fieldLabelCount, cumulativeWidth{}, matchedField{ -1 };
 
       caretColumn = caretPos - caretRecordStartPos;
-      recLength = caretEolMarkerPos - caretRecordStartPos;
+      recLength = caretRecordEndPos - caretRecordStartPos;
 
       fieldInfoText = CUR_POS_DATA_REC_TYPE + FLD.label;
       fieldCount = static_cast<int>(FLD.fieldStarts.size());
@@ -1962,17 +1937,14 @@ void MultiCSVPanel::applyFolding(string fsType) {
    const size_t regexedCount{ vRecInfo.size() };
 
    string lineTextCStr(FW_LINE_MAX_LENGTH, '\0');
-   string recStartText{}, eolMarker{};
+   string recStartText{};
 
-   size_t eolMarkerLen, eolMarkerPos, recStartLine{}, startPos, endPos, recStartPos{};
+   size_t recStartLine{}, startPos, endPos, recStartPos{};
    bool newRec{ TRUE };
 
    vector<FoldingInfo> foldStack{ {} };
    int currentLevel{ 0 };
    bool bFoldExists{};
-
-   eolMarker = _configIO.getConfigStringA(fileType, "RecordTerminator");
-   eolMarkerLen = eolMarker.length();
 
 #if FW_DEBUG_FOLD_INFO
    wstring info{ L"Line\tRec. Type\tLevel\n" };
@@ -2002,22 +1974,7 @@ void MultiCSVPanel::applyFolding(string fsType) {
          continue;
       }
 
-      if (eolMarkerLen == 0) {
-         newRec = TRUE;
-         eolMarkerPos = endPos;
-      }
-      else if (lineText.length() > eolMarkerLen &&
-         (lineText.substr(lineText.length() - eolMarkerLen) == eolMarker)) {
-         newRec = TRUE;
-         eolMarkerPos = endPos - eolMarkerLen;
-      }
-      else if (currentLine < endLine) {
-         newRec = FALSE;
-         continue;
-      }
-      else {
-         eolMarkerPos = endPos;
-      }
+      newRec = TRUE;
 
       size_t regexIndex{};
 

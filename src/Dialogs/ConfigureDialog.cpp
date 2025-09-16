@@ -17,7 +17,6 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    }
 
    hFilesLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_LIST_BOX);
-   hFileEOL = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_EOL_EDIT);
    hFileThemes = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_THEME_LIST);
    hRecsLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_LIST_BOX);
    hRecStart = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_START_EDIT);
@@ -33,7 +32,6 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
    SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_REC_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
 
-   SendMessage(hFileEOL, EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[0], EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[1], EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[2], EM_LIMITTEXT, MAX_PATH, NULL);
@@ -140,7 +138,6 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          break;
 
       case IDC_MCVIZ_DEF_FILE_DESC_EDIT:
-      case IDC_MCVIZ_DEF_FILE_EOL_EDIT:
       case IDC_MCVIZ_DEF_FILE_THEME_LIST:
       case IDC_MCVIZ_DEF_ADFT_LINE_EDIT_01:
       case IDC_MCVIZ_DEF_ADFT_REGEX_EDT_01:
@@ -377,7 +374,6 @@ void ConfigureDialog::localize() {
    SetWindowText(_hSelf, MCVIZ_DEF_DIALOG_TITLE);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_GROUP_BOX, MCVIZ_DEF_FILE_GROUP_BOX);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_LABEL, MCVIZ_DEF_FILE_DESC_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_EOL_LABEL, MCVIZ_DEF_FILE_EOL_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_GROUP_LABEL, MCVIZ_DEF_ADFT_GROUP_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_LINE_LABEL, MCVIZ_DEF_ADFT_LINE_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_REGEX_LABEL, MCVIZ_DEF_ADFT_REGEX_LABEL);
@@ -468,7 +464,6 @@ int ConfigureDialog::loadFileTypeInfo(int vIndex, const string& fileType, const 
 
    FT.label = _configIO.getConfigWideChar(fileType, "FileLabel", "", sConfigFile);
    FT.theme = _configIO.getConfigWideChar(fileType, "FileTheme", "", sConfigFile);
-   FT.eol = _configIO.getConfigWideChar(fileType, "RecordTerminator", "", sConfigFile);
 
    // Load ADFT data
    for (int i{}; i < ADFT_MAX; ++i) {
@@ -628,7 +623,6 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
    ftConfig = L"[" + ftCode + L"]" + new_line +
       L"FileLabel=" + FT.label + new_line +
       L"FileTheme=" + FT.theme + new_line +
-      L"RecordTerminator=" + FT.eol + new_line +
       adft + recTypes + new_line + rtConfig;
 
    return 1;
@@ -671,7 +665,6 @@ void ConfigureDialog::onFileTypeSelect() {
 void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
    loadingEdits = TRUE;
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileInfo->label.c_str());
-   SetWindowText(hFileEOL, fileInfo->eol.c_str());
 
    for (int i{}; i < ADFT_MAX; ++i) {
       wstring lineNum{ (fileInfo->lineNums[i] == 0) ? L"" : to_wstring(fileInfo->lineNums[i]) };
@@ -1110,11 +1103,6 @@ int ConfigureDialog::fileEditAccept(bool accept) {
       GetWindowText(hFileThemes, fileVal, MAX_PATH);
       fileInfo.theme = fileVal;
 
-      wchar_t eolVal[MAX_PATH + 1];
-
-      GetWindowText(hFileEOL, eolVal, MAX_PATH);
-      fileInfo.eol = eolVal;
-
       // ADFT Info
       wchar_t lineNum[MAX_PATH + 1];
       wchar_t regExpr[MAX_PATH + 1];
@@ -1210,7 +1198,6 @@ void ConfigureDialog::fileEditClone() {
 
    NF.label = FT.label + L"_clone";
    NF.theme = FT.theme;
-   NF.eol = FT.eol;
 
    // ADFT Info
    for (int i{}; i < ADFT_MAX; ++i) {

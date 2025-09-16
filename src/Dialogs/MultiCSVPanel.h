@@ -85,7 +85,7 @@ private:
    HBRUSH hbr{};
 
    // Field Info tracking
-   intptr_t caretRecordStartPos{}, caretRecordEndPos{}, caretEolMarkerPos{};
+   intptr_t caretRecordStartPos{}, caretRecordEndPos{};
    int caretRecordRegIndex{}, caretFieldIndex{};
    bool panelMounted{}, unlexed{}, utf8Config{}, leftAlign{}, themeEnabled{}, fieldEnabled{};
    string calltipText{}; // Needed for the PostMessage call

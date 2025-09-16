@@ -605,9 +605,8 @@ void DataExtractDialog::extractData() {
    const size_t regexedCount{ pRecInfoList->size() };
 
    string lineTextCStr(FW_LINE_MAX_LENGTH, '\0');
-   string recStartText{}, eolMarker{};
-   size_t eolMarkerLen;
-   intptr_t eolMarkerPos, recStartLine{}, startPos, endPos, recStartPos{};
+   string recStartText{};
+   intptr_t recStartLine{}, startPos, endPos, recStartPos{};
    bool newRec{ TRUE };
 
    bool recMatch{};
@@ -616,9 +615,6 @@ void DataExtractDialog::extractData() {
    string fieldText(FW_LINE_MAX_LENGTH, '\0');
    Sci_TextRangeFull sciTR{};
    sciTR.lpstrText = fieldText.data();
-
-   eolMarker = _configIO.getConfigStringA(fileType, "RecordTerminator");
-   eolMarkerLen = eolMarker.length();
 
    bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
    const std::wregex regexTrimSpaces{ std::wregex(L"^\\s+|\\s+$") };
@@ -645,22 +641,7 @@ void DataExtractDialog::extractData() {
          continue;
       }
 
-      if (eolMarkerLen == 0) {
-         newRec = TRUE;
-         eolMarkerPos = endPos;
-      }
-      else if (lineText.length() > eolMarkerLen &&
-         (lineText.substr(lineText.length() - eolMarkerLen) == eolMarker)) {
-         newRec = TRUE;
-         eolMarkerPos = endPos - eolMarkerLen;
-      }
-      else if (currentLine < endLine) {
-         newRec = FALSE;
-         continue;
-      }
-      else {
-         eolMarkerPos = endPos;
-      }
+      newRec = TRUE;
 
       size_t regexIndex{};
 
@@ -681,10 +662,10 @@ void DataExtractDialog::extractData() {
          sciTR.chrg.cpMin = recStartPos + RI.fieldStarts[LI.fieldType];
          sciTR.chrg.cpMax = sciTR.chrg.cpMin + RI.fieldWidths[LI.fieldType];
 
-         if (sciTR.chrg.cpMax > eolMarkerPos || sciTR.chrg.cpMax == 0)
-            sciTR.chrg.cpMax = eolMarkerPos;
+         if (sciTR.chrg.cpMax > endPos || sciTR.chrg.cpMax == 0)
+            sciTR.chrg.cpMax = endPos;
 
-         if (sciTR.chrg.cpMin < eolMarkerPos &&
+         if (sciTR.chrg.cpMin < endPos &&
             (recStartPos + RI.fieldStarts[LI.fieldType] == 0 || sciTR.chrg.cpMin > 0)) {
             sciFunc(sciPtr, SCI_GETTEXTRANGEFULL, NULL, (LPARAM)&sciTR);
 
