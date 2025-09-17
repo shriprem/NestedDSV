@@ -17,6 +17,7 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    }
 
    hFilesLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_LIST_BOX);
+   hFileDelim = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_DELIM_LIST);
    hFileThemes = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_THEME_LIST);
    hRecsLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_LIST_BOX);
    hRecStart = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_START_EDIT);
@@ -32,6 +33,7 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
    SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_REC_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
 
+   SendMessage(hFileDelim, EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[0], EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[1], EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[2], EM_LIMITTEXT, MAX_PATH, NULL);
@@ -138,6 +140,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          break;
 
       case IDC_MCVIZ_DEF_FILE_DESC_EDIT:
+      case IDC_MCVIZ_DEF_FILE_DELIM_LIST:
       case IDC_MCVIZ_DEF_FILE_THEME_LIST:
       case IDC_MCVIZ_DEF_ADFT_LINE_EDIT_01:
       case IDC_MCVIZ_DEF_ADFT_REGEX_EDT_01:
@@ -374,6 +377,7 @@ void ConfigureDialog::localize() {
    SetWindowText(_hSelf, MCVIZ_DEF_DIALOG_TITLE);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_GROUP_BOX, MCVIZ_DEF_FILE_GROUP_BOX);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_LABEL, MCVIZ_DEF_FILE_DESC_LABEL);
+   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DELIM_LABEL, MCVIZ_DEF_FILE_DELIM_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_GROUP_LABEL, MCVIZ_DEF_ADFT_GROUP_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_LINE_LABEL, MCVIZ_DEF_ADFT_LINE_LABEL);
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_REGEX_LABEL, MCVIZ_DEF_ADFT_REGEX_LABEL);
@@ -463,6 +467,7 @@ int ConfigureDialog::loadFileTypeInfo(int vIndex, const string& fileType, const 
    FileType& FT{ vFileTypes[vIndex] };
 
    FT.label = _configIO.getConfigWideChar(fileType, "FileLabel", "", sConfigFile);
+   FT.delim = _configIO.getConfigWideChar(fileType, "Delimiter", "", sConfigFile);
    FT.theme = _configIO.getConfigWideChar(fileType, "FileTheme", "", sConfigFile);
 
    // Load ADFT data
@@ -504,6 +509,12 @@ void ConfigureDialog::fillFileTypes() {
 
    if (vFileTypes.size())
       SendMessage(hFilesLB, LB_SETCURSEL, 0, NULL);
+
+   // Fill File Delimiter Droplist
+   SendMessage(hFileDelim, CB_RESETCONTENT, NULL, NULL);
+   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_CSV);
+   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_PSV);
+   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_TSV);
 
    // Fill Files & Records Themes Droplists
    SendMessage(hFileThemes, CB_RESETCONTENT, NULL, NULL);
@@ -622,6 +633,7 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
    ftCode = wstring{ fileTypeCode };
    ftConfig = L"[" + ftCode + L"]" + new_line +
       L"FileLabel=" + FT.label + new_line +
+      L"Delimiter=" + FT.delim + new_line +
       L"FileTheme=" + FT.theme + new_line +
       adft + recTypes + new_line + rtConfig;
 
@@ -666,6 +678,28 @@ void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
    loadingEdits = TRUE;
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileInfo->label.c_str());
 
+   // Set File Delimiter List
+   wstring delim = fileInfo->delim;
+   bool otherDelim = (!delim.empty()) && (delim != L",") && (delim != L"|") && (delim != L"\t");
+   int delimCount = static_cast<int>(SendMessage(hFileDelim, CB_GETCOUNT, 0, 0));
+
+   if (otherDelim) {
+      if (delimCount == 3)
+         SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_OTHER);
+   }
+   else {
+      if (delimCount == 4)
+         SendMessage(hFileDelim, CB_DELETESTRING, 3, NULL);
+   }
+
+   int curselDelim = (delim == L",") ? 0 :
+      (delim == L"|") ? 1 :
+      (delim == L"\t") ? 2 :
+      otherDelim ? 3 : -1;
+
+   SendMessage(hFileDelim, CB_SETCURSEL, curselDelim, NULL);
+
+   // Set ADFT Controls
    for (int i{}; i < ADFT_MAX; ++i) {
       wstring lineNum{ (fileInfo->lineNums[i] == 0) ? L"" : to_wstring(fileInfo->lineNums[i]) };
 
@@ -673,6 +707,7 @@ void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
       SetWindowText(hADFTRegex[i], fileInfo->regExprs[i].c_str());
    }
 
+   // Set Theme List
    Utils::setComboBoxSelection(hFileThemes, static_cast<int>(
       SendMessage(hFileThemes, CB_FINDSTRING, (WPARAM)-1, (LPARAM)fileInfo->theme.c_str())));
 
@@ -1100,6 +1135,16 @@ int ConfigureDialog::fileEditAccept(bool accept) {
       GetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileVal, MAX_PATH);
       fileInfo.label = fileVal;
 
+      int fileDelim = static_cast<int>(SendMessage(hFileDelim, CB_GETCURSEL, 0, 0));
+      fileInfo.delim = (fileDelim == 0) ? L"," :
+         (fileDelim == 1) ? L"|" :
+         (fileDelim == 2) ? L"\t" :
+         (fileDelim == 3) ? fileInfo.delim : L"|";
+
+      // Remove "Manually entered delimiter" entry from the listing if that's not the one selected
+      if (fileDelim < 3)
+         SendMessage(hFileDelim, CB_DELETESTRING, 3, NULL);
+
       GetWindowText(hFileThemes, fileVal, MAX_PATH);
       fileInfo.theme = fileVal;
 
@@ -1197,6 +1242,7 @@ void ConfigureDialog::fileEditClone() {
    FileType NF{};
 
    NF.label = FT.label + L"_clone";
+   NF.delim = FT.delim;
    NF.theme = FT.theme;
 
    // ADFT Info
