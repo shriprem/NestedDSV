@@ -10,7 +10,6 @@
 #define FW_DEBUG_SET_STYLES FALSE
 #define FW_DEBUG_LOAD_REGEX FALSE
 #define FW_DEBUG_APPLY_LEXER FALSE
-#define FW_DEBUG_APPLIED_STYLES FALSE
 #define FW_DEBUG_LEXER_COUNT FALSE
 #define FW_DEBUG_COPY_TRIM FALSE
 #define FW_DEBUG_DOC_INFO FALSE
@@ -39,8 +38,6 @@ public:
       string marker;
       regex regExpr;
       wstring theme;
-      vector<int> fieldStarts;
-      vector<int> fieldWidths;
       vector<wstring> fieldLabels;
       vector<int> fieldStyles;
    };
@@ -102,6 +99,7 @@ private:
    struct DocInfo {
       wstring fileName{};
       string docType{};
+      string docDelim{};
       string docTheme{};
       string foldStructType{};
       bool folded{};
@@ -124,13 +122,18 @@ private:
 
    vector<RecordInfo> vRecInfo;
 
+   vector<int> caretFieldStartPositions;
+   vector<int> caretFieldEndPositions;
+
+
    virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
    void localize();
    bool detectFileType(HWND hScintilla, string& fileType);
    bool detectFileTypeByVizConfig(HWND hScintilla, string& fileType, bool defaultConfig);
    const wstring getCurrentFileName();
-   void setDocInfo(bool bDocType, string val);
+   void initDocInfo(bool bDocType, string val);
 
+   bool getDocDelim(string& delim);
    bool getDocTheme(wstring& theme);
    string getDocFoldStructType();
    bool getDocFolded();

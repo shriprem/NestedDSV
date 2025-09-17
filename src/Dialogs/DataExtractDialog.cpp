@@ -616,7 +616,7 @@ void DataExtractDialog::extractData() {
    Sci_TextRangeFull sciTR{};
    sciTR.lpstrText = fieldText.data();
 
-   bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
+   //??bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
    const std::wregex regexTrimSpaces{ std::wregex(L"^\\s+|\\s+$") };
    wstring fieldData{};
 
@@ -653,7 +653,7 @@ void DataExtractDialog::extractData() {
       if (regexIndex >= regexedCount) continue;
 
       recMatch = FALSE;
-
+      /* //??
       for (size_t j{}; j < validLIs.size(); ++j) {
          const LineItemInfo& LI{ validLIs[j] };
          const RecordInfo& RI{ pRecInfoList->at(LI.recType) };
@@ -677,6 +677,7 @@ void DataExtractDialog::extractData() {
             recMatch = TRUE;
          }
       }
+      */
 
       if (recMatch) extract += L"\n";
    }

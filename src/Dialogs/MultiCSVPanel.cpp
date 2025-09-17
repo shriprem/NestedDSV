@@ -820,7 +820,7 @@ void MultiCSVPanel::fieldPaste() {
    intptr_t fieldCurrLen{ rightPos - leftPos };
    if (fieldCurrLen < 1) return;
 
-   int fieldLength{ vRecInfo[caretRecordRegIndex].fieldWidths[caretFieldIndex] };
+   int fieldLength{ caretFieldEndPositions[caretFieldIndex] - caretFieldStartPositions[caretFieldIndex] + 1 };
 
    wstring clipText;
    Utils::getClipboardText(GetParent(_hSelf), clipText);
@@ -1034,20 +1034,7 @@ int MultiCSVPanel::loadLexer() {
       RT.regExpr = regex{ RT.marker + ".*" };
       RT.theme = _configIO.getConfigWideChar(fileType, (recType + "_Theme"));
 
-      string fieldWidthList;
       int fieldCount;
-
-      fieldWidthList = _configIO.getConfigStringA(fileType, (recType + "_FieldWidths"));
-      fieldCount = _configIO.Tokenize(fieldWidthList, RT.fieldWidths);
-
-      RT.fieldStarts.clear();
-      RT.fieldStarts.resize(fieldCount);
-
-      for (int fnum{}, startPos{}; fnum < fieldCount; ++fnum) {
-         RT.fieldStarts[fnum] = startPos;
-         startPos += RT.fieldWidths[fnum];
-      }
-
       wstring fieldLabelList, fieldType;
       size_t colonPos{};
 
@@ -1104,8 +1091,6 @@ int MultiCSVPanel::loadLexer() {
    unlexed = FALSE;
 
 #if FW_DEBUG_LOAD_REGEX
-   int fieldCount;
-
    for (int i{}; i < recTypeCount; ++i) {
       wstring dbgMessage;
       wstring& recType = recTypes[i];
@@ -1113,14 +1098,7 @@ int MultiCSVPanel::loadLexer() {
 
       dbgMessage = recType + L"\nRec_Label = " + RT.label +
          L"\nRec_Marker = " + _configIO.NarrowToWide(RT.marker) +
-         L"\nRec_Theme = " + RT.theme +
-         L"\nFieldWidths=\n";
-
-      fieldCount = static_cast<int>(RT.fieldWidths.size());
-
-      for (int j{}; j < fieldCount; ++j) {
-         dbgMessage += L" (" + to_wstring(RT.fieldStarts[j]) + L", " + to_wstring(RT.fieldWidths[j]) + L"),";
-      }
+         L"\nRec_Theme = " + RT.theme;
 
       MessageBox(_hSelf, dbgMessage.c_str(), L"", MB_OK);
    }
@@ -1140,6 +1118,12 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    string fileType;
    if (!getDocFileType(fileType)) return;
 
+   string fileDelim;
+   if (!getDocDelim(fileDelim)) return;
+
+   int delimWidth{ static_cast<int>(fileDelim.length()) };
+   if (delimWidth < 1) return;
+
    wstring fileTheme;
    if (!getDocTheme(fileTheme)) return;
 
@@ -1156,10 +1140,9 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    shiftPerRec = (shiftPerRec < 5) ? 1 : ((shiftPerRec + 1) >> 1) - 1;
 
    string lineTextCStr(FW_LINE_MAX_LENGTH, '\0');
-   string recStartText{};
-   intptr_t caretLine, recStartLine{}, currentPos, startPos, endPos, recStartPos{};
+   intptr_t caretLine, lineStartPos, lineEndPos;
+   size_t lineLength;
    const size_t regexedCount{ vRecInfo.size() };
-   bool newRec{ TRUE };
 
    caretLine = sciFunc(sciPtr, SCI_LINEFROMPOSITION,
       sciFunc(sciPtr, SCI_GETCURRENTPOS, NULL, NULL), NULL);
@@ -1168,40 +1151,27 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    caretRecordStartPos = 0;
    caretRecordEndPos = 0;
 
-#if FW_DEBUG_LEXER_COUNT
-   ++lexCount;
-#endif
-
    for (auto currentLine{ startLine }; currentLine < endLine; ++currentLine) {
-      if (sciFunc(sciPtr, SCI_LINELENGTH, currentLine, NULL) > FW_LINE_MAX_LENGTH)
-         continue;
+      if (sciFunc(sciPtr, SCI_LINELENGTH, currentLine, NULL) > FW_LINE_MAX_LENGTH) continue;
 
       sciFunc(sciPtr, SCI_GETLINE, currentLine, (LPARAM)lineTextCStr.c_str());
-      startPos = sciFunc(sciPtr, SCI_POSITIONFROMLINE, currentLine, NULL);
-      endPos = sciFunc(sciPtr, SCI_GETLINEENDPOSITION, currentLine, NULL);
-      string_view lineText{ lineTextCStr.c_str(), static_cast<size_t>(endPos - startPos) };
+      lineStartPos = sciFunc(sciPtr, SCI_POSITIONFROMLINE, currentLine, NULL);
+      lineEndPos = sciFunc(sciPtr, SCI_GETLINEENDPOSITION, currentLine, NULL);
 
-      if (newRec) {
-         recStartLine = currentLine;
-         recStartPos = startPos;
-         recStartText = lineText;
-      }
+      lineLength = lineEndPos - lineStartPos;
+      if (lineLength < 1) continue;
 
-      if (newRec && lineText.empty())
-         continue;
-
-      newRec = TRUE;
-      currentPos = recStartPos;
+      string_view lineText{ lineTextCStr.c_str(), static_cast<size_t>(lineEndPos - lineStartPos) };
 
       int colorOffset{};
       size_t regexIndex{};
 
       while (regexIndex < regexedCount) {
-         if (regex_match(recStartText, vRecInfo[regexIndex].regExpr)) {
-            if (caretLine >= recStartLine && caretLine <= currentLine) {
+         if (regex_match(string{lineText}, vRecInfo[regexIndex].regExpr)) {
+            if (caretLine == currentLine) {
                caretRecordRegIndex = static_cast<int>(regexIndex);
-               caretRecordStartPos = static_cast<int>(recStartPos);
-               caretRecordEndPos = static_cast<int>(endPos);
+               caretRecordStartPos = static_cast<int>(lineStartPos);
+               caretRecordEndPos = static_cast<int>(lineEndPos);
             }
 
             break;
@@ -1212,9 +1182,6 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       }
 
       if (regexIndex >= regexedCount) continue;
-
-      const vector<int>& recFieldWidths{ vRecInfo[regexIndex].fieldWidths };
-      const size_t fieldCount{ recFieldWidths.size() };
 
       wstring recTheme{ vRecInfo[regexIndex].theme };
       size_t themeIndex{};
@@ -1233,77 +1200,68 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       const int& styleCount{ vThemes[themeIndex].styleCount };
       if (styleCount < 1) continue;
 
-#if FW_DEBUG_APPLY_LEXER
-      wstring dbgMessage;
-      size_t dbgPos{ currentPos };
-
-      dbgMessage = L"FieldWidths[" + to_wstring(regexIndex) + L"] = " +
-         to_wstring(fieldCount) + L"\n";
-
-      for (int i{}; i < static_cast<int>(fieldCount); ++i) {
-         dbgMessage += L" (" + to_wstring(dbgPos) + L"), ";
-         dbgPos += recFieldWidths[i];
-      }
-
-      MessageBox(_hSelf, dbgMessage.c_str(), L"", MB_OK);
-#endif
-
       size_t styleIndex{};
       const vector<int>& recFieldStyles{ vRecInfo[regexIndex].fieldStyles };
 
-      intptr_t unstyledLen{};
+      const size_t fieldCount{ vRecInfo[regexIndex].fieldLabels.size() };
+      size_t fieldStartPos{}, fieldEndPos, nextDelim;
 
-      for (size_t i{}; i < fieldCount; ++i) {
-         sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-         unstyledLen = endPos - currentPos;
-         currentPos += recFieldWidths[i];
+      if (caretLine == currentLine) {
+         caretFieldStartPositions.clear();
+         caretFieldStartPositions.resize(fieldCount);
+
+         caretFieldEndPositions.clear();
+         caretFieldEndPositions.resize(fieldCount);
+      }
+
+      for (size_t i{}; (i < fieldCount) && (fieldStartPos < lineLength); ++i) {
+         nextDelim = lineTextCStr.find(fileDelim, fieldStartPos);
+         fieldEndPos = ((nextDelim == string::npos) ? lineLength : nextDelim) - 1;
+
+         if (caretLine == currentLine) {
+            caretFieldStartPositions[i] = static_cast<int>(fieldStartPos);
+            caretFieldEndPositions[i] = static_cast<int>(fieldEndPos);
+         }
+
+         if (fieldEndPos < fieldStartPos) {
+            fieldStartPos += delimWidth;
+            continue;
+         }
 
          styleIndex = (recFieldStyles[i] >= 0) ?
             recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
 
-         if (recFieldWidths[i] < unstyledLen) {
-            sciFunc(sciPtr, SCI_SETSTYLING, recFieldWidths[i], styleIndex);
-         }
-         else {
-            sciFunc(sciPtr, SCI_SETSTYLING, unstyledLen, styleIndex);
-            unstyledLen = 0;
-            break;
-         }
+         sciFunc(sciPtr, SCI_STARTSTYLING, lineStartPos + fieldStartPos, NULL);
+         sciFunc(sciPtr, SCI_SETSTYLING, (fieldEndPos - fieldStartPos + 1), styleIndex);
+
+         fieldStartPos = fieldEndPos + delimWidth + 1;
       }
 
-      if (fieldCount > 0 && unstyledLen > 0) {
-         sciFunc(sciPtr, SCI_STARTSTYLING, currentPos, NULL);
-         sciFunc(sciPtr, SCI_SETSTYLING, (endPos - currentPos), styleRangeStart - 1);
+      if (fieldCount > 0 && fieldStartPos <= lineLength) {
+         sciFunc(sciPtr, SCI_STARTSTYLING, lineStartPos + fieldStartPos, NULL);
+         sciFunc(sciPtr, SCI_SETSTYLING, (lineLength - fieldStartPos + 1), styleRangeStart - 1);
       }
 
-#if FW_DEBUG_APPLIED_STYLES
+#if FW_DEBUG_APPLY_LEXER
       if (currentLine == caretLine) {
-         size_t dbgStyleIndex{};
-         wstring dbgMessage{}, dbgPre{ L", " }, dbgNoPre{};
-         intptr_t dbgPos{};
+         wstring dbgMessage{};
+         fieldStartPos = 0;
 
-         dbgPos = recStartPos;
-         dbgMessage = L"Input Styles:\n";
+         for (size_t i{}; (i < fieldCount) && (fieldStartPos < lineLength); ++i) {
+            nextDelim = lineTextCStr.find(fileDelim, fieldStartPos);
+            fieldEndPos = ((nextDelim == string::npos) ? lineLength : nextDelim) - 1;
 
-         for (size_t i{}; (i < fieldCount) && (dbgPos < endPos); ++i) {
-            dbgStyleIndex = (recFieldStyles[i] >= 0) ?
-               recFieldStyles[i] : styleRangeStart + ((i + colorOffset) % styleCount);
-            dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
-               to_wstring(recFieldWidths[i]) + L", " + to_wstring(dbgStyleIndex) + L")";
-            dbgPos += recFieldWidths[i];
+            dbgMessage += vRecInfo[regexIndex].fieldLabels[i] + L": " +
+               to_wstring(fieldStartPos) + L", " + to_wstring(fieldEndPos) + L"\n";
+
+            if (fieldEndPos < fieldStartPos) {
+               fieldStartPos += delimWidth;
+               continue;
+            }
+
+            fieldStartPos = fieldEndPos + delimWidth + 1;
          }
 
-         dbgPos = recStartPos;
-         dbgMessage += L"\n\nApplied Styles:\n";
-
-         for (size_t i{}; (i < fieldCount) && (dbgPos < endPos); ++i) {
-            dbgMessage += (i == 0 ? dbgNoPre : dbgPre) + L"(" + to_wstring(dbgPos) + L", " +
-               to_wstring(recFieldWidths[i]) + L", " + to_wstring(sciFunc(sciPtr, SCI_GETSTYLEAT, dbgPos, NULL)) + L")";
-            dbgPos += recFieldWidths[i];
-         }
-
-         dbgMessage += L"\n\nDocument Length: " + to_wstring(sciFunc(sciPtr, SCI_GETLENGTH, NULL, NULL));
-         dbgMessage += L"\tEnd Styled: " + to_wstring(sciFunc(sciPtr, SCI_GETENDSTYLED, NULL, NULL));
          MessageBox(_hSelf, dbgMessage.c_str(), L"", MB_OK);
       }
 #endif
@@ -1394,10 +1352,10 @@ int MultiCSVPanel::getFieldEdges(const string fileType, const int fieldIdx, cons
 
    RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };
 
-   if (fieldIdx < 0 || fieldIdx >= static_cast<int>(FLD.fieldStarts.size())) return -1;
+   if (fieldIdx < 0 || fieldIdx >= static_cast<int>(FLD.fieldLabels.size())) return -1;
 
-   int leftOffset{ FLD.fieldStarts[fieldIdx] };
-   int rightOffset{ leftOffset + FLD.fieldWidths[fieldIdx] - rightPullback };
+   int leftOffset{ caretFieldStartPositions[fieldIdx] };
+   int rightOffset{ caretFieldEndPositions[fieldIdx] - rightPullback };
 
    leftPos = caretRecordStartPos + leftOffset;
    rightPos = caretRecordStartPos + rightOffset;
@@ -1467,6 +1425,12 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
 
    if (!getDocFileType(fileType)) return;
 
+   string fileDelim;
+   if (!getDocDelim(fileDelim)) return;
+
+   int delimWidth{ static_cast<int>(fileDelim.length()) };
+   if (delimWidth < 1) return;
+
    wstring fieldInfoText{};
    intptr_t caretPos;
    intptr_t caretLine;
@@ -1498,25 +1462,22 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
    }
    else {
       RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };
-      intptr_t caretColumn, recLength;
-      int fieldCount, fieldLabelCount, cumulativeWidth{}, matchedField{ -1 };
+      size_t caretColumn, recLength;
+      int fieldCount, matchedField{ -1 };
 
       caretColumn = caretPos - caretRecordStartPos;
       recLength = caretRecordEndPos - caretRecordStartPos;
 
       fieldInfoText = CUR_POS_DATA_REC_TYPE + FLD.label;
-      fieldCount = static_cast<int>(FLD.fieldStarts.size());
-      fieldLabelCount = static_cast<int>(FLD.fieldLabels.size());
+      fieldCount = static_cast<int>(FLD.fieldLabels.size());
 
       for (int i{}; i < fieldCount; ++i) {
-         cumulativeWidth += FLD.fieldWidths[i];
-         if (caretColumn >= FLD.fieldStarts[i] && caretColumn < cumulativeWidth) {
+         if (caretColumn >= caretFieldStartPositions[i] && caretColumn <= caretFieldEndPositions[i]) {
             matchedField = i;
          }
       }
 
-      fieldInfoText += newLine + CUR_POS_DATA_REC_LENGTH +
-         to_wstring(recLength) + L"/" + to_wstring(cumulativeWidth) + CUR_POS_DATA_CURR_DEFINED;
+      fieldInfoText += newLine + CUR_POS_DATA_REC_LENGTH + to_wstring(recLength);
 
       if (matchedField < 0) {
          fieldInfoText += newLine + CUR_POS_DATA_OVERFLOW;
@@ -1525,13 +1486,13 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
          caretFieldIndex = matchedField;
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_LABEL;
 
-         if (fieldLabelCount == 0 || matchedField >= fieldLabelCount)
+         if (fieldCount == 0 || matchedField >= fieldCount)
             fieldInfoText += CUR_POS_DATA_FIELD_NUM + to_wstring(matchedField + 1);
          else
             fieldInfoText += FLD.fieldLabels[matchedField];
 
-         int fieldBegin{ FLD.fieldStarts[matchedField] };
-         int fieldLength{ FLD.fieldWidths[matchedField] };
+         const int fieldBegin{ caretFieldStartPositions[matchedField] };
+         const int fieldLength{ caretFieldEndPositions[matchedField] };
 
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_START + to_wstring(fieldBegin + 1);
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_WIDTH + to_wstring(fieldLength);
@@ -1612,23 +1573,8 @@ void MultiCSVPanel::showJumpDialog() {
 
    RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };
 
-   int fieldCount = static_cast<int>(FLD.fieldStarts.size());
-   int fieldLabelCount = static_cast<int>(FLD.fieldLabels.size());
-
-   vector<wstring> fieldLabels;
-   fieldLabels.resize(fieldCount);
-
-   for (int i{}; i < fieldCount; ++i) {
-      if (fieldLabelCount == 0 || i >= fieldLabelCount) {
-         fieldLabels[i] = CUR_POS_DATA_FIELD_NUM + to_wstring(i + 1);
-      }
-      else {
-         fieldLabels[i] = FLD.fieldLabels[i];
-      }
-   }
-
    _jumpDlg.doDialog((HINSTANCE)_gModule);
-   _jumpDlg.initDialog(fileType, caretRecordRegIndex, caretFieldIndex, fieldLabels);
+   _jumpDlg.initDialog(fileType, caretRecordRegIndex, caretFieldIndex, FLD.fieldLabels);
 }
 
 void MultiCSVPanel::showAboutDialog() {
@@ -1729,7 +1675,7 @@ const wstring MultiCSVPanel::getCurrentFileName() {
    return wstring{ fileName.c_str() };
 }
 
-void MultiCSVPanel::setDocInfo(bool bDocType, string val) {
+void MultiCSVPanel::initDocInfo(bool bDocType, string val) {
    const wstring fileName{ getCurrentFileName() };
 
    for (DocInfo& DI : vDocInfo) {
@@ -1740,7 +1686,12 @@ void MultiCSVPanel::setDocInfo(bool bDocType, string val) {
       }
    }
 
-   DocInfo fi{fileName, (bDocType ? val : ""), (!bDocType ? val : "")};
+   DocInfo fi {
+      fileName,
+      (bDocType ? val : ""),
+      (bDocType && (!val.empty()) ? _configIO.getConfigStringA(val, "Delimiter") : ""),
+      (!bDocType ? val : "")
+   };
 
    vDocInfo.emplace_back(fi);
 }
@@ -1757,6 +1708,20 @@ bool MultiCSVPanel::getDocFileType(string& fileType) {
    }
 
    return (!fileType.empty());
+}
+
+bool MultiCSVPanel::getDocDelim(string& delim) {
+   const wstring fileName{ getCurrentFileName() };
+   delim = "";
+
+   for (const DocInfo& DI : vDocInfo) {
+      if (fileName == DI.fileName) {
+         delim = DI.docDelim;
+         break;
+      }
+   }
+
+   return (!delim.empty());
 }
 
 bool MultiCSVPanel::getDocTheme(wstring& theme) {
@@ -1795,14 +1760,14 @@ void MultiCSVPanel::setDocFileType(string fileType) {
    if (!panelMounted) return;
 
    enableThemeList(!fileType.empty());
-   setDocInfo(true, fileType);
+   initDocInfo(true, fileType);
 }
 
 void MultiCSVPanel::setDocTheme(string theme, string fileType) {
    if (theme.empty() && (!fileType.empty()))
       theme = _configIO.getConfigStringA(fileType, "FileTheme");
 
-   setDocInfo(false, theme);
+   initDocInfo(false, theme);
 }
 
 void MultiCSVPanel::setDocFoldStructType(string foldStructType) {
