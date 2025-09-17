@@ -19,8 +19,6 @@
 #define PREF_SHOW_CALLTIP     "ShowCalltip"
 #define PREF_COPY_TRIM        "CopyFieldTrim"
 #define PREF_HOP_RT_LEFT_EDGE "HopRightLeftEdge"
-#define PREF_PASTE_LPAD       "PasteFieldLPAD"
-#define PREF_PASTE_RPAD       "PasteFieldRPAD"
 #define PREF_CLEARVIZ_AUTO    "ClearVizWithAutoDetect"
 #define PREF_CLEARVIZ_PANEL   "ClearVizOnPanelClose"
 #define PREF_FOLDLINE_COLOR   "FoldLineColor"

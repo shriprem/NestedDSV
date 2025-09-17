@@ -135,36 +135,6 @@ INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM 
          setFocusOnEditor();
          break;
 
-      case IDC_VIZPANEL_PASTE_LEFT_LABEL:
-      case IDC_VIZPANEL_PASTE_RPAD_LABEL:
-         setFieldAlign(TRUE);
-         break;
-
-      case IDC_VIZPANEL_PASTE_RIGHT_LABEL:
-      case IDC_VIZPANEL_PASTE_LPAD_LABEL:
-         setFieldAlign(FALSE);
-         break;
-
-      case IDC_VIZPANEL_PASTE_RPAD_FIELD:
-      case IDC_VIZPANEL_PASTE_LPAD_FIELD:
-      {
-         int ctrlID{ LOWORD(wParam) };
-         bool leftEdge{ ctrlID == IDC_VIZPANEL_PASTE_RPAD_FIELD };
-
-         switch HIWORD(wParam) {
-         case EN_CHANGE:
-            wchar_t padChars[MAX_PATH];
-            GetWindowText(GetDlgItem(_hSelf, ctrlID), padChars, MAX_PATH);
-            _configIO.setPreference(leftEdge ? PREF_PASTE_RPAD : PREF_PASTE_LPAD, padChars);
-            break;
-
-         case EN_SETFOCUS:
-            setFieldAlign(leftEdge);
-            break;
-         }
-         break;
-      }
-
       case IDC_VIZPANEL_EXTRACT_DATA_BTN:
          if (_configIO.fixIfNotUTF8File(_configIO.CONFIG_EXTRACTS))
             showExtractDialog();
@@ -271,16 +241,6 @@ INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM 
       case IDC_VIZPANEL_THEME_LABEL:
          return NPPDM_OnCtlColorIfEnabled(reinterpret_cast<HDC>(wParam), themeEnabled);
 
-      case IDC_VIZPANEL_PASTE_LEFT_LABEL:
-      case IDC_VIZPANEL_PASTE_RIGHT_LABEL:
-      case IDC_VIZPANEL_PASTE_RPAD_LABEL:
-      case IDC_VIZPANEL_PASTE_LPAD_LABEL:
-         return NPPDM_OnCtlColorIfEnabled(reinterpret_cast<HDC>(wParam), fieldEnabled);
-
-      case IDC_VIZPANEL_PASTE_RPAD_INDIC:
-      case IDC_VIZPANEL_PASTE_LPAD_INDIC:
-         return NPPDM_OnCtlHiliteIfEnabled(reinterpret_cast<HDC>(wParam), fieldEnabled);
-
       default:
          if (NPPDM_IsEnabled()) {
             return NPPDM_OnCtlColorDarker(reinterpret_cast<HDC>(wParam));
@@ -334,9 +294,6 @@ void MultiCSVPanel::initPanel() {
    loadBitmap(_hSelf, IDC_VIZPANEL_THEME_CONFIG, IDB_VIZ_COLOR_CONFIG_BITMAP);
    addTooltip(_hSelf, IDC_VIZPANEL_THEME_CONFIG, L"", VIZ_PANEL_THEME_CONFIG_TIP, FALSE);
 
-   SetWindowText(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RPAD_FIELD), _configIO.getPreference(PREF_PASTE_RPAD).c_str());
-   SetWindowText(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LPAD_FIELD), _configIO.getPreference(PREF_PASTE_LPAD).c_str());
-
    addTooltip(_hSelf, IDC_VIZPANEL_CLEAR_BTN, L"", VIZ_PANEL_CLEAR_BTN_TIP, FW_TIP_MEDIUM, TRUE);
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM, L"", VIZ_PANEL_FIELD_TRIM_TIP, FW_TIP_SHORT, TRUE);
 
@@ -347,14 +304,6 @@ void MultiCSVPanel::initPanel() {
 
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_COPY_BUTTON, L"", VIZ_PANEL_FIELD_COPY_TIP, FW_TIP_MEDIUM, TRUE);
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_PASTE_BUTTON, L"", VIZ_PANEL_FIELD_PASTE_TIP, FW_TIP_LONG, TRUE);
-
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_LEFT_LABEL, L"", VIZ_PANEL_FIELD_RPAD_TIP, FW_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_RPAD_LABEL, L"", VIZ_PANEL_FIELD_RPAD_TIP, FW_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_RPAD_INDIC, L"", VIZ_PANEL_FIELD_RPAD_TIP, FW_TIP_LONG, TRUE);
-
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_RIGHT_LABEL, L"", VIZ_PANEL_FIELD_LPAD_TIP, FW_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_LPAD_LABEL, L"", VIZ_PANEL_FIELD_LPAD_TIP, FW_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_VIZPANEL_PASTE_LPAD_INDIC, L"", VIZ_PANEL_FIELD_LPAD_TIP, FW_TIP_LONG, TRUE);
 
    loadBitmap(_hSelf, IDC_VIZPANEL_FOLD_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
    addTooltip(_hSelf, IDC_VIZPANEL_FOLD_INFO_BUTTON, L"", VIZ_PANEL_INFO_TIP, FALSE);
@@ -384,10 +333,6 @@ void MultiCSVPanel::localize() {
    SetDlgItemText(_hSelf, IDC_VIZPANEL_EXTRACT_DATA_BTN, VIZ_PANEL_EXTRACT_DATA_BTN);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FIELD_COPY_BUTTON, VIZ_PANEL_FIELD_COPY_BTN);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FIELD_PASTE_BUTTON, VIZ_PANEL_FIELD_PASTE_BTN);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_PASTE_LEFT_LABEL, VIZ_PANEL_PASTE_LEFT_LABEL);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_PASTE_RIGHT_LABEL, VIZ_PANEL_PASTE_RIGHT_LABEL);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_PASTE_RPAD_LABEL, VIZ_PANEL_PASTE_RPAD_LABEL);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_PASTE_LPAD_LABEL, VIZ_PANEL_PASTE_LPAD_LABEL);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FOLDING_GROUP_BOX, VIZPANEL_FOLD_GROUP_BOX);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FOLDING_APPLY_BTN, VIZPANEL_FOLD_APPLY_BTN);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FOLDING_REMOVE_BTN, VIZPANEL_FOLD_REMOVE_BTN);
@@ -577,15 +522,6 @@ void MultiCSVPanel::enableFieldControls(bool enable) {
    fieldEnabled = recEnabled && (caretFieldIndex >= 0);
    EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_FIELD_COPY_BUTTON), fieldEnabled);
    EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_FIELD_PASTE_BUTTON), fieldEnabled);
-   EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RPAD_FIELD), fieldEnabled);
-   EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LPAD_FIELD), fieldEnabled);
-
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RPAD_INDIC), nullptr, TRUE);
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LPAD_INDIC), nullptr, TRUE);
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LEFT_LABEL), nullptr, TRUE);
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RIGHT_LABEL), nullptr, TRUE);
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RPAD_LABEL), nullptr, TRUE);
-   InvalidateRect(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LPAD_LABEL), nullptr, TRUE);
 
    HMENU hPluginMenu = (HMENU)NppMessage(NPPM_GETMENUHANDLE);
 
@@ -693,16 +629,16 @@ void MultiCSVPanel::jumpToField(const string fileType, const int recordIndex, co
       return;
    }
 
-   moveToFieldEdge(fileType, fieldIdx, TRUE, FALSE, TRUE);
+   moveToFieldEdge(fieldIdx, TRUE, FALSE, TRUE);
 }
 
 void MultiCSVPanel::fieldLeft() {
-   moveToFieldEdge("", caretFieldIndex, FALSE, FALSE, FALSE);
+   moveToFieldEdge(caretFieldIndex, FALSE, FALSE, FALSE);
 }
 
 void MultiCSVPanel::fieldRight() {
    bool hopRight_LeftEdge{ _configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE) };
-   moveToFieldEdge("", caretFieldIndex + (hopRight_LeftEdge ? 1 : 0), FALSE, !hopRight_LeftEdge, FALSE);
+   moveToFieldEdge(caretFieldIndex + (hopRight_LeftEdge ? 1 : 0), FALSE, !hopRight_LeftEdge, FALSE);
 }
 
 void MultiCSVPanel::fieldCopy() {
@@ -712,100 +648,13 @@ void MultiCSVPanel::fieldCopy() {
    if (!hScintilla) return;
 
    intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges("", caretFieldIndex, 0, leftPos, rightPos) < 0) return;
+   if (getFieldEdges(caretFieldIndex, TRUE, leftPos, rightPos) < 0) return;
 
-   intptr_t fieldLen{ rightPos - leftPos };
+   intptr_t fieldLen{ rightPos - leftPos + 1 };
    if (fieldLen < 1) return;
 
-   // if no trimming is required, copy to clipbard and return early
-   if (!_configIO.getPreferenceBool(PREF_COPY_TRIM, FALSE)) {
-      SendMessage(hScintilla, SCI_COPYRANGE, leftPos, rightPos);
-      return;
-   }
-
-   string padText{};
-   padText = Utils::WideToNarrow(_configIO.getPreference(leftAlign ? PREF_PASTE_RPAD : PREF_PASTE_LPAD));
-   if (padText.empty()) padText = " ";
-
-   intptr_t padLen{ static_cast<intptr_t>(padText.length()) };
-   intptr_t leftTrimLen{}, rightTrimLen{};
-
-   string colText(fieldLen + 1, '\0');
-   Sci_TextRangeFull sciTR{};
-
-   sciTR.lpstrText = colText.data();
-   sciTR.chrg.cpMin = leftPos;
-   sciTR.chrg.cpMax = rightPos;
-   SendMessage(hScintilla, SCI_GETTEXTRANGEFULL, NULL, (LPARAM)&sciTR);
-
-   colText = string{ colText.c_str() };
-
-   if (leftAlign && fieldLen >= padLen) {
-      // find right-most full/partial match
-      intptr_t lastPadLen{ padLen };
-      intptr_t matchStart{ fieldLen - padLen };
-      intptr_t matchingPos{};
-
-      while (lastPadLen > 0) {
-         bool matchFailed{ FALSE };
-
-         for (intptr_t i{}; i < lastPadLen; ++i) {
-            matchingPos = matchStart + i;
-            if (colText.at(matchingPos) != padText.at(i)) {
-               matchFailed = TRUE;
-               --lastPadLen;
-               ++matchStart;
-               break;
-            }
-         }
-         if (!matchFailed && (matchingPos == fieldLen - 1)) break;
-      }
-
-#if FW_DEBUG_COPY_TRIM
-      MessageBoxA(_hSelf, ("(" + to_string(colText.length()) + ", " + to_string(padText.length()) + ")").c_str(),
-         "(ColLen, PadLen)", MB_OK);
-      MessageBoxA(_hSelf, ("(" + to_string(lastPadLen) + ", " + to_string(matchStart) + ", " +
-         to_string(matchingPos) + ")").c_str(), "(LastPadLen, MatchStart, MatchPos)", MB_OK);
-#endif
-
-      rightTrimLen = lastPadLen;
-
-      // if right-most match found, find prior matches
-      if (lastPadLen > 0) {
-         while (fieldLen >= rightTrimLen + padLen) {
-            if (colText.substr(fieldLen - rightTrimLen - padLen, padLen) == padText)
-               rightTrimLen += padLen;
-            else
-               break;
-         }
-      }
-   }
-   else if (!leftAlign) {
-      // trim LPADs for right align
-      bool keepTrimming{ TRUE };
-      while (keepTrimming && (leftTrimLen < fieldLen)) {
-         for (int i{}; i < padLen; ++i) {
-            if (colText.at(leftTrimLen) == padText.at(i)) {
-               ++leftTrimLen;
-            }
-            else {
-               keepTrimming = FALSE;
-               break;
-            }
-         }
-      }
-   }
-
-   if (leftPos + leftTrimLen < rightPos - rightTrimLen)
-      SendMessage(hScintilla, SCI_COPYRANGE, leftPos + leftTrimLen, rightPos - rightTrimLen);
-
-#if FW_DEBUG_COPY_TRIM
-   colText = colText.substr(leftTrimLen, colText.length() - leftTrimLen - rightTrimLen);
-   MessageBoxA(_hSelf, ("(" + to_string(leftTrimLen) + ", " + to_string(rightTrimLen) + ")").c_str(),
-      "(LeftTrimLen, RightTrimLen)", MB_OK);
-   MessageBox(_hSelf, Utils::NarrowToWide("<|" + colText + "|>").c_str(),
-      Utils::NarrowToWide("<|" + padText + "|>").c_str(), MB_OK);
-#endif
+   SendMessage(hScintilla, SCI_COPYRANGE, leftPos, rightPos + 1);
+   return;
 }
 
 void MultiCSVPanel::fieldPaste() {
@@ -815,36 +664,16 @@ void MultiCSVPanel::fieldPaste() {
    if (!hScintilla) return;
 
    intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges("", caretFieldIndex, 0, leftPos, rightPos) < 0) return;
+   if (getFieldEdges(caretFieldIndex, TRUE, leftPos, rightPos) < 0) return;
 
-   intptr_t fieldCurrLen{ rightPos - leftPos };
+   intptr_t fieldCurrLen{ rightPos - leftPos + 1 };
    if (fieldCurrLen < 1) return;
-
-   int fieldLength{ caretFieldEndPositions[caretFieldIndex] - caretFieldStartPositions[caretFieldIndex] + 1 };
 
    wstring clipText;
    Utils::getClipboardText(GetParent(_hSelf), clipText);
 
    int clipLength{ static_cast<int>(clipText.length()) };
    if (clipLength < 1) return;
-
-   if (clipLength > fieldLength) {
-      clipText = clipText.substr(leftAlign ? 0 : (clipLength - fieldLength), fieldLength);
-   }
-   else if (clipLength < fieldLength) {
-      int gapLength{ fieldLength - clipLength };
-
-      wstring padText{ _configIO.getPreference(leftAlign ? PREF_PASTE_RPAD : PREF_PASTE_LPAD) };
-      if (padText.empty()) padText = L" ";
-
-      wstring fillText{};
-      while (static_cast<int>(fillText.length()) < gapLength) {
-         fillText.append(padText);
-      }
-      fillText = fillText.substr(0, gapLength);
-
-      clipText = leftAlign ? (clipText + fillText) : (fillText + clipText);
-   }
 
    SendMessage(hScintilla, SCI_DELETERANGE, leftPos, fieldCurrLen);
    SendMessage(hScintilla, SCI_INSERTTEXT, leftPos, (LPARAM)(Utils::WideToNarrow(clipText).c_str()));
@@ -1336,26 +1165,21 @@ void MultiCSVPanel::onPanelResize(LPARAM lParam) {
    MoveWindow(hIniBtn, (LOWORD(lParam) - aboutBtnWidth - iniBtnWidth - 4), (HIWORD(lParam) - iniBtnHeight - 3), iniBtnWidth, iniBtnHeight, TRUE);
 }
 
-int MultiCSVPanel::getFieldEdges(const string fileType, const int fieldIdx, const int rightPullback,
-   intptr_t& leftPos, intptr_t& rightPos) {
+int MultiCSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return -1;
-
-   string currFileType{};
-
-   if (fileType == "") {
-      if (!getDocFileType(currFileType)) return -1;
-   }
-   else {
-      currFileType = fileType;
-   }
 
    RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };
 
    if (fieldIdx < 0 || fieldIdx >= static_cast<int>(FLD.fieldLabels.size())) return -1;
 
+   string fileDelim;
+   if (!getDocDelim(fileDelim)) return -1;
+
+   int delimWidth{ static_cast<int>(fileDelim.length()) };
+
    int leftOffset{ caretFieldStartPositions[fieldIdx] };
-   int rightOffset{ caretFieldEndPositions[fieldIdx] - rightPullback };
+   int rightOffset{ caretFieldEndPositions[fieldIdx] + (rightPullback ? 0 : delimWidth + 1) };
 
    leftPos = caretRecordStartPos + leftOffset;
    rightPos = caretRecordStartPos + rightOffset;
@@ -1369,7 +1193,7 @@ int MultiCSVPanel::getFieldEdges(const string fileType, const int fieldIdx, cons
    return 0;
 }
 
-void MultiCSVPanel::moveToFieldEdge(const string fileType, const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite) {
+void MultiCSVPanel::moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
@@ -1384,16 +1208,16 @@ void MultiCSVPanel::moveToFieldEdge(const string fileType, const int fieldIdx, b
    }
 
    intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges(fileType, fieldIdx, 1, leftPos, rightPos) < 0) return;
+   if (getFieldEdges(fieldIdx, TRUE, leftPos, rightPos) < 0) return;
 
    if (!jumpTo) {
       if (rightEdge) {
-         if (caretPos == rightPos && caretPos < caretRecordEndPos - 1)
-            if (getFieldEdges(fileType, fieldIdx + 1, 1, leftPos, rightPos) < 0) return;
+         if (caretPos >= rightPos && caretPos < caretRecordEndPos - 1)
+            if (getFieldEdges(fieldIdx + 1, TRUE, leftPos, rightPos) < 0) return;
       }
       else {
          if (caretPos == leftPos && caretPos > caretRecordStartPos)
-            if (getFieldEdges(fileType, fieldIdx - 1, 1, leftPos, rightPos) < 0) return;
+            if (getFieldEdges(fieldIdx - 1, FALSE, leftPos, rightPos) < 0) return;
       }
    }
 
@@ -1407,12 +1231,6 @@ void MultiCSVPanel::moveToFieldEdge(const string fileType, const int fieldIdx, b
    }
 
    setFocusOnEditor();
-}
-
-void MultiCSVPanel::setFieldAlign(bool left) {
-   leftAlign = left;
-   ShowWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_RPAD_INDIC), leftAlign ? SW_SHOW : SW_HIDE);
-   ShowWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_PASTE_LPAD_INDIC), leftAlign ? SW_HIDE : SW_SHOW);
 }
 
 void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr_t endLine) {
@@ -1462,17 +1280,17 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
    }
    else {
       RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };
-      size_t caretColumn, recLength;
+      int caretColumn, recLength;
       int fieldCount, matchedField{ -1 };
 
-      caretColumn = caretPos - caretRecordStartPos;
-      recLength = caretRecordEndPos - caretRecordStartPos;
+      caretColumn = static_cast<int>(caretPos - caretRecordStartPos);
+      recLength = static_cast<int>(caretRecordEndPos - caretRecordStartPos);
 
       fieldInfoText = CUR_POS_DATA_REC_TYPE + FLD.label;
       fieldCount = static_cast<int>(FLD.fieldLabels.size());
 
       for (int i{}; i < fieldCount; ++i) {
-         if (caretColumn >= caretFieldStartPositions[i] && caretColumn <= caretFieldEndPositions[i]) {
+         if (caretColumn >= caretFieldStartPositions[i] && caretColumn <= caretFieldEndPositions[i] + delimWidth) {
             matchedField = i;
          }
       }
@@ -1488,6 +1306,8 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
 
          if (fieldCount == 0 || matchedField >= fieldCount)
             fieldInfoText += CUR_POS_DATA_FIELD_NUM + to_wstring(matchedField + 1);
+         else if (caretColumn > caretFieldEndPositions[matchedField])
+            fieldInfoText += L"»" + FLD.fieldLabels[matchedField];
          else
             fieldInfoText += FLD.fieldLabels[matchedField];
 
@@ -1497,7 +1317,6 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_START + to_wstring(fieldBegin + 1);
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_WIDTH + to_wstring(fieldLength);
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_COL + to_wstring(caretColumn - fieldBegin + 1);
-         setFieldAlign(static_cast<int>(caretColumn - fieldBegin) < (fieldBegin + fieldLength - caretColumn));
       }
    }
 

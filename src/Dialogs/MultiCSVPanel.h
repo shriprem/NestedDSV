@@ -162,9 +162,8 @@ private:
    void displayCaretFieldInfo(const intptr_t startLine, const intptr_t endLine);
    void clearCaretFieldInfo();
    void onPanelResize(LPARAM lParam);
-   int getFieldEdges(const string fileType, const int fieldIdx, const int rightPullback, intptr_t& leftPos, intptr_t& rightPos);
-   void moveToFieldEdge(const string fileType, const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite);
-   void setFieldAlign(bool left);
+   int getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos);
+   void moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite);
    void popupSamplesMenu();
 
    string detectFoldStructType(string fileType);
