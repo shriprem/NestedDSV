@@ -48,6 +48,11 @@ private:
       wstring regExprs[ADFT_MAX]{};
    };
 
+   struct DelimType {
+      wstring delim{};
+      wstring label{};
+   };
+
    INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM);
    void localize();
    void indicateCleanStatus();
@@ -102,6 +107,19 @@ private:
       hRecsLB{}, hRecStart{}, hRecRegex{}, hRecThemes{}, hFieldLabels{};
 
    vector<FileType> vFileTypes;
+
+   vector<DelimType> vDelimTypes{
+      {L",", L"Comma (,)"},
+      {L"|", L"Pipe (|)"},
+      {L"\t", L"Tab (ASCII 9)"},
+      {L";", L"Semicolon (;)"},
+      {L":", L"Colon (:)"},
+      {L"~", L"Tilde (~)"},
+      {L"^", L"Caret (^)"},
+      {L"||", L"Double Pipe (||)"},
+      {L"::", L"Double Colon (::)"},
+   };
+   const int delimTypeCount{ static_cast<int>(vDelimTypes.size()) };
 };
 
 LRESULT CALLBACK procNumberEditControl(HWND hwnd, UINT messageId, WPARAM wParam, LPARAM lParam, UINT_PTR, DWORD_PTR);

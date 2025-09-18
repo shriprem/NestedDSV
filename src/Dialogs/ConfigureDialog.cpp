@@ -512,9 +512,10 @@ void ConfigureDialog::fillFileTypes() {
 
    // Fill File Delimiter Droplist
    SendMessage(hFileDelim, CB_RESETCONTENT, NULL, NULL);
-   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_CSV);
-   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_PSV);
-   SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_TSV);
+
+   for (int i{}; i < delimTypeCount; i++) {
+      SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)vDelimTypes[i].label.c_str());
+   }
 
    // Fill Files & Records Themes Droplists
    SendMessage(hFileThemes, CB_RESETCONTENT, NULL, NULL);
@@ -680,24 +681,36 @@ void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
 
    // Set File Delimiter List
    wstring delim = fileInfo->delim;
-   bool otherDelim = (!delim.empty()) && (delim != L",") && (delim != L"|") && (delim != L"\t");
-   int delimCount = static_cast<int>(SendMessage(hFileDelim, CB_GETCOUNT, 0, 0));
+   int delimListCount = static_cast<int>(SendMessage(hFileDelim, CB_GETCOUNT, 0, 0));
+
+   int delimCurSel{ -1 };
+   bool otherDelim{ TRUE };
+
+   if (delim.empty()) {
+      otherDelim = FALSE;
+   }
+   else {
+      for (int i{}; i < delimTypeCount; i++) {
+         if (delim != vDelimTypes[i].delim) continue;
+
+         delimCurSel = i;
+         otherDelim = FALSE;
+         break;
+      }
+   }
 
    if (otherDelim) {
-      if (delimCount == 3)
+      delimCurSel = delimTypeCount;
+
+      if (delimListCount == delimTypeCount)
          SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_OTHER);
    }
    else {
-      if (delimCount == 4)
-         SendMessage(hFileDelim, CB_DELETESTRING, 3, NULL);
+      if (delimListCount == delimTypeCount + 1)
+         SendMessage(hFileDelim, CB_DELETESTRING, delimTypeCount, NULL);
    }
 
-   int curselDelim = (delim == L",") ? 0 :
-      (delim == L"|") ? 1 :
-      (delim == L"\t") ? 2 :
-      otherDelim ? 3 : -1;
-
-   SendMessage(hFileDelim, CB_SETCURSEL, curselDelim, NULL);
+   SendMessage(hFileDelim, CB_SETCURSEL, delimCurSel, NULL);
 
    // Set ADFT Controls
    for (int i{}; i < ADFT_MAX; ++i) {
@@ -1135,15 +1148,13 @@ int ConfigureDialog::fileEditAccept(bool accept) {
       GetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileVal, MAX_PATH);
       fileInfo.label = fileVal;
 
-      int fileDelim = static_cast<int>(SendMessage(hFileDelim, CB_GETCURSEL, 0, 0));
-      fileInfo.delim = (fileDelim == 0) ? L"," :
-         (fileDelim == 1) ? L"|" :
-         (fileDelim == 2) ? L"\t" :
-         (fileDelim == 3) ? fileInfo.delim : L"|";
+      int delimCurSel = static_cast<int>(SendMessage(hFileDelim, CB_GETCURSEL, 0, 0));
+      fileInfo.delim = (delimCurSel < delimTypeCount) ? vDelimTypes[delimCurSel].delim :
+         (delimCurSel == delimTypeCount) ? fileInfo.delim : L"|";
 
       // Remove "Manually entered delimiter" entry from the listing if that's not the one selected
-      if (fileDelim < 3)
-         SendMessage(hFileDelim, CB_DELETESTRING, 3, NULL);
+      if (delimCurSel < delimTypeCount)
+         SendMessage(hFileDelim, CB_DELETESTRING, delimTypeCount, NULL);
 
       GetWindowText(hFileThemes, fileVal, MAX_PATH);
       fileInfo.theme = fileVal;
