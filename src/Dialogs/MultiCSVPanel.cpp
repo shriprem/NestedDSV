@@ -991,12 +991,13 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       if (lineLength < 1) continue;
 
       string_view lineText{ lineTextCStr.c_str(), static_cast<size_t>(lineEndPos - lineStartPos) };
+      string lineTextChomped{ lineText };
 
       int colorOffset{};
       size_t regexIndex{};
 
       while (regexIndex < regexedCount) {
-         if (regex_match(string{lineText}, vRecInfo[regexIndex].regExpr)) {
+         if (regex_match(lineTextChomped, vRecInfo[regexIndex].regExpr)) {
             if (caretLine == currentLine) {
                caretRecordRegIndex = static_cast<int>(regexIndex);
                caretRecordStartPos = static_cast<int>(lineStartPos);
@@ -1292,6 +1293,7 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
       for (int i{}; i < fieldCount; ++i) {
          if (caretColumn >= caretFieldStartPositions[i] && caretColumn <= caretFieldEndPositions[i] + delimWidth) {
             matchedField = i;
+            break;
          }
       }
 
