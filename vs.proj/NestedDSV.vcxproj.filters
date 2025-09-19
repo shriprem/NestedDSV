@@ -121,13 +121,13 @@
     <ClInclude Include="..\src\Resources\localization.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Resources\NDVIZ_messages.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Resources\resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Resources\SamplesMenuDefs.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Resources\NDVIZ_messages.h">
       <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
