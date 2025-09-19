@@ -154,6 +154,19 @@ int ConfigIO::getConfigInt(const wstring& section, const string& key, const int&
    return Utils::StringtoInt(getConfigStringA(section, key, defVal, file));
 }
 
+string ConfigIO::getFileDelim(const string& section, const bool rawVal, string file) const {
+   string delim{ getConfigStringA(section, "Delimiter", "", file) };
+
+   if (rawVal) {
+      if (delim == "<TAB>")
+         delim = "\x09";
+      else if (delim == "<US>")
+         delim = "\x1F";
+   }
+
+   return delim;
+}
+
 wstring ConfigIO::getStyleValue(const wstring& theme, const string& styleName, wstring file) const {
    return getConfigWideChar(theme, styleName, "", (file.empty()) ? wCurrentThemeFile : file);
 }

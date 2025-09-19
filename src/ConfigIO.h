@@ -70,6 +70,8 @@ public:
    int getConfigInt(const string& section, const string& key, const int& defaultVal = 0, string file = "") const;
    int getConfigInt(const wstring& section, const string& key, const int& defaultVal = 0, wstring file = L"") const;
 
+   string getFileDelim(const string& section, const bool rawVal, string file = "") const;
+
    wstring getStyleValue(const wstring& theme, const string& styleName, wstring file = L"") const;
    void getFullStyle(const wstring& theme, const string& styleName, StyleInfo& style, wstring file = L"") const;
    string getFieldStyleText(const wstring& fieldName) const;

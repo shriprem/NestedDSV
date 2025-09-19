@@ -467,7 +467,7 @@ int ConfigureDialog::loadFileTypeInfo(int vIndex, const string& fileType, const 
    FileType& FT{ vFileTypes[vIndex] };
 
    FT.label = _configIO.getConfigWideChar(fileType, "FileLabel", "", sConfigFile);
-   FT.delim = _configIO.getConfigWideChar(fileType, "Delimiter", "", sConfigFile);
+   FT.delim = _configIO.getFileDelim(fileType, false, sConfigFile);
    FT.theme = _configIO.getConfigWideChar(fileType, "FileTheme", "", sConfigFile);
 
    // Load ADFT data
@@ -634,7 +634,7 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
    ftCode = wstring{ fileTypeCode };
    ftConfig = L"[" + ftCode + L"]" + new_line +
       L"FileLabel=" + FT.label + new_line +
-      L"Delimiter=" + FT.delim + new_line +
+      L"Delimiter=" + Utils::NarrowToWide(FT.delim) + new_line +
       L"FileTheme=" + FT.theme + new_line +
       adft + recTypes + new_line + rtConfig;
 
@@ -680,7 +680,7 @@ void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
    SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileInfo->label.c_str());
 
    // Set File Delimiter List
-   wstring delim = fileInfo->delim;
+   string delim = fileInfo->delim;
    int delimListCount = static_cast<int>(SendMessage(hFileDelim, CB_GETCOUNT, 0, 0));
 
    int delimCurSel{ -1 };
@@ -1150,7 +1150,7 @@ int ConfigureDialog::fileEditAccept(bool accept) {
 
       int delimCurSel = static_cast<int>(SendMessage(hFileDelim, CB_GETCURSEL, 0, 0));
       fileInfo.delim = (delimCurSel < delimTypeCount) ? vDelimTypes[delimCurSel].delim :
-         (delimCurSel == delimTypeCount) ? fileInfo.delim : L"|";
+         (delimCurSel == delimTypeCount) ? fileInfo.delim : "|";
 
       // Remove "Manually entered delimiter" entry from the listing if that's not the one selected
       if (delimCurSel < delimTypeCount)

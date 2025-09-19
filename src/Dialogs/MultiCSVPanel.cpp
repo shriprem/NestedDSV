@@ -1510,7 +1510,7 @@ void MultiCSVPanel::initDocInfo(bool bDocType, string val) {
    DocInfo fi {
       fileName,
       (bDocType ? val : ""),
-      (bDocType && (!val.empty()) ? _configIO.getConfigStringA(val, "Delimiter") : ""),
+      (bDocType && (!val.empty()) ? _configIO.getFileDelim(val, true) : ""),
       (!bDocType ? val : "")
    };
 

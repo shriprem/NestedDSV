@@ -41,7 +41,7 @@ private:
 
    struct FileType {
       wstring label{};
-      wstring delim{};
+      string delim{};
       wstring theme{};
       vector<RecordType> vRecTypes;
       int lineNums[ADFT_MAX]{};
@@ -49,7 +49,7 @@ private:
    };
 
    struct DelimType {
-      wstring delim{};
+      string delim{};
       wstring label{};
    };
 
@@ -109,15 +109,16 @@ private:
    vector<FileType> vFileTypes;
 
    vector<DelimType> vDelimTypes{
-      {L",", L"Comma (,)"},
-      {L"|", L"Pipe (|)"},
-      {L"\t", L"Tab (ASCII 9)"},
-      {L";", L"Semicolon (;)"},
-      {L":", L"Colon (:)"},
-      {L"~", L"Tilde (~)"},
-      {L"^", L"Caret (^)"},
-      {L"||", L"Double Pipe (||)"},
-      {L"::", L"Double Colon (::)"},
+      {",", L"Comma (,)"},
+      {"|", L"Pipe (|)"},
+      {"<TAB>", L"Tab (ASCII 9)"},
+      {";", L"Semicolon (;)"},
+      {":", L"Colon (:)"},
+      {"~", L"Tilde (~)"},
+      {"^", L"Caret (^)"},
+      {"<US>", L"Unit Separator (ASCII 31)"},
+      {"||", L"Double Pipe (||)"},
+      {"::", L"Double Colon (::)"},
    };
    const int delimTypeCount{ static_cast<int>(vDelimTypes.size()) };
 };
