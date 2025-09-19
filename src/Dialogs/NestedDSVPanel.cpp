@@ -990,7 +990,7 @@ void NestedDSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
       lineLength = lineEndPos - lineStartPos;
       if (lineLength < 1) continue;
 
-      string_view lineText{ lineTextCStr.c_str(), static_cast<size_t>(lineEndPos - lineStartPos) };
+      string_view lineText{ lineTextCStr.c_str(), lineLength };
       string lineTextChomped{ lineText };
 
       int colorOffset{};

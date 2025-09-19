@@ -54,6 +54,7 @@ public:
 
    void loadListFileTypes();
    bool getDocFileType(string& fileType);
+   bool getDocDelim(string& delim);
    void loadListThemes() const;
    void onBufferActivate();
    void renderScrolledPage(void* view);
@@ -133,7 +134,6 @@ private:
    const wstring getCurrentFileName();
    void initDocInfo(bool bDocType, string val);
 
-   bool getDocDelim(string& delim);
    bool getDocTheme(wstring& theme);
    string getDocFoldStructType();
    bool getDocFolded();

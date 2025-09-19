@@ -599,15 +599,20 @@ void DataExtractDialog::extractData() {
       return;
    }
 
+   string fileDelim;
+   if (!_dsvPanel.getDocDelim(fileDelim)) return;
+
+   int delimWidth{ static_cast<int>(fileDelim.length()) };
+   if (delimWidth < 1) return;
+
    const intptr_t lineCount{ sciFunc(sciPtr, SCI_GETLINECOUNT, NULL, NULL) };
    if (lineCount < 1) return;
 
    const size_t regexedCount{ pRecInfoList->size() };
 
    string lineTextCStr(FW_LINE_MAX_LENGTH, '\0');
-   string recStartText{};
-   intptr_t recStartLine{}, startPos, endPos, recStartPos{};
-   bool newRec{ TRUE };
+   intptr_t lineStartPos, lineEndPos;
+   size_t lineLength;
 
    bool recMatch{};
    wstring extract{};
@@ -616,57 +621,78 @@ void DataExtractDialog::extractData() {
    Sci_TextRangeFull sciTR{};
    sciTR.lpstrText = fieldText.data();
 
-   //??bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
+   bool trimSpaces{ IsDlgButtonChecked(_hSelf, IDC_DAT_EXT_FIELD_TRIM) == BST_CHECKED };
    const std::wregex regexTrimSpaces{ std::wregex(L"^\\s+|\\s+$") };
    wstring fieldData{};
 
-   const intptr_t endLine{ lineCount };
-   for (intptr_t currentLine{}; currentLine < endLine; ++currentLine) {
+   fieldIndexedLine = -1;
+
+   for (intptr_t currentLine{}; currentLine < lineCount; ++currentLine) {
       if (sciFunc(sciPtr, SCI_LINELENGTH, currentLine, NULL) > FW_LINE_MAX_LENGTH) {
          continue;
       }
 
       sciFunc(sciPtr, SCI_GETLINE, currentLine, (LPARAM)lineTextCStr.c_str());
-      startPos = sciFunc(sciPtr, SCI_POSITIONFROMLINE, currentLine, NULL);
-      endPos = sciFunc(sciPtr, SCI_GETLINEENDPOSITION, currentLine, NULL);
-      string_view lineText{ lineTextCStr.c_str(), static_cast<size_t>(endPos - startPos)};
+      lineStartPos = sciFunc(sciPtr, SCI_POSITIONFROMLINE, currentLine, NULL);
+      lineEndPos = sciFunc(sciPtr, SCI_GETLINEENDPOSITION, currentLine, NULL);
 
-      if (newRec) {
-         recStartLine = currentLine;
-         recStartPos = startPos;
-         recStartText = lineText;
-      }
+      lineLength = lineEndPos - lineStartPos;
+      if (lineLength < 1) continue;
 
-      if (newRec && lineText.empty()) {
-         continue;
-      }
-
-      newRec = TRUE;
+      string_view lineText{ lineTextCStr.c_str(), lineLength };
+      string lineTextChomped{ lineText };
 
       size_t regexIndex{};
 
       while (regexIndex < regexedCount) {
-         if (regex_match(recStartText, pRecInfoList->at(regexIndex).regExpr)) break;
+         if (regex_match(lineTextChomped, pRecInfoList->at(regexIndex).regExpr)) break;
          ++regexIndex;
       }
 
       if (regexIndex >= regexedCount) continue;
 
       recMatch = FALSE;
-      /* //??
+
       for (size_t j{}; j < validLIs.size(); ++j) {
          const LineItemInfo& LI{ validLIs[j] };
-         const RecordInfo& RI{ pRecInfoList->at(LI.recType) };
          if (static_cast<int>(regexIndex) != LI.recType) continue;
 
-         sciTR.chrg.cpMin = recStartPos + RI.fieldStarts[LI.fieldType];
-         sciTR.chrg.cpMax = sciTR.chrg.cpMin + RI.fieldWidths[LI.fieldType];
+         if (currentLine != fieldIndexedLine) {
+            const RecordInfo& RI{ pRecInfoList->at(LI.recType) };
+            const size_t fieldCount{ RI.fieldLabels.size() };
+            size_t fieldStartPos{}, fieldEndPos, nextDelim;
 
-         if (sciTR.chrg.cpMax > endPos || sciTR.chrg.cpMax == 0)
-            sciTR.chrg.cpMax = endPos;
+            lineFieldStartPositions.clear();
+            lineFieldStartPositions.resize(fieldCount);
 
-         if (sciTR.chrg.cpMin < endPos &&
-            (recStartPos + RI.fieldStarts[LI.fieldType] == 0 || sciTR.chrg.cpMin > 0)) {
+            lineFieldEndPositions.clear();
+            lineFieldEndPositions.resize(fieldCount);
+
+            for (size_t i{}; (i < fieldCount) && (fieldStartPos < lineLength); ++i) {
+               nextDelim = lineTextCStr.find(fileDelim, fieldStartPos);
+               fieldEndPos = ((nextDelim == string::npos) ? lineLength : nextDelim) - 1;
+
+               lineFieldStartPositions[i] = static_cast<int>(fieldStartPos);
+               lineFieldEndPositions[i] = static_cast<int>(fieldEndPos);
+
+               if (fieldEndPos < fieldStartPos) {
+                  fieldStartPos += delimWidth;
+                  continue;
+               }
+
+               fieldStartPos = fieldEndPos + delimWidth + 1;
+            }
+
+            fieldIndexedLine = currentLine;
+         }
+
+         sciTR.chrg.cpMin = lineStartPos + lineFieldStartPositions[LI.fieldType];
+         sciTR.chrg.cpMax = lineStartPos + lineFieldEndPositions[LI.fieldType] + 1;
+
+         if (sciTR.chrg.cpMax > lineEndPos || sciTR.chrg.cpMax == 0)
+            sciTR.chrg.cpMax = lineEndPos;
+
+         if (sciTR.chrg.cpMin < lineEndPos && sciTR.chrg.cpMin >= 0) {
             sciFunc(sciPtr, SCI_GETTEXTRANGEFULL, NULL, (LPARAM)&sciTR);
 
             fieldData = Utils::NarrowToWide(fieldText.c_str());
@@ -677,7 +703,6 @@ void DataExtractDialog::extractData() {
             recMatch = TRUE;
          }
       }
-      */
 
       if (recMatch) extract += L"\n";
    }

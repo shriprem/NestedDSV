@@ -76,4 +76,8 @@ private:
    HWND hIndicator{}, hTemplatesList{}, hTemplateName{};
 
    vector<LineItemInfo> liBuffer{};
+
+   intptr_t fieldIndexedLine{};
+   vector<int> lineFieldStartPositions;
+   vector<int> lineFieldEndPositions;
 };
