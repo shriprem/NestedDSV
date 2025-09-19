@@ -1,9 +1,9 @@
 #include "PreferencesDialog.h"
-#include "MultiCSVPanel.h"
+#include "NestedDSVPanel.h"
 
 constexpr int PREF_TIP_LONG{ 30 };
 
-extern MultiCSVPanel _csvPanel;
+extern NestedDSVPanel _dsvPanel;
 
 void PreferencesDialog::doDialog(HINSTANCE hInst) {
    if (!isCreated()) {
@@ -51,7 +51,7 @@ INT_PTR PreferencesDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPara
 
       case IDC_PREF_HOP_FIELD_LEFT_EDGE:
          setCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_LEFT_EDGE);
-         _csvPanel.updateHopRightTip();
+         _dsvPanel.updateHopRightTip();
          break;
 
       case IDC_PREF_FOLD_LINE_COLOR:

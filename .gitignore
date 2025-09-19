@@ -329,10 +329,10 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
-#/vs.proj/MultiCSV.sln
-/vs.proj/MultiCSV.lib
-/vs.proj/MultiCSV.exp
+#/vs.proj/NestedDSV.sln
+/vs.proj/NestedDSV.lib
+/vs.proj/NestedDSV.exp
 /bin64
-/vs.proj/MultiCSV.exp
-/vs.proj/MultiCSV.lib
+/vs.proj/NestedDSV.exp
+/vs.proj/NestedDSV.lib
 /arm64

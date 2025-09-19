@@ -1,9 +1,9 @@
 #include "SubmenuManager.h"
-#include "Dialogs/MultiCSVPanel.h"
+#include "Dialogs/NestedDSVPanel.h"
 #include "Resources/SamplesMenuDefs.h"
 
 extern FuncItem pluginMenuItems[MI_COUNT];
-extern MultiCSVPanel _csvPanel;
+extern NestedDSVPanel _dsvPanel;
 
 void SubmenuManager::listSampleFiles() {
    HMENU hSubMenu = getPluginSubMenu();
@@ -63,10 +63,10 @@ void SubmenuManager::loadSampleFile(WPARAM wParam, LPARAM) const {
    if (!Utils::checkFileExists(sampleFile)) return;
 
    NppMessage(NPPM_DOOPEN, 0, (LPARAM)sampleFile);
-   ShowMultiCSVPanel(TRUE);
+   ShowNestedDSVPanel(TRUE);
 
    _configIO.defaultVizConfig();
-   _csvPanel.visualizeFile(gSampleFiles[cmdID].file_type, FALSE, FALSE, TRUE);
+   _dsvPanel.visualizeFile(gSampleFiles[cmdID].file_type, FALSE, FALSE, TRUE);
 }
 
 void SubmenuManager::initSamplesPopup(HMENU hPopup) {

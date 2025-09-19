@@ -1,4 +1,4 @@
-#include "MultiCSVPanel.h"
+#include "NestedDSVPanel.h"
 #include "ConfigureDialog.h"
 #include "ThemeDialog.h"
 #include "PreferencesDialog.h"
@@ -20,7 +20,7 @@ DataExtractDialog _dataExtractDlg;
 FoldStructDialog _foldStructDlg;
 AboutDialog _aboutDlg;
 
-INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK NestedDSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) {
    switch (message) {
    case WM_COMMAND:
       switch LOWORD(wParam) {
@@ -200,7 +200,7 @@ INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM 
       break;
 
    case WM_SHOWWINDOW:
-      Utils::checkMenuItem(MI_MCVIZ_PANEL, wParam);
+      Utils::checkMenuItem(MI_NDVIZ_PANEL, wParam);
       if (wParam) visualizeFile("", TRUE, TRUE, TRUE);
       break;
 
@@ -265,7 +265,7 @@ INT_PTR CALLBACK MultiCSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM 
    return FALSE;
 }
 
-void MultiCSVPanel::initPanel() {
+void NestedDSVPanel::initPanel() {
    bool recentOS = Utils::checkBaseOS(WV_VISTA);
    wstring fontName = recentOS ? L"Consolas" : L"Courier New";
    int fontHeight = recentOS ? 10 : 8;
@@ -317,7 +317,7 @@ void MultiCSVPanel::initPanel() {
    if constexpr(_gLanguage != LANG_ENGLISH) localize();
 }
 
-void MultiCSVPanel::localize() {
+void NestedDSVPanel::localize() {
    SetWindowText(_hSelf, MENU_PANEL_NAME);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FILETYPE_LABEL, VIZ_PANEL_FILETYPE_LABEL);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_THEME_LABEL, VIZ_PANEL_THEME_LABEL);
@@ -342,7 +342,7 @@ void MultiCSVPanel::localize() {
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FOLDING_UNFOLD_BTN, VIZPANEL_FOLD_UNFOLD_BTN);
 }
 
-void MultiCSVPanel::display(bool toShow) {
+void NestedDSVPanel::display(bool toShow) {
    DockingDlgInterface::display(toShow);
 
    if (!utf8Config) return;
@@ -401,7 +401,7 @@ void MultiCSVPanel::display(bool toShow) {
       setFocusOnEditor();
 }
 
-void MultiCSVPanel::refreshDarkMode() {
+void NestedDSVPanel::refreshDarkMode() {
    NPPDM_AutoThemeChildControls(_hSelf);
    RegisterDockPanelIcon();
    redraw();
@@ -429,16 +429,16 @@ void MultiCSVPanel::refreshDarkMode() {
       _aboutDlg.refreshDarkMode();
 }
 
-void MultiCSVPanel::updateHopRightTip() {
+void NestedDSVPanel::updateHopRightTip() {
    Utils::updateTooltip(_hSelf, IDC_VIZPANEL_FIELD_RIGHT_BUTTON, hTipHopRight,
       (_configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE)) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP);
 }
 
-void MultiCSVPanel::setParent(HWND parent2set) {
+void NestedDSVPanel::setParent(HWND parent2set) {
    _hParent = parent2set;
 }
 
-void MultiCSVPanel::loadListFileTypes() {
+void NestedDSVPanel::loadListFileTypes() {
    SendMessage(hFTList, CB_RESETCONTENT, NULL, NULL);
 
    if (!utf8Config) return;
@@ -459,7 +459,7 @@ void MultiCSVPanel::loadListFileTypes() {
    }
 }
 
-void MultiCSVPanel::loadListThemes() const {
+void NestedDSVPanel::loadListThemes() const {
    SendMessage(hThemesLB, CB_RESETCONTENT, NULL, NULL);
 
    if (!utf8Config) return;
@@ -472,7 +472,7 @@ void MultiCSVPanel::loadListThemes() const {
    }
 }
 
-void MultiCSVPanel::syncListFileTypes() {
+void NestedDSVPanel::syncListFileTypes() {
    if (!panelMounted) return;
 
    HWND hScintilla{ GetCurrentScintilla() };
@@ -498,7 +498,7 @@ void MultiCSVPanel::syncListFileTypes() {
    enableThemeList(!fileType.empty());
 }
 
-void MultiCSVPanel::syncListThemes() {
+void NestedDSVPanel::syncListThemes() {
    wstring theme;
 
    getDocTheme(theme);
@@ -508,7 +508,7 @@ void MultiCSVPanel::syncListThemes() {
       -1 : static_cast<int>(SendMessage(hThemesLB, CB_FINDSTRING, (WPARAM)-1, (LPARAM)theme.c_str())));
 }
 
-void MultiCSVPanel::enableFieldControls(bool enable) {
+void NestedDSVPanel::enableFieldControls(bool enable) {
    if (!isVisible()) return;
 
    EnableWindow(hFieldInfo, enable);
@@ -536,7 +536,7 @@ void MultiCSVPanel::enableFieldControls(bool enable) {
    EnableMenuItem(hPluginMenu, (UINT)pluginMenuItems[MI_FIELD_PASTE]._cmdID, fieldMenu);
 }
 
-void MultiCSVPanel::enableThemeList(bool enable) {
+void NestedDSVPanel::enableThemeList(bool enable) {
    if (!panelMounted) return;
 
    themeEnabled = enable;
@@ -544,7 +544,7 @@ void MultiCSVPanel::enableThemeList(bool enable) {
    EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_THEME_SELECT), enable);
 }
 
-void MultiCSVPanel::visualizeFile(string fileType, bool bCachedFT, bool bAutoFT, bool bSyncFT) {
+void NestedDSVPanel::visualizeFile(string fileType, bool bCachedFT, bool bAutoFT, bool bSyncFT) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
@@ -594,7 +594,7 @@ void MultiCSVPanel::visualizeFile(string fileType, bool bCachedFT, bool bAutoFT,
    setFocusOnEditor();
 }
 
-void MultiCSVPanel::delDocInfo(intptr_t bufferID) {
+void NestedDSVPanel::delDocInfo(intptr_t bufferID) {
    wstring filePath(MAX_PATH, '\0');
    NppMessage(NPPM_GETFULLPATHFROMBUFFERID, bufferID, (LPARAM)filePath.c_str());
    filePath = filePath.c_str();
@@ -607,17 +607,17 @@ void MultiCSVPanel::delDocInfo(intptr_t bufferID) {
    }
 }
 
-void MultiCSVPanel::showConfigDialog() {
+void NestedDSVPanel::showConfigDialog() {
    if (_configIO.fixIfNotUTF8File(_configIO.CONFIG_VIZ))
       _configDlg.doDialog((HINSTANCE)_gModule);
 }
 
-void MultiCSVPanel::showThemeDialog() {
+void NestedDSVPanel::showThemeDialog() {
    if (_configIO.fixIfNotUTF8File(_configIO.CONFIG_THEMES))
       _themeDlg.doDialog((HINSTANCE)_gModule);
 }
 
-void MultiCSVPanel::jumpToField(const string fileType, const int recordIndex, const int fieldIdx) {
+void NestedDSVPanel::jumpToField(const string fileType, const int recordIndex, const int fieldIdx) {
    string currFileType{};
    if (!getDocFileType(currFileType) || (fileType != currFileType)) {
       MessageBox(_hSelf, VIZ_PANEL_JUMP_CHANGED_DOC, VIZ_PANEL_JUMP_FIELD_TITLE, MB_OK | MB_ICONSTOP);
@@ -632,16 +632,16 @@ void MultiCSVPanel::jumpToField(const string fileType, const int recordIndex, co
    moveToFieldEdge(fieldIdx, TRUE, FALSE, TRUE);
 }
 
-void MultiCSVPanel::fieldLeft() {
+void NestedDSVPanel::fieldLeft() {
    moveToFieldEdge(caretFieldIndex, FALSE, FALSE, FALSE);
 }
 
-void MultiCSVPanel::fieldRight() {
+void NestedDSVPanel::fieldRight() {
    bool hopRight_LeftEdge{ _configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE) };
    moveToFieldEdge(caretFieldIndex + (hopRight_LeftEdge ? 1 : 0), FALSE, !hopRight_LeftEdge, FALSE);
 }
 
-void MultiCSVPanel::fieldCopy() {
+void NestedDSVPanel::fieldCopy() {
    if (caretFieldIndex < 0) return;
 
    HWND hScintilla{ GetCurrentScintilla() };
@@ -657,7 +657,7 @@ void MultiCSVPanel::fieldCopy() {
    return;
 }
 
-void MultiCSVPanel::fieldPaste() {
+void NestedDSVPanel::fieldPaste() {
    if (caretFieldIndex < 0) return;
 
    HWND hScintilla{ GetCurrentScintilla() };
@@ -679,7 +679,7 @@ void MultiCSVPanel::fieldPaste() {
    SendMessage(hScintilla, SCI_INSERTTEXT, leftPos, (LPARAM)(Utils::WideToNarrow(clipText).c_str()));
 }
 
-void MultiCSVPanel::visualizeTheme() {
+void NestedDSVPanel::visualizeTheme() {
    wchar_t fDesc[MAX_PATH]{};
 
    SendMessage(hThemesLB, WM_GETTEXT, MAX_PATH, (LPARAM)fDesc);
@@ -695,7 +695,7 @@ void MultiCSVPanel::visualizeTheme() {
    renderCurrentPage();
 }
 
-void MultiCSVPanel::clearVisualize(bool sync) {
+void NestedDSVPanel::clearVisualize(bool sync) {
    if (!fwVizRegexed.empty()) {
       HWND hScintilla{ GetCurrentScintilla() };
       if (!hScintilla) return;
@@ -715,7 +715,7 @@ void MultiCSVPanel::clearVisualize(bool sync) {
    }
 }
 
-int MultiCSVPanel::loadTheme(const wstring theme) {
+int NestedDSVPanel::loadTheme(const wstring theme) {
    PSCIFUNC_T sciFunc;
    void* sciPtr;
 
@@ -780,7 +780,7 @@ int MultiCSVPanel::loadTheme(const wstring theme) {
    return styleCount + 1;  // Add 1 to include EOL styleInfo
 }
 
-int MultiCSVPanel::loadUsedThemes() {
+int NestedDSVPanel::loadUsedThemes() {
    loadedStyleCount = 0;
    vThemes.clear();
    initCalltipStyle();
@@ -818,7 +818,7 @@ int MultiCSVPanel::loadUsedThemes() {
    return static_cast<int>(vThemes.size());
 }
 
-int MultiCSVPanel::loadLexer() {
+int NestedDSVPanel::loadLexer() {
    if (unlexed && !panelMounted) return 0;
 
    PSCIFUNC_T sciFunc;
@@ -936,7 +936,7 @@ int MultiCSVPanel::loadLexer() {
    return recTypeCount;
 }
 
-void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
+void NestedDSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    if (unlexed && !panelMounted) return;
 
    PSCIFUNC_T sciFunc;
@@ -1098,7 +1098,7 @@ void MultiCSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
    }
 }
 
-void MultiCSVPanel::renderScrolledPage(void* view) {
+void NestedDSVPanel::renderScrolledPage(void* view) {
    bool otherView{ (view != GetCurrentScintilla()) };
 
    if (otherView)
@@ -1110,7 +1110,7 @@ void MultiCSVPanel::renderScrolledPage(void* view) {
       NppMessage(NPPM_MENUCOMMAND, 0, (LPARAM)IDM_VIEW_SWITCHTO_OTHER_VIEW);
 }
 
-void MultiCSVPanel::renderCurrentPage() {
+void NestedDSVPanel::renderCurrentPage() {
    if (loadLexer() < 1) {
       clearCaretFieldInfo();
       return;
@@ -1130,12 +1130,12 @@ void MultiCSVPanel::renderCurrentPage() {
    displayCaretFieldInfo(startLine, endLine);
 }
 
-void MultiCSVPanel::clearCaretFieldInfo() {
+void NestedDSVPanel::clearCaretFieldInfo() {
    enableFieldControls(FALSE);
    SetWindowText(hFieldInfo, L"");
 }
 
-void MultiCSVPanel::onPanelResize(LPARAM lParam) {
+void NestedDSVPanel::onPanelResize(LPARAM lParam) {
    RECT rcInfo;
    GetWindowRect(hFieldInfo, &rcInfo);
 
@@ -1166,7 +1166,7 @@ void MultiCSVPanel::onPanelResize(LPARAM lParam) {
    MoveWindow(hIniBtn, (LOWORD(lParam) - aboutBtnWidth - iniBtnWidth - 4), (HIWORD(lParam) - iniBtnHeight - 3), iniBtnWidth, iniBtnHeight, TRUE);
 }
 
-int MultiCSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos) {
+int NestedDSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return -1;
 
@@ -1194,7 +1194,7 @@ int MultiCSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, i
    return 0;
 }
 
-void MultiCSVPanel::moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite) {
+void NestedDSVPanel::moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
@@ -1234,7 +1234,7 @@ void MultiCSVPanel::moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightE
    setFocusOnEditor();
 }
 
-void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr_t endLine) {
+void NestedDSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr_t endLine) {
    if (!isVisible()) return;
 
    HWND hScintilla{ GetCurrentScintilla() };
@@ -1388,7 +1388,7 @@ void MultiCSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intptr
    }
 }
 
-void MultiCSVPanel::showJumpDialog() {
+void NestedDSVPanel::showJumpDialog() {
    string fileType;
    if (!getDocFileType(fileType)) return;
 
@@ -1398,11 +1398,11 @@ void MultiCSVPanel::showJumpDialog() {
    _jumpDlg.initDialog(fileType, caretRecordRegIndex, caretFieldIndex, FLD.fieldLabels);
 }
 
-void MultiCSVPanel::showAboutDialog() {
+void NestedDSVPanel::showAboutDialog() {
    _aboutDlg.doDialog((HINSTANCE)_gModule);
 }
 
-void MultiCSVPanel::showExtractDialog() {
+void NestedDSVPanel::showExtractDialog() {
    string fileType;
    if (!getDocFileType(fileType)) return;
 
@@ -1410,7 +1410,7 @@ void MultiCSVPanel::showExtractDialog() {
    _dataExtractDlg.initDialog(fileType, vRecInfo);
 }
 
-bool MultiCSVPanel::detectFileType(HWND hScintilla, string& fileType) {
+bool NestedDSVPanel::detectFileType(HWND hScintilla, string& fileType) {
    if (!panelMounted) return FALSE;
 
    bool detected{ detectFileTypeByVizConfig(hScintilla, fileType, FALSE) };
@@ -1421,7 +1421,7 @@ bool MultiCSVPanel::detectFileType(HWND hScintilla, string& fileType) {
    return detected;
 }
 
-bool MultiCSVPanel::detectFileTypeByVizConfig(HWND hScintilla, string& fileType, bool defaultVizConfig) {
+bool NestedDSVPanel::detectFileTypeByVizConfig(HWND hScintilla, string& fileType, bool defaultVizConfig) {
    if (defaultVizConfig) {
       _configIO.defaultVizConfig();
    }
@@ -1490,13 +1490,13 @@ bool MultiCSVPanel::detectFileTypeByVizConfig(HWND hScintilla, string& fileType,
    return (!fileType.empty());
 }
 
-const wstring MultiCSVPanel::getCurrentFileName() {
+const wstring NestedDSVPanel::getCurrentFileName() {
    wstring fileName(MAX_PATH, '\0');
    NppMessage(NPPM_GETFULLCURRENTPATH, MAX_PATH, (LPARAM)fileName.c_str());
    return wstring{ fileName.c_str() };
 }
 
-void MultiCSVPanel::initDocInfo(bool bDocType, string val) {
+void NestedDSVPanel::initDocInfo(bool bDocType, string val) {
    const wstring fileName{ getCurrentFileName() };
 
    for (DocInfo& DI : vDocInfo) {
@@ -1517,7 +1517,7 @@ void MultiCSVPanel::initDocInfo(bool bDocType, string val) {
    vDocInfo.emplace_back(fi);
 }
 
-bool MultiCSVPanel::getDocFileType(string& fileType) {
+bool NestedDSVPanel::getDocFileType(string& fileType) {
    const wstring fileName{ getCurrentFileName() };
    fileType = "";
 
@@ -1531,7 +1531,7 @@ bool MultiCSVPanel::getDocFileType(string& fileType) {
    return (!fileType.empty());
 }
 
-bool MultiCSVPanel::getDocDelim(string& delim) {
+bool NestedDSVPanel::getDocDelim(string& delim) {
    const wstring fileName{ getCurrentFileName() };
    delim = "";
 
@@ -1545,7 +1545,7 @@ bool MultiCSVPanel::getDocDelim(string& delim) {
    return (!delim.empty());
 }
 
-bool MultiCSVPanel::getDocTheme(wstring& theme) {
+bool NestedDSVPanel::getDocTheme(wstring& theme) {
    const wstring fileName{ getCurrentFileName() };
    theme = L"";
 
@@ -1559,7 +1559,7 @@ bool MultiCSVPanel::getDocTheme(wstring& theme) {
    return (!theme.empty());
 }
 
-string MultiCSVPanel::getDocFoldStructType() {
+string NestedDSVPanel::getDocFoldStructType() {
    const wstring fileName{ getCurrentFileName() };
 
    for (const DocInfo& DI : vDocInfo) {
@@ -1568,7 +1568,7 @@ string MultiCSVPanel::getDocFoldStructType() {
    return "";
 }
 
-bool MultiCSVPanel::getDocFolded() {
+bool NestedDSVPanel::getDocFolded() {
    const wstring fileName{ getCurrentFileName() };
 
    for (const DocInfo& DI : vDocInfo) {
@@ -1577,21 +1577,21 @@ bool MultiCSVPanel::getDocFolded() {
    return false;
 }
 
-void MultiCSVPanel::setDocFileType(string fileType) {
+void NestedDSVPanel::setDocFileType(string fileType) {
    if (!panelMounted) return;
 
    enableThemeList(!fileType.empty());
    initDocInfo(true, fileType);
 }
 
-void MultiCSVPanel::setDocTheme(string theme, string fileType) {
+void NestedDSVPanel::setDocTheme(string theme, string fileType) {
    if (theme.empty() && (!fileType.empty()))
       theme = _configIO.getConfigStringA(fileType, "FileTheme");
 
    initDocInfo(false, theme);
 }
 
-void MultiCSVPanel::setDocFoldStructType(string foldStructType) {
+void NestedDSVPanel::setDocFoldStructType(string foldStructType) {
    const wstring fileName{ getCurrentFileName() };
 
    for (DocInfo& DI : vDocInfo) {
@@ -1602,7 +1602,7 @@ void MultiCSVPanel::setDocFoldStructType(string foldStructType) {
    }
 }
 
-void MultiCSVPanel::setDocFolded(bool bFolding) {
+void NestedDSVPanel::setDocFolded(bool bFolding) {
    const wstring fileName{ getCurrentFileName() };
 
    for (DocInfo& DI : vDocInfo) {
@@ -1613,24 +1613,24 @@ void MultiCSVPanel::setDocFolded(bool bFolding) {
    }
 }
 
-void MultiCSVPanel::setADFTCheckbox() {
+void NestedDSVPanel::setADFTCheckbox() {
    bool checked{ IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT) == BST_CHECKED };
 
    _configIO.setPreferenceBool(PREF_ADFT, checked);
    if (checked) visualizeFile("", FALSE, TRUE, TRUE);
 }
 
-void MultiCSVPanel::setDefaultBackground() {
+void NestedDSVPanel::setDefaultBackground() {
    _configIO.setPreferenceBool(PREF_DEF_BACKGROUND, (IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_DEFAULT_BACKGROUND) == BST_CHECKED));
    visualizeFile("", TRUE, (IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT) == BST_CHECKED), TRUE);
 }
 
-void MultiCSVPanel::setShowCalltip() {
+void NestedDSVPanel::setShowCalltip() {
    _configIO.setPreferenceBool(PREF_SHOW_CALLTIP, (IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_SHOW_CALLTIP) == BST_CHECKED));
    visualizeFile("", TRUE, (IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT) == BST_CHECKED), TRUE);
 }
 
-void MultiCSVPanel::initCalltipStyle() {
+void NestedDSVPanel::initCalltipStyle() {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
@@ -1641,7 +1641,7 @@ void MultiCSVPanel::initCalltipStyle() {
    SendMessage(hScintilla, SCI_CALLTIPUSESTYLE, 3, 0);
 }
 
-void MultiCSVPanel::onBufferActivate() {
+void NestedDSVPanel::onBufferActivate() {
    unlexed = TRUE;
    enableFoldableControls(FALSE);
 
@@ -1650,19 +1650,19 @@ void MultiCSVPanel::onBufferActivate() {
    enableFoldedControls(getDocFolded());
 }
 
-void MultiCSVPanel::setFocusOnEditor() {
+void NestedDSVPanel::setFocusOnEditor() {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
    SendMessage(hScintilla, SCI_GRABFOCUS, 0, 0);
 }
 
-void MultiCSVPanel::clearLexer() {
+void NestedDSVPanel::clearLexer() {
    vRecInfo.clear();
    fwVizRegexed = "";
 }
 
-void MultiCSVPanel::popupSamplesMenu() {
+void NestedDSVPanel::popupSamplesMenu() {
    HMENU hPopupMenu = CreatePopupMenu();
    _submenu.initSamplesPopup(hPopupMenu);
 
@@ -1685,7 +1685,7 @@ void MultiCSVPanel::popupSamplesMenu() {
    DestroyMenu(hPopupMenu);
 }
 
-string MultiCSVPanel::detectFoldStructType(string fileType) {
+string NestedDSVPanel::detectFoldStructType(string fileType) {
    if (fileType.empty()) return "";
 
    int foldStructCount{ _configIO.getFoldStructCount() };
@@ -1701,7 +1701,7 @@ string MultiCSVPanel::detectFoldStructType(string fileType) {
    return "";
 }
 
-void MultiCSVPanel::applyFolding(string fsType) {
+void NestedDSVPanel::applyFolding(string fsType) {
    if (getDocFolded()) return;
 
    string fileType{};
@@ -1844,7 +1844,7 @@ void MultiCSVPanel::applyFolding(string fsType) {
 #endif // FW_DEBUG_FOLD_INFO
 }
 
-void MultiCSVPanel::removeFolding() {
+void NestedDSVPanel::removeFolding() {
    // First, unfold all levels
    expandFoldLevel(TRUE, MAXBYTE);
 
@@ -1866,11 +1866,11 @@ void MultiCSVPanel::removeFolding() {
    setDocFolded(FALSE);
 }
 
-void MultiCSVPanel::enableFoldableControls(bool bFoldable) {
+void NestedDSVPanel::enableFoldableControls(bool bFoldable) {
    EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_FOLDING_APPLY_BTN), bFoldable);
 }
 
-void MultiCSVPanel::enableFoldedControls(bool bFolded) {
+void NestedDSVPanel::enableFoldedControls(bool bFolded) {
    SetWindowText(GetDlgItem(_hSelf, IDC_VIZPANEL_FOLDING_APPLY_BTN), bFolded ? VIZPANEL_FOLD_REAPPLY_BTN : VIZPANEL_FOLD_APPLY_BTN);
    EnableWindow(GetDlgItem(_hSelf, IDC_VIZPANEL_FOLDING_REMOVE_BTN), bFolded);
 
@@ -1896,7 +1896,7 @@ void MultiCSVPanel::enableFoldedControls(bool bFolded) {
    }
 }
 
-void MultiCSVPanel::toggleFolding() {
+void NestedDSVPanel::toggleFolding() {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
@@ -1915,7 +1915,7 @@ void MultiCSVPanel::toggleFolding() {
    renderCurrentPage();
 }
 
-int MultiCSVPanel::foldLevelFromPopup(bool bFold) {
+int NestedDSVPanel::foldLevelFromPopup(bool bFold) {
    constexpr int itemCount{ 10 };
 
    HMENU hPopupMenu = CreatePopupMenu();
@@ -1941,7 +1941,7 @@ int MultiCSVPanel::foldLevelFromPopup(bool bFold) {
    return (option == MAXBYTE ? MAXBYTE : option - 1);
 }
 
-void MultiCSVPanel::expandFoldLevel(bool bExpand, int foldLevel) {
+void NestedDSVPanel::expandFoldLevel(bool bExpand, int foldLevel) {
    if (foldLevel < 0) return;
 
    HWND hScintilla{ GetCurrentScintilla() };
@@ -1965,19 +1965,19 @@ void MultiCSVPanel::expandFoldLevel(bool bExpand, int foldLevel) {
    renderCurrentPage();
 }
 
-void MultiCSVPanel::foldLevelMenu() {
+void NestedDSVPanel::foldLevelMenu() {
    expandFoldLevel(FALSE, foldLevelFromPopup(TRUE));
 }
 
-void MultiCSVPanel::unfoldLevelMenu() {
+void NestedDSVPanel::unfoldLevelMenu() {
    expandFoldLevel(TRUE, foldLevelFromPopup(FALSE));
 }
 
-void MultiCSVPanel::showFoldStructDialog() {
+void NestedDSVPanel::showFoldStructDialog() {
    _foldStructDlg.doDialog((HINSTANCE)_gModule);
 }
 
-DWORD __stdcall MultiCSVPanel::threadPositionHighlighter(void*) {
+DWORD __stdcall NestedDSVPanel::threadPositionHighlighter(void*) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return FALSE;
 

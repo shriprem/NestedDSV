@@ -16,22 +16,22 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
       create(IDD_FILE_TYPE_DEFINER_DIALOG);
    }
 
-   hFilesLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_LIST_BOX);
-   hFileDelim = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_DELIM_LIST);
-   hFileThemes = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_THEME_LIST);
-   hRecsLB = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_LIST_BOX);
-   hRecStart = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_START_EDIT);
-   hRecRegex = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_REGEX_EDIT);
-   hRecThemes = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_THEME_LIST);
-   hFieldLabels = GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FIELD_LABELS_EDIT);
+   hFilesLB = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_LIST_BOX);
+   hFileDelim = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_DELIM_LIST);
+   hFileThemes = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_THEME_LIST);
+   hRecsLB = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_LIST_BOX);
+   hRecStart = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_START_EDIT);
+   hRecRegex = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_REGEX_EDIT);
+   hRecThemes = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_THEME_LIST);
+   hFieldLabels = GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FIELD_LABELS_EDIT);
 
-   for (int i{}, id{ IDC_MCVIZ_DEF_ADFT_LINE_EDIT_01 }; i < ADFT_MAX; ++i) {
+   for (int i{}, id{ IDC_NDVIZ_DEF_ADFT_LINE_EDIT_01 }; i < ADFT_MAX; ++i) {
       hADFTLine[i] = GetDlgItem(_hSelf, id++);
       hADFTRegex[i] = GetDlgItem(_hSelf, id++);
    }
 
-   SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
-   SendDlgItemMessage(_hSelf, IDC_MCVIZ_DEF_REC_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
+   SendDlgItemMessage(_hSelf, IDC_NDVIZ_DEF_FILE_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
+   SendDlgItemMessage(_hSelf, IDC_NDVIZ_DEF_REC_DESC_EDIT, EM_LIMITTEXT, MAX_PATH, NULL);
 
    SendMessage(hFileDelim, EM_LIMITTEXT, MAX_PATH, NULL);
    SendMessage(hADFTRegex[0], EM_LIMITTEXT, MAX_PATH, NULL);
@@ -52,32 +52,32 @@ void ConfigureDialog::doDialog(HINSTANCE hInst) {
    using Utils::addTooltip;
    using Utils::loadBitmap;
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_FILE_DOWN_BUTTON, IDB_VIZ_MOVE_DOWN_BITMAP);
-   addTooltip(_hSelf, IDC_MCVIZ_DEF_FILE_DOWN_BUTTON, L"", MCVIZ_DEF_FILE_MOVE_DOWN, FALSE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_FILE_DOWN_BUTTON, IDB_VIZ_MOVE_DOWN_BITMAP);
+   addTooltip(_hSelf, IDC_NDVIZ_DEF_FILE_DOWN_BUTTON, L"", NDVIZ_DEF_FILE_MOVE_DOWN, FALSE);
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_FILE_UP_BUTTON, IDB_VIZ_MOVE_UP_BITMAP);
-   addTooltip(_hSelf, IDC_MCVIZ_DEF_FILE_UP_BUTTON, L"", MCVIZ_DEF_FILE_MOVE_UP, FALSE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_FILE_UP_BUTTON, IDB_VIZ_MOVE_UP_BITMAP);
+   addTooltip(_hSelf, IDC_NDVIZ_DEF_FILE_UP_BUTTON, L"", NDVIZ_DEF_FILE_MOVE_UP, FALSE);
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_ADFT_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
-   hToolTip = addTooltip(_hSelf, IDC_MCVIZ_DEF_ADFT_INFO_BUTTON,
-      MCVIZ_DEF_ADFT_HINT_TITLE, MCVIZ_DEF_ADFT_HINT_TEXT, TRUE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_ADFT_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
+   hToolTip = addTooltip(_hSelf, IDC_NDVIZ_DEF_ADFT_INFO_BUTTON,
+      NDVIZ_DEF_ADFT_HINT_TITLE, NDVIZ_DEF_ADFT_HINT_TEXT, TRUE);
    SendMessage(hToolTip, TTM_SETDELAYTIME, TTDT_AUTOPOP, (LPARAM)(30000));
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_REC_DOWN_BUTTON, IDB_VIZ_MOVE_DOWN_BITMAP);
-   addTooltip(_hSelf, IDC_MCVIZ_DEF_REC_DOWN_BUTTON, L"", MCVIZ_DEF_REC_MOVE_DOWN, FALSE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_REC_DOWN_BUTTON, IDB_VIZ_MOVE_DOWN_BITMAP);
+   addTooltip(_hSelf, IDC_NDVIZ_DEF_REC_DOWN_BUTTON, L"", NDVIZ_DEF_REC_MOVE_DOWN, FALSE);
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_REC_UP_BUTTON, IDB_VIZ_MOVE_UP_BITMAP);
-   addTooltip(_hSelf, IDC_MCVIZ_DEF_REC_UP_BUTTON, L"", MCVIZ_DEF_REC_MOVE_UP, FALSE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_REC_UP_BUTTON, IDB_VIZ_MOVE_UP_BITMAP);
+   addTooltip(_hSelf, IDC_NDVIZ_DEF_REC_UP_BUTTON, L"", NDVIZ_DEF_REC_MOVE_UP, FALSE);
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_REC_THEME_INFOBTN, IDB_VIZ_INFO_BITMAP);
-   hToolTip = addTooltip(_hSelf, IDC_MCVIZ_DEF_REC_THEME_INFOBTN,
-      MCVIZ_DEF_RECTHEME_HINT_HDR, MCVIZ_DEF_RECTHEME_HINT_TXT, TRUE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_REC_THEME_INFOBTN, IDB_VIZ_INFO_BITMAP);
+   hToolTip = addTooltip(_hSelf, IDC_NDVIZ_DEF_REC_THEME_INFOBTN,
+      NDVIZ_DEF_RECTHEME_HINT_HDR, NDVIZ_DEF_RECTHEME_HINT_TXT, TRUE);
    SendMessage(hToolTip, TTM_SETDELAYTIME, TTDT_AUTOPOP, (LPARAM)(30000));
 
-   loadBitmap(_hSelf, IDC_MCVIZ_DEF_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
-   addTooltip(_hSelf, IDC_MCVIZ_DEF_INFO_BUTTON, L"", VIZ_PANEL_INFO_TIP, FALSE);
+   loadBitmap(_hSelf, IDC_NDVIZ_DEF_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
+   addTooltip(_hSelf, IDC_NDVIZ_DEF_INFO_BUTTON, L"", VIZ_PANEL_INFO_TIP, FALSE);
 
-   Utils::setFontUnderline(_hSelf, IDC_MCVIZ_DEF_ADFT_GROUP_LABEL);
+   Utils::setFontUnderline(_hSelf, IDC_NDVIZ_DEF_ADFT_GROUP_LABEL);
 
    if constexpr(_gLanguage != LANG_ENGLISH) localize();
    goToCenter();
@@ -115,7 +115,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
    switch (message) {
    case WM_COMMAND:
       switch LOWORD(wParam) {
-      case IDC_MCVIZ_DEF_FILE_LIST_BOX:
+      case IDC_NDVIZ_DEF_FILE_LIST_BOX:
          switch HIWORD(wParam) {
          case LBN_SELCHANGE:
             onFileTypeSelect();
@@ -123,31 +123,31 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_FILE_DOWN_BUTTON:
+      case IDC_NDVIZ_DEF_FILE_DOWN_BUTTON:
          moveFileType(MOVE_DOWN);
          break;
 
-      case IDC_MCVIZ_DEF_FILE_UP_BUTTON:
+      case IDC_NDVIZ_DEF_FILE_UP_BUTTON:
          moveFileType(MOVE_UP);
          break;
 
-      case IDC_MCVIZ_DEF_ADFT_INFO_BUTTON:
-         ShellExecute(NULL, L"open", MCVIZ_DEF_ADFT_INFO_README, NULL, NULL, SW_SHOW);
+      case IDC_NDVIZ_DEF_ADFT_INFO_BUTTON:
+         ShellExecute(NULL, L"open", NDVIZ_DEF_ADFT_INFO_README, NULL, NULL, SW_SHOW);
          break;
 
-      case IDC_MCVIZ_DEF_REC_THEME_INFOBTN:
-         ShellExecute(NULL, L"open", MCVIZ_RT_THEME_INFO_README, NULL, NULL, SW_SHOW);
+      case IDC_NDVIZ_DEF_REC_THEME_INFOBTN:
+         ShellExecute(NULL, L"open", NDVIZ_RT_THEME_INFO_README, NULL, NULL, SW_SHOW);
          break;
 
-      case IDC_MCVIZ_DEF_FILE_DESC_EDIT:
-      case IDC_MCVIZ_DEF_FILE_DELIM_LIST:
-      case IDC_MCVIZ_DEF_FILE_THEME_LIST:
-      case IDC_MCVIZ_DEF_ADFT_LINE_EDIT_01:
-      case IDC_MCVIZ_DEF_ADFT_REGEX_EDT_01:
-      case IDC_MCVIZ_DEF_ADFT_LINE_EDIT_02:
-      case IDC_MCVIZ_DEF_ADFT_REGEX_EDT_02:
-      case IDC_MCVIZ_DEF_ADFT_LINE_EDIT_03:
-      case IDC_MCVIZ_DEF_ADFT_REGEX_EDT_03:
+      case IDC_NDVIZ_DEF_FILE_DESC_EDIT:
+      case IDC_NDVIZ_DEF_FILE_DELIM_LIST:
+      case IDC_NDVIZ_DEF_FILE_THEME_LIST:
+      case IDC_NDVIZ_DEF_ADFT_LINE_EDIT_01:
+      case IDC_NDVIZ_DEF_ADFT_REGEX_EDT_01:
+      case IDC_NDVIZ_DEF_ADFT_LINE_EDIT_02:
+      case IDC_NDVIZ_DEF_ADFT_REGEX_EDT_02:
+      case IDC_NDVIZ_DEF_ADFT_LINE_EDIT_03:
+      case IDC_NDVIZ_DEF_ADFT_REGEX_EDT_03:
          switch HIWORD(wParam) {
          case BN_CLICKED:
          case EN_CHANGE:
@@ -160,24 +160,24 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_FILE_ACCEPT_BTN:
-      case IDC_MCVIZ_DEF_FILE_RESET_BTN:
-         fileEditAccept(LOWORD(wParam) == IDC_MCVIZ_DEF_FILE_ACCEPT_BTN);
+      case IDC_NDVIZ_DEF_FILE_ACCEPT_BTN:
+      case IDC_NDVIZ_DEF_FILE_RESET_BTN:
+         fileEditAccept(LOWORD(wParam) == IDC_NDVIZ_DEF_FILE_ACCEPT_BTN);
          break;
 
-      case IDC_MCVIZ_DEF_FILE_NEW_BTN:
+      case IDC_NDVIZ_DEF_FILE_NEW_BTN:
          fileEditNew();
          break;
 
-      case IDC_MCVIZ_DEF_FILE_CLONE_BTN:
+      case IDC_NDVIZ_DEF_FILE_CLONE_BTN:
          fileEditClone();
          break;
 
-      case IDC_MCVIZ_DEF_FILE_DEL_BTN:
+      case IDC_NDVIZ_DEF_FILE_DEL_BTN:
          fileEditDelete();
          break;
 
-      case IDC_MCVIZ_DEF_REC_LIST_BOX:
+      case IDC_NDVIZ_DEF_REC_LIST_BOX:
          switch HIWORD(wParam) {
          case LBN_SELCHANGE:
             onRecTypeSelect();
@@ -185,16 +185,16 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_REC_DOWN_BUTTON:
+      case IDC_NDVIZ_DEF_REC_DOWN_BUTTON:
          moveRecType(MOVE_DOWN);
          break;
 
-      case IDC_MCVIZ_DEF_REC_UP_BUTTON:
+      case IDC_NDVIZ_DEF_REC_UP_BUTTON:
          moveRecType(MOVE_UP);
          break;
 
-      case IDC_MCVIZ_DEF_REC_DESC_EDIT:
-      case IDC_MCVIZ_DEF_REC_THEME_LIST:
+      case IDC_NDVIZ_DEF_REC_DESC_EDIT:
+      case IDC_NDVIZ_DEF_REC_THEME_LIST:
          switch HIWORD(wParam) {
          case EN_CHANGE:
          case CBN_SELCHANGE:
@@ -206,7 +206,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_REC_START_EDIT:
+      case IDC_NDVIZ_DEF_REC_START_EDIT:
          switch HIWORD(wParam) {
          case EN_CHANGE:
             if (!loadingEdits) {
@@ -221,7 +221,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_REC_REGEX_EDIT:
+      case IDC_NDVIZ_DEF_REC_REGEX_EDIT:
          switch HIWORD(wParam) {
          case EN_CHANGE:
             if (!loadingEdits) {
@@ -242,24 +242,24 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_REC_ACCEPT_BTN:
-      case IDC_MCVIZ_DEF_REC_RESET_BTN:
-         recEditAccept(LOWORD(wParam) == IDC_MCVIZ_DEF_REC_ACCEPT_BTN);
+      case IDC_NDVIZ_DEF_REC_ACCEPT_BTN:
+      case IDC_NDVIZ_DEF_REC_RESET_BTN:
+         recEditAccept(LOWORD(wParam) == IDC_NDVIZ_DEF_REC_ACCEPT_BTN);
          break;
 
-      case IDC_MCVIZ_DEF_REC_NEW_BTN:
+      case IDC_NDVIZ_DEF_REC_NEW_BTN:
          recEditNew(FALSE);
          break;
 
-      case IDC_MCVIZ_DEF_REC_CLONE_BTN:
+      case IDC_NDVIZ_DEF_REC_CLONE_BTN:
          recEditNew(TRUE);
          break;
 
-      case IDC_MCVIZ_DEF_REC_DEL_BTN:
+      case IDC_NDVIZ_DEF_REC_DEL_BTN:
          recEditDelete();
          break;
 
-      case IDC_MCVIZ_DEF_FIELD_LABELS_EDIT:
+      case IDC_NDVIZ_DEF_FIELD_LABELS_EDIT:
          switch HIWORD(wParam) {
          case EN_CHANGE:
             if (!loadingEdits) {
@@ -271,29 +271,29 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
 
          break;
 
-      case IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN:
+      case IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN:
          fieldEditsAccept();
          break;
 
-      case IDC_MCVIZ_DEF_FIELD_RESET_BTN:
+      case IDC_NDVIZ_DEF_FIELD_RESET_BTN:
          fillFieldTypes();
          break;
 
-      case IDC_MCVIZ_FIELD_TYPE_BUTTON:
+      case IDC_NDVIZ_FIELD_TYPE_BUTTON:
          _fieldTypeDlg.doDialog((HINSTANCE)_gModule);
          break;
 
-      case IDC_MCVIZ_DEF_INFO_BUTTON:
-         ShellExecute(NULL, L"open", MCVIZ_DEF_INFO_README, NULL, NULL, SW_SHOW);
+      case IDC_NDVIZ_DEF_INFO_BUTTON:
+         ShellExecute(NULL, L"open", NDVIZ_DEF_INFO_README, NULL, NULL, SW_SHOW);
          break;
 
-      case IDC_MCVIZ_DEF_SAVE_CONFIG_BTN:
+      case IDC_NDVIZ_DEF_SAVE_CONFIG_BTN:
          SetCursor(LoadCursor(NULL, IDC_WAIT));
          saveConfigInfo();
          SetCursor(LoadCursor(NULL, IDC_ARROW));
          return TRUE;
 
-      case IDC_MCVIZ_DEF_RESET_BTN:
+      case IDC_NDVIZ_DEF_RESET_BTN:
          if (!promptDiscardChangesNo()) {
             configFile = L"";
             loadConfigInfo();
@@ -301,7 +301,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_BACKUP_LOAD_BTN:
+      case IDC_NDVIZ_DEF_BACKUP_LOAD_BTN:
          if (!promptDiscardChangesNo()) {
             wstring backupConfigFile;
 
@@ -317,15 +317,15 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
          }
          break;
 
-      case IDC_MCVIZ_DEF_BACKUP_VIEW_BTN:
+      case IDC_NDVIZ_DEF_BACKUP_VIEW_BTN:
          _configIO.viewBackupFolder();
          break;
 
-      case IDC_MCVIZ_DEF_EXTRACT_BTN:
+      case IDC_NDVIZ_DEF_EXTRACT_BTN:
          showEximDialog(TRUE);
          break;
 
-      case IDC_MCVIZ_DEF_APPEND_BTN:
+      case IDC_NDVIZ_DEF_APPEND_BTN:
          showEximDialog(FALSE);
          break;
 
@@ -365,7 +365,7 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
       if (NPPDM_IsEnabled()) return TRUE;
       break;
 
-   case MCVIZMSG_APPEND_EXIM_DATA:
+   case NDVIZMSG_APPEND_EXIM_DATA:
       appendFileTypeConfigs(reinterpret_cast<LPCWSTR>(lParam));
       break;
    }
@@ -374,77 +374,77 @@ INT_PTR CALLBACK ConfigureDialog::run_dlgProc(UINT message, WPARAM wParam, LPARA
 }
 
 void ConfigureDialog::localize() {
-   SetWindowText(_hSelf, MCVIZ_DEF_DIALOG_TITLE);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_GROUP_BOX, MCVIZ_DEF_FILE_GROUP_BOX);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_LABEL, MCVIZ_DEF_FILE_DESC_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DELIM_LABEL, MCVIZ_DEF_FILE_DELIM_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_GROUP_LABEL, MCVIZ_DEF_ADFT_GROUP_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_LINE_LABEL, MCVIZ_DEF_ADFT_LINE_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_ADFT_REGEX_LABEL, MCVIZ_DEF_ADFT_REGEX_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_THEME_LABEL, MCVIZ_DEF_FILE_THEME_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_ACCEPT_BTN, MCVIZ_DEF_FILE_ACCEPT_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_RESET_BTN, MCVIZ_DEF_FILE_RESET_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_NEW_BTN, MCVIZ_DEF_FILE_NEW_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_CLONE_BTN, MCVIZ_DEF_FILE_CLONE_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DEL_BTN, MCVIZ_DEF_FILE_DEL_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_GROUP_BOX, MCVIZ_DEF_REC_GROUP_BOX);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_DESC_LABEL, MCVIZ_DEF_REC_DESC_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_START_LABEL, MCVIZ_DEF_REC_START_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_REGEX_LABEL, MCVIZ_DEF_REC_REGEX_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_THEME_LABEL, MCVIZ_DEF_REC_THEME_LABEL);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_ACCEPT_BTN, MCVIZ_DEF_REC_ACCEPT_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_RESET_BTN, MCVIZ_DEF_REC_RESET_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_NEW_BTN, MCVIZ_DEF_REC_NEW_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_CLONE_BTN, MCVIZ_DEF_REC_CLONE_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_DEL_BTN, MCVIZ_DEF_REC_DEL_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_GROUP_BOX, MCVIZ_DEF_FIELD_GROUP_BOX);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN, MCVIZ_DEF_FIELD_ACCEPT_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_RESET_BTN, MCVIZ_DEF_FIELD_RESET_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_FIELD_TYPE_BUTTON, MCVIZ_DEF_FIELD_TYPE_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_SAVE_CONFIG_BTN, MCVIZ_DIALOG_SAVE_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_RESET_BTN, MCVIZ_DIALOG_RESET_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_BACKUP_LOAD_BTN, MCVIZ_DIALOG_BKUP_LOAD_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_BACKUP_VIEW_BTN, MCVIZ_DIALOG_BKUP_VIEW_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_EXTRACT_BTN, MCVIZ_DIALOG_EXTRACT_BTN);
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_APPEND_BTN, MCVIZ_DIALOG_APPEND_BTN);
-   SetDlgItemText(_hSelf, IDCLOSE, MCVIZ_DIALOG_CLOSE_BTN);
+   SetWindowText(_hSelf, NDVIZ_DEF_DIALOG_TITLE);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_GROUP_BOX, NDVIZ_DEF_FILE_GROUP_BOX);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_DESC_LABEL, NDVIZ_DEF_FILE_DESC_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_DELIM_LABEL, NDVIZ_DEF_FILE_DELIM_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_ADFT_GROUP_LABEL, NDVIZ_DEF_ADFT_GROUP_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_ADFT_LINE_LABEL, NDVIZ_DEF_ADFT_LINE_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_ADFT_REGEX_LABEL, NDVIZ_DEF_ADFT_REGEX_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_THEME_LABEL, NDVIZ_DEF_FILE_THEME_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_ACCEPT_BTN, NDVIZ_DEF_FILE_ACCEPT_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_RESET_BTN, NDVIZ_DEF_FILE_RESET_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_NEW_BTN, NDVIZ_DEF_FILE_NEW_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_CLONE_BTN, NDVIZ_DEF_FILE_CLONE_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_DEL_BTN, NDVIZ_DEF_FILE_DEL_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_GROUP_BOX, NDVIZ_DEF_REC_GROUP_BOX);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_DESC_LABEL, NDVIZ_DEF_REC_DESC_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_START_LABEL, NDVIZ_DEF_REC_START_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_REGEX_LABEL, NDVIZ_DEF_REC_REGEX_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_THEME_LABEL, NDVIZ_DEF_REC_THEME_LABEL);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_ACCEPT_BTN, NDVIZ_DEF_REC_ACCEPT_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_RESET_BTN, NDVIZ_DEF_REC_RESET_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_NEW_BTN, NDVIZ_DEF_REC_NEW_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_CLONE_BTN, NDVIZ_DEF_REC_CLONE_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_DEL_BTN, NDVIZ_DEF_REC_DEL_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FIELD_GROUP_BOX, NDVIZ_DEF_FIELD_GROUP_BOX);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN, NDVIZ_DEF_FIELD_ACCEPT_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FIELD_RESET_BTN, NDVIZ_DEF_FIELD_RESET_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_FIELD_TYPE_BUTTON, NDVIZ_DEF_FIELD_TYPE_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_SAVE_CONFIG_BTN, NDVIZ_DIALOG_SAVE_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_RESET_BTN, NDVIZ_DIALOG_RESET_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_BACKUP_LOAD_BTN, NDVIZ_DIALOG_BKUP_LOAD_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_BACKUP_VIEW_BTN, NDVIZ_DIALOG_BKUP_VIEW_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_EXTRACT_BTN, NDVIZ_DIALOG_EXTRACT_BTN);
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_APPEND_BTN, NDVIZ_DIALOG_APPEND_BTN);
+   SetDlgItemText(_hSelf, IDCLOSE, NDVIZ_DIALOG_CLOSE_BTN);
 }
 
 void ConfigureDialog::indicateCleanStatus() {
    if (cleanConfigFile) {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_SAVE_CONFIG_BTN, MCVIZ_DIALOG_SAVE_BTN);
-      Utils::setFontRegular(_hSelf, IDC_MCVIZ_DEF_SAVE_CONFIG_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_SAVE_CONFIG_BTN, NDVIZ_DIALOG_SAVE_BTN);
+      Utils::setFontRegular(_hSelf, IDC_NDVIZ_DEF_SAVE_CONFIG_BTN);
    }
    else {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_SAVE_CONFIG_BTN, (wstring(MCVIZ_DIALOG_SAVE_BTN) + L"*").c_str());
-      Utils::setFontBold(_hSelf, IDC_MCVIZ_DEF_SAVE_CONFIG_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_SAVE_CONFIG_BTN, (wstring(NDVIZ_DIALOG_SAVE_BTN) + L"*").c_str());
+      Utils::setFontBold(_hSelf, IDC_NDVIZ_DEF_SAVE_CONFIG_BTN);
    }
 
    if (cleanFileVals) {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_ACCEPT_BTN, MCVIZ_DEF_FILE_ACCEPT_BTN);
-      Utils::setFontRegular(_hSelf, IDC_MCVIZ_DEF_FILE_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_ACCEPT_BTN, NDVIZ_DEF_FILE_ACCEPT_BTN);
+      Utils::setFontRegular(_hSelf, IDC_NDVIZ_DEF_FILE_ACCEPT_BTN);
    }
    else {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_ACCEPT_BTN, (wstring(MCVIZ_DEF_FILE_ACCEPT_BTN) + L"*").c_str());
-      Utils::setFontBold(_hSelf, IDC_MCVIZ_DEF_FILE_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_ACCEPT_BTN, (wstring(NDVIZ_DEF_FILE_ACCEPT_BTN) + L"*").c_str());
+      Utils::setFontBold(_hSelf, IDC_NDVIZ_DEF_FILE_ACCEPT_BTN);
    }
 
    if (cleanRecVals) {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_ACCEPT_BTN, MCVIZ_DEF_REC_ACCEPT_BTN);
-      Utils::setFontRegular(_hSelf, IDC_MCVIZ_DEF_REC_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_ACCEPT_BTN, NDVIZ_DEF_REC_ACCEPT_BTN);
+      Utils::setFontRegular(_hSelf, IDC_NDVIZ_DEF_REC_ACCEPT_BTN);
    }
    else {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_ACCEPT_BTN, (wstring(MCVIZ_DEF_REC_ACCEPT_BTN) + L"*").c_str());
-      Utils::setFontBold(_hSelf, IDC_MCVIZ_DEF_REC_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_ACCEPT_BTN, (wstring(NDVIZ_DEF_REC_ACCEPT_BTN) + L"*").c_str());
+      Utils::setFontBold(_hSelf, IDC_NDVIZ_DEF_REC_ACCEPT_BTN);
    }
 
    if (cleanFieldVals) {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN, MCVIZ_DEF_FIELD_ACCEPT_BTN);
-      Utils::setFontRegular(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN, NDVIZ_DEF_FIELD_ACCEPT_BTN);
+      Utils::setFontRegular(_hSelf, IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN);
    }
    else {
-      SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN, (wstring(MCVIZ_DEF_FIELD_ACCEPT_BTN) + L"*").c_str());
-      Utils::setFontBold(_hSelf, IDC_MCVIZ_DEF_FIELD_ACCEPT_BTN);
+      SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN, (wstring(NDVIZ_DEF_FIELD_ACCEPT_BTN) + L"*").c_str());
+      Utils::setFontBold(_hSelf, IDC_NDVIZ_DEF_FIELD_ACCEPT_BTN);
    }
 }
 
@@ -520,7 +520,7 @@ void ConfigureDialog::fillFileTypes() {
    // Fill Files & Records Themes Droplists
    SendMessage(hFileThemes, CB_RESETCONTENT, NULL, NULL);
    SendMessage(hRecThemes, CB_RESETCONTENT, NULL, NULL);
-   SendMessage(hRecThemes, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_REC_THEME_FROM_FT);
+   SendMessage(hRecThemes, CB_ADDSTRING, NULL, (LPARAM)NDVIZ_DEF_REC_THEME_FROM_FT);
 
    vector<wstring> themesList;
    _configIO.getThemesList(themesList);
@@ -591,8 +591,8 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
    // ADFT Info
    for (int i{}; i < ADFT_MAX; ++i) {
       if (Utils::isInvalidRegex(FT.regExprs[i], _hSelf,
-         wstring(MCVIZ_DEF_FILE_DESC_LABEL) + L" " + FT.label + new_line +
-         MCVIZ_DEF_ADFT_GROUP_LABEL + L" - " + MCVIZ_DEF_ADFT_LINE_LABEL + L" " + to_wstring(i + 1)))
+         wstring(NDVIZ_DEF_FILE_DESC_LABEL) + L" " + FT.label + new_line +
+         NDVIZ_DEF_ADFT_GROUP_LABEL + L" - " + NDVIZ_DEF_ADFT_LINE_LABEL + L" " + to_wstring(i + 1)))
          return -2;
 
       wchar_t idx[5];
@@ -612,9 +612,9 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
       RecordType& RT{ FT.vRecTypes[j] };
 
       if (Utils::isInvalidRegex(RT.marker, _hSelf,
-         wstring(MCVIZ_DEF_FILE_DESC_LABEL) + L" " + FT.label + new_line +
-         MCVIZ_DEF_REC_DESC_LABEL + L" " + RT.label + new_line +
-         MCVIZ_DEF_REC_REGEX_LABEL))
+         wstring(NDVIZ_DEF_FILE_DESC_LABEL) + L" " + FT.label + new_line +
+         NDVIZ_DEF_REC_DESC_LABEL + L" " + RT.label + new_line +
+         NDVIZ_DEF_REC_REGEX_LABEL))
          return -2;
 
       swprintf(recTypeCode, 10, L"REC%03d", static_cast<int>(j + 1));
@@ -626,7 +626,7 @@ int ConfigureDialog::getFileTypeConfig(size_t idxFT, bool cr_lf, wstring& ftCode
          recTypePrefix + L"_Marker=" + RT.marker + new_line +
          recTypePrefix + L"_FieldLabels=" + RT.fieldLabels + new_line;
 
-      if ((RT.theme != L"") && (RT.theme != MCVIZ_DEF_REC_THEME_FROM_FT) && (RT.theme != FT.theme))
+      if ((RT.theme != L"") && (RT.theme != NDVIZ_DEF_REC_THEME_FROM_FT) && (RT.theme != FT.theme))
          rtConfig += recTypePrefix + L"_Theme=" + RT.theme + new_line;
    }
 
@@ -677,7 +677,7 @@ void ConfigureDialog::onFileTypeSelect() {
 
 void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
    loadingEdits = TRUE;
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileInfo->label.c_str());
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_DESC_EDIT, fileInfo->label.c_str());
 
    // Set File Delimiter List
    string delim = fileInfo->delim;
@@ -703,7 +703,7 @@ void ConfigureDialog::onFileTypeSelectFill(FileType* fileInfo) {
       delimCurSel = delimTypeCount;
 
       if (delimListCount == delimTypeCount)
-         SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)MCVIZ_DEF_FILE_DELIM_OTHER);
+         SendMessage(hFileDelim, CB_ADDSTRING, NULL, (LPARAM)NDVIZ_DEF_FILE_DELIM_OTHER);
    }
    else {
       if (delimListCount == delimTypeCount + 1)
@@ -731,32 +731,32 @@ void ConfigureDialog::enableMoveFileButtons() {
    int idxFT{ getCurrentFileTypeIndex() };
    if (idxFT == LB_ERR) return;
 
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_DOWN_BUTTON),
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_DOWN_BUTTON),
       (idxFT < static_cast<int>(vFileTypes.size()) - 1));
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_UP_BUTTON), (idxFT > 0));
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_UP_BUTTON), (idxFT > 0));
 }
 
 void ConfigureDialog::enableFileSelection() {
    bool enable{ cleanFileVals && cleanRecVals && cleanFieldVals };
    bool fileTypesExist{ SendMessage(hFilesLB, LB_GETCOUNT, 0, 0) > 0 };
 
-   ShowWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_NEW_BTN), cleanFileVals ? SW_SHOW : SW_HIDE);
-   ShowWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_RESET_BTN), cleanFileVals ? SW_HIDE : SW_SHOW);
+   ShowWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_NEW_BTN), cleanFileVals ? SW_SHOW : SW_HIDE);
+   ShowWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_RESET_BTN), cleanFileVals ? SW_HIDE : SW_SHOW);
 
    EnableWindow(hFilesLB, enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_NEW_BTN), enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_CLONE_BTN), enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_DEL_BTN), fileTypesExist);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_NEW_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_CLONE_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_DEL_BTN), fileTypesExist);
 
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_EXTRACT_BTN), enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_APPEND_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_EXTRACT_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_APPEND_BTN), enable);
 
    if (enable) {
       enableMoveFileButtons();
    }
    else {
-      EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_DOWN_BUTTON), FALSE);
-      EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_FILE_UP_BUTTON), FALSE);
+      EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_DOWN_BUTTON), FALSE);
+      EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_FILE_UP_BUTTON), FALSE);
    }
 
    indicateCleanStatus();
@@ -836,7 +836,7 @@ void ConfigureDialog::onRecTypeSelect() {
 void ConfigureDialog::onRecTypeSelectFill(RecordType* recInfo) {
    loadingEdits = TRUE;
 
-   SetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_DESC_EDIT, recInfo->label.c_str());
+   SetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_DESC_EDIT, recInfo->label.c_str());
 
    wstring regExpr = recInfo->marker;
 
@@ -846,7 +846,7 @@ void ConfigureDialog::onRecTypeSelectFill(RecordType* recInfo) {
    loadingEdits = FALSE;
 
    if (recInfo->theme == L"")
-      recInfo->theme = MCVIZ_DEF_REC_THEME_FROM_FT;
+      recInfo->theme = NDVIZ_DEF_REC_THEME_FROM_FT;
 
    Utils::setComboBoxSelection(hRecThemes, static_cast<int>(
       SendMessage(hRecThemes, CB_FINDSTRING, (WPARAM)-1, (LPARAM)recInfo->theme.c_str())));
@@ -859,29 +859,29 @@ void ConfigureDialog::enableMoveRecButtons() {
    int idxRec{ getCurrentRecIndex() };
    if (idxRec == LB_ERR) return;
 
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_DOWN_BUTTON),
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_DOWN_BUTTON),
       (idxRec < static_cast<int>(vFileTypes[idxFT].vRecTypes.size()) - 1));
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_UP_BUTTON), (idxRec > 0));
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_UP_BUTTON), (idxRec > 0));
 }
 
 void ConfigureDialog::enableRecSelection() {
    bool enable{ cleanRecVals && cleanFieldVals };
    bool recTypesExist{ SendMessage(hRecsLB, LB_GETCOUNT, 0, 0) > 0 };
 
-   ShowWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_NEW_BTN), cleanRecVals ? SW_SHOW : SW_HIDE);
-   ShowWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_RESET_BTN), cleanRecVals ? SW_HIDE : SW_SHOW);
+   ShowWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_NEW_BTN), cleanRecVals ? SW_SHOW : SW_HIDE);
+   ShowWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_RESET_BTN), cleanRecVals ? SW_HIDE : SW_SHOW);
 
    EnableWindow(hRecsLB, enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_NEW_BTN), enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_CLONE_BTN), enable);
-   EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_DEL_BTN), recTypesExist);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_NEW_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_CLONE_BTN), enable);
+   EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_DEL_BTN), recTypesExist);
 
    if (enable) {
       enableMoveRecButtons();
    }
    else {
-      EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_DOWN_BUTTON), FALSE);
-      EnableWindow(GetDlgItem(_hSelf, IDC_MCVIZ_DEF_REC_UP_BUTTON), FALSE);
+      EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_DOWN_BUTTON), FALSE);
+      EnableWindow(GetDlgItem(_hSelf, IDC_NDVIZ_DEF_REC_UP_BUTTON), FALSE);
    }
 
    enableFileSelection();
@@ -1021,14 +1021,14 @@ int ConfigureDialog::recEditAccept(bool accept) {
    if (accept) {
       wchar_t recDesc[MAX_PATH + 1];
 
-      GetDlgItemText(_hSelf, IDC_MCVIZ_DEF_REC_DESC_EDIT, recDesc, MAX_PATH);
+      GetDlgItemText(_hSelf, IDC_NDVIZ_DEF_REC_DESC_EDIT, recDesc, MAX_PATH);
       recInfo.label = recDesc;
 
       wchar_t regexVal[MAX_PATH + 1];
 
       GetWindowText(hRecRegex, regexVal, MAX_PATH);
 
-      if (Utils::isInvalidRegex(regexVal, _hSelf, MCVIZ_DEF_REC_REGEX_LABEL))
+      if (Utils::isInvalidRegex(regexVal, _hSelf, NDVIZ_DEF_REC_REGEX_LABEL))
          return -2;
       else
          recInfo.marker = regexVal;
@@ -1036,7 +1036,7 @@ int ConfigureDialog::recEditAccept(bool accept) {
       wchar_t themeVal[MAX_PATH + 1];
 
       GetWindowText(hRecThemes, themeVal, MAX_PATH);
-      recInfo.theme = (wstring{ themeVal } == MCVIZ_DEF_REC_THEME_FROM_FT) ? L"" : themeVal;
+      recInfo.theme = (wstring{ themeVal } == NDVIZ_DEF_REC_THEME_FROM_FT) ? L"" : themeVal;
    }
    else if (recInfo.label.empty()) {
       recEditDelete();
@@ -1068,8 +1068,8 @@ void ConfigureDialog::recEditNew(bool clone) {
 
    if (static_cast<int>(records.size()) >= REC_TYPE_LIMIT) {
       TCHAR buf[100];
-      swprintf(buf, 100, MCVIZ_RT_LIMIT_ERROR, REC_TYPE_LIMIT);
-      MessageBox(_hSelf, buf, clone ? MCVIZ_RT_CLONE_ACTION : MCVIZ_RT_NEW_ACTION, MB_OK | MB_ICONSTOP);
+      swprintf(buf, 100, NDVIZ_RT_LIMIT_ERROR, REC_TYPE_LIMIT);
+      MessageBox(_hSelf, buf, clone ? NDVIZ_RT_CLONE_ACTION : NDVIZ_RT_NEW_ACTION, MB_OK | MB_ICONSTOP);
       return;
    }
 
@@ -1145,7 +1145,7 @@ int ConfigureDialog::fileEditAccept(bool accept) {
    if (accept) {
       wchar_t fileVal[MAX_PATH + 1];
 
-      GetDlgItemText(_hSelf, IDC_MCVIZ_DEF_FILE_DESC_EDIT, fileVal, MAX_PATH);
+      GetDlgItemText(_hSelf, IDC_NDVIZ_DEF_FILE_DESC_EDIT, fileVal, MAX_PATH);
       fileInfo.label = fileVal;
 
       int delimCurSel = static_cast<int>(SendMessage(hFileDelim, CB_GETCURSEL, 0, 0));
@@ -1169,7 +1169,7 @@ int ConfigureDialog::fileEditAccept(bool accept) {
 
          GetWindowText(hADFTRegex[i], regExpr, MAX_PATH);
          if (Utils::isInvalidRegex(regExpr, _hSelf,
-            wstring(MCVIZ_DEF_ADFT_GROUP_LABEL) + L" - " + MCVIZ_DEF_ADFT_LINE_LABEL + L" " + to_wstring(i + 1)))
+            wstring(NDVIZ_DEF_ADFT_GROUP_LABEL) + L" - " + NDVIZ_DEF_ADFT_LINE_LABEL + L" " + to_wstring(i + 1)))
             return -2;
          else
             fileInfo.regExprs[i] = regExpr;
@@ -1305,14 +1305,14 @@ bool ConfigureDialog::checkFTLimit(bool clone) {
    if (vFileTypes.size() < FILE_TYPE_LIMIT) return TRUE;
 
    TCHAR buf[100];
-   swprintf(buf, 100, MCVIZ_FT_LIMIT_ERROR, FILE_TYPE_LIMIT);
-   MessageBox(_hSelf, buf, clone ? MCVIZ_FT_CLONE_ACTION : MCVIZ_FT_NEW_ACTION, MB_OK | MB_ICONSTOP);
+   swprintf(buf, 100, NDVIZ_FT_LIMIT_ERROR, FILE_TYPE_LIMIT);
+   MessageBox(_hSelf, buf, clone ? NDVIZ_FT_CLONE_ACTION : NDVIZ_FT_NEW_ACTION, MB_OK | MB_ICONSTOP);
    return FALSE;
 }
 
 bool ConfigureDialog::promptDiscardChangesNo() {
    if (!(cleanConfigFile && cleanFileVals && cleanRecVals && cleanFieldVals)) {
-      if (MessageBox(_hSelf, MCVIZ_DISCARD_CHANGES, MCVIZ_DEF_DIALOG_TITLE,
+      if (MessageBox(_hSelf, NDVIZ_DISCARD_CHANGES, NDVIZ_DEF_DIALOG_TITLE,
          MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDNO)
          return TRUE;
    }
@@ -1322,7 +1322,7 @@ bool ConfigureDialog::promptDiscardChangesNo() {
 
 void ConfigureDialog::saveConfigInfo() {
    if (_configIO.isCurrentVizConfigDefault() &&
-      MessageBox(_hSelf, MCVIZ_DEFAULT_OVERWRITE, MCVIZ_DEF_DIALOG_TITLE,
+      MessageBox(_hSelf, NDVIZ_DEFAULT_OVERWRITE, NDVIZ_DEF_DIALOG_TITLE,
          MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDNO)
       return;
 
@@ -1352,7 +1352,7 @@ void ConfigureDialog::saveConfigInfo() {
 
    cleanConfigFile = TRUE;
    indicateCleanStatus();
-   RefreshMultiCSVPanel();
+   RefreshNestedDSVPanel();
 }
 
 void ConfigureDialog::showEximDialog(bool bExtract) {
@@ -1397,7 +1397,7 @@ LRESULT CALLBACK procNumberEditControl(HWND hwnd, UINT messageId, WPARAM wParam,
       }
 
       if (!valid) {
-         showEditBalloonTip(hwnd, MCVIZ_DIALOG_NUMERIC_TITLE, MCVIZ_DIALOG_NUMERIC_MSG);
+         showEditBalloonTip(hwnd, NDVIZ_DIALOG_NUMERIC_TITLE, NDVIZ_DIALOG_NUMERIC_MSG);
          return FALSE;
       }
       break;
@@ -1417,7 +1417,7 @@ LRESULT CALLBACK procNumberEditControl(HWND hwnd, UINT messageId, WPARAM wParam,
       clipValid += L"[0-9]*";
 
       if (!regex_match(clipText, wregex(clipValid))) {
-         showEditBalloonTip(hwnd, MCVIZ_DIALOG_NUMERIC_TITLE, MCVIZ_DIALOG_NUMERIC_MSG);
+         showEditBalloonTip(hwnd, NDVIZ_DIALOG_NUMERIC_TITLE, NDVIZ_DIALOG_NUMERIC_MSG);
          return FALSE;
       }
       break;
@@ -1431,7 +1431,7 @@ LRESULT CALLBACK procFieldEditMessages(HWND hwnd, UINT messageId, WPARAM wParam,
    switch (messageId) {
    case WM_CHAR:
       if (wParam == ',') {
-         showEditBalloonTip(hwnd, MCVIZ_DIALOG_COMMAS_TITLE, MCVIZ_DIALOG_COMMAS_MESSAGE);
+         showEditBalloonTip(hwnd, NDVIZ_DIALOG_COMMAS_TITLE, NDVIZ_DIALOG_COMMAS_MESSAGE);
       }
       break;
    }

@@ -1,7 +1,7 @@
 #include "JumpToField.h"
-#include "MultiCSVPanel.h"
+#include "NestedDSVPanel.h"
 
-extern MultiCSVPanel _csvPanel;
+extern NestedDSVPanel _dsvPanel;
 
 void JumpToField::doDialog(HINSTANCE hInst) {
    if (!isCreated()) {
@@ -144,7 +144,7 @@ void JumpToField::onJumpSeqNumPref() {
 void JumpToField::onJumpBtnClick() {
    display(FALSE);
 
-   _csvPanel.jumpToField(initFileType, initRecordRegIndex,
+   _dsvPanel.jumpToField(initFileType, initRecordRegIndex,
       static_cast<int>(SendMessage(hFieldList, CB_GETCURSEL, NULL, NULL)));
 }
 

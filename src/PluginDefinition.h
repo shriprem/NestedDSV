@@ -26,10 +26,10 @@
 #include "NPP/PluginInterface.h"
 #include "Resources/resource.h"
 #include "Resources/control_ids.h"
-#include "Resources/MCVIZ_messages.h"
+#include "Resources/NDVIZ_messages.h"
 #include "Resources/localization.h"
 
-#define PLUGIN_FOLDER_NAME L"MultiCSV"
+#define PLUGIN_FOLDER_NAME L"NestedDSV"
 
 using std::string;
 using std::string_view;
@@ -42,7 +42,7 @@ constexpr int ADFT_MAX{ 3 };
 constexpr int _gLanguage{ LANG_ENGLISH };
 
 const enum MenuIndex {
-   MI_MCVIZ_PANEL,
+   MI_NDVIZ_PANEL,
    MI_CONFIG_DIALOG,
    MI_CONFIG_THEMES,
    MI_SEPARATOR_1,
@@ -77,9 +77,9 @@ LRESULT NppMessage(UINT messageID, WPARAM wparam = 0, LPARAM lparam = 0);
 HWND GetCurrentScintilla();
 bool GetDirectScintillaFunc(PSCIFUNC_T& fn, void*& ptr);
 
-void ShowMultiCSVPanel(bool show);
-void ToggleMultiCSVPanel();
-void RefreshMultiCSVPanel();
+void ShowNestedDSVPanel(bool show);
+void ToggleNestedDSVPanel();
+void RefreshNestedDSVPanel();
 
 void ShowConfigDialog();
 void ShowThemeDialog();

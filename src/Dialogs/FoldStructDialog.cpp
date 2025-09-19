@@ -280,7 +280,7 @@ INT_PTR CALLBACK FoldStructDialog::run_dlgProc(UINT message, WPARAM wParam, LPAR
       if (NPPDM_IsEnabled()) return TRUE;
       break;
 
-   case MCVIZMSG_APPEND_EXIM_DATA:
+   case NDVIZMSG_APPEND_EXIM_DATA:
       appendFoldStructInfo(reinterpret_cast<LPCWSTR>(lParam));
       break;
    }
@@ -1120,7 +1120,7 @@ bool FoldStructDialog::promptDiscardChangesNo() {
 
 void FoldStructDialog::saveFoldStructInfo() {
    if (_configIO.isCurrentVizConfigDefault() &&
-      MessageBox(_hSelf, MCVIZ_DEFAULT_OVERWRITE, MCVIZ_DEF_DIALOG_TITLE,
+      MessageBox(_hSelf, NDVIZ_DEFAULT_OVERWRITE, NDVIZ_DEF_DIALOG_TITLE,
          MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDNO)
       return;
 

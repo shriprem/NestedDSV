@@ -17,7 +17,7 @@
 #include "ConfigIO.h"
 #include "SubmenuManager.h"
 
-#include "Dialogs/MultiCSVPanel.h"
+#include "Dialogs/NestedDSVPanel.h"
 
 #ifdef UNICODE
    #define generic_itoa _itow
@@ -33,11 +33,11 @@ HINSTANCE _gModule;
 ConfigIO _configIO;
 SubmenuManager _submenu;
 
-MultiCSVPanel _csvPanel;
+NestedDSVPanel _dsvPanel;
 
 void pluginInit(HANDLE hModule) {
    _gModule = (HINSTANCE)hModule;
-   _csvPanel.init(_gModule, NULL);
+   _dsvPanel.init(_gModule, NULL);
 }
 
 void pluginCleanUp(){}
@@ -51,7 +51,7 @@ void commandMenuInit() {
    shKeyOpen->_isCtrl = true;
    shKeyOpen->_isShift = false;
    shKeyOpen->_key = VK_F8;
-   setCommand(MI_MCVIZ_PANEL, MENU_SHOW_PANEL, ToggleMultiCSVPanel, shKeyOpen, _csvPanel.isVisible());
+   setCommand(MI_NDVIZ_PANEL, MENU_SHOW_PANEL, ToggleNestedDSVPanel, shKeyOpen, _dsvPanel.isVisible());
 
    setCommand(MI_CONFIG_DIALOG, MENU_CONFIG_FILE_TYPES, ShowConfigDialog);
    setCommand(MI_CONFIG_THEMES, MENU_CONFIG_THEMES, ShowThemeDialog);
@@ -102,7 +102,7 @@ void commandMenuInit() {
 }
 
 void commandMenuCleanUp() {
-   delete pluginMenuItems[MI_MCVIZ_PANEL]._pShKey;
+   delete pluginMenuItems[MI_NDVIZ_PANEL]._pShKey;
    delete pluginMenuItems[MI_FIELD_JUMP]._pShKey;
    delete pluginMenuItems[MI_FIELD_LEFT]._pShKey;
    delete pluginMenuItems[MI_FIELD_RIGHT]._pShKey;
@@ -154,74 +154,74 @@ void RegisterDockPanelIcon() {
 }
 
 
-// Dockable Multi-CSV Viewer Dialog
-void ShowMultiCSVPanel(bool show) {
-   if (show && !_csvPanel.isVisible()) {
-      _csvPanel.setParent(nppData._nppHandle);
+// Dockable Nested DSV Viewer Dialog
+void ShowNestedDSVPanel(bool show) {
+   if (show && !_dsvPanel.isVisible()) {
+      _dsvPanel.setParent(nppData._nppHandle);
 
-      if (!_csvPanel.isCreated()) {
-         _csvPanel.create(&_dockpanelData);
+      if (!_dsvPanel.isCreated()) {
+         _dsvPanel.create(&_dockpanelData);
 
          _dockpanelData.uMask = DWS_DF_CONT_RIGHT | DWS_ICONTAB | DWS_USEOWNDARKMODE;
-         _dockpanelData.pszModuleName = _csvPanel.getPluginFileName();
-         _dockpanelData.dlgID = MI_MCVIZ_PANEL;
+         _dockpanelData.pszModuleName = _dsvPanel.getPluginFileName();
+         _dockpanelData.dlgID = MI_NDVIZ_PANEL;
          _dockpanelData.pszName = MENU_PANEL_NAME;
          RegisterDockPanelIcon();
 
-         _csvPanel.initPanel();
+         _dsvPanel.initPanel();
       }
    }
 
-   _csvPanel.display(show);
+   _dsvPanel.display(show);
 }
 
-void ToggleMultiCSVPanel() {
-   ShowMultiCSVPanel(!_csvPanel.isVisible());
+void ToggleNestedDSVPanel() {
+   ShowNestedDSVPanel(!_dsvPanel.isVisible());
 }
 
-void RefreshMultiCSVPanel() {
-    _csvPanel.loadListFileTypes();
-    _csvPanel.loadListThemes();
+void RefreshNestedDSVPanel() {
+    _dsvPanel.loadListFileTypes();
+    _dsvPanel.loadListThemes();
 }
 
 void ShowConfigDialog() {
-   _csvPanel.showConfigDialog();
+   _dsvPanel.showConfigDialog();
 }
 
 void ShowThemeDialog() {
-   _csvPanel.showThemeDialog();
+   _dsvPanel.showThemeDialog();
 }
 
 void ShowJumpDialog() {
-   _csvPanel.showJumpDialog();
+   _dsvPanel.showJumpDialog();
 }
 
 void FieldLeft() {
-   _csvPanel.fieldLeft();
+   _dsvPanel.fieldLeft();
 }
 
 void FieldRight() {
-   _csvPanel.fieldRight();
+   _dsvPanel.fieldRight();
 }
 
 void FieldCopy() {
-   _csvPanel.fieldCopy();
+   _dsvPanel.fieldCopy();
 }
 
 void FieldPaste() {
-   _csvPanel.fieldPaste();
+   _dsvPanel.fieldPaste();
 }
 
 void ShowDataExtractDialog() {
-   _csvPanel.showExtractDialog();
+   _dsvPanel.showExtractDialog();
 }
 
 void ShowAboutDialog() {
-   _csvPanel.showAboutDialog();
+   _dsvPanel.showAboutDialog();
 }
 
 void RefreshDarkMode() {
-   if (_csvPanel.isCreated())
-      _csvPanel.refreshDarkMode();
+   if (_dsvPanel.isCreated())
+      _dsvPanel.refreshDarkMode();
 }
 

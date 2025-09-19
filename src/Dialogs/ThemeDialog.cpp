@@ -284,7 +284,7 @@ INT_PTR CALLBACK ThemeDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lP
       NPPDM_AutoSubclassAndThemeChildControls(_hSelf);
       break;
 
-   case MCVIZMSG_APPEND_EXIM_DATA:
+   case NDVIZMSG_APPEND_EXIM_DATA:
       appendThemeConfigs(reinterpret_cast<LPCWSTR>(lParam));
       break;
    }
@@ -1054,7 +1054,7 @@ void ThemeDialog::saveConfigInfo() {
 
    cleanConfigFile = TRUE;
    indicateCleanStatus();
-   RefreshMultiCSVPanel();
+   RefreshNestedDSVPanel();
 }
 
 void ThemeDialog::showEximDialog(bool bExtract) {

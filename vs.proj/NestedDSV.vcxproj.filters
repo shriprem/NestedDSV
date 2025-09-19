@@ -103,7 +103,7 @@
     <ClInclude Include="..\src\Dialogs\JumpToField.h">
       <Filter>Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Dialogs\MultiCSVPanel.h">
+    <ClInclude Include="..\src\Dialogs\NestedDSVPanel.h">
       <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Dialogs\PreferencesDialog.h">
@@ -121,7 +121,7 @@
     <ClInclude Include="..\src\Resources\localization.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Resources\MCVIZ_messages.h">
+    <ClInclude Include="..\src\Resources\NDVIZ_messages.h">
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Resources\resource.h">
@@ -180,7 +180,7 @@
     <ClCompile Include="..\src\Dialogs\JumpToField.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Dialogs\MultiCSVPanel.cpp">
+    <ClCompile Include="..\src\Dialogs\NestedDSVPanel.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Dialogs\PreferencesDialog.cpp">
@@ -192,7 +192,7 @@
     <ClCompile Include="..\src\Dialogs\ThemeDialog.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MultiCSVMain.cpp">
+    <ClCompile Include="..\src\NestedDSVMain.cpp">
       <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,10 +200,10 @@
     <ResourceCompile Include="..\src\Resources\AboutUI.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\Resources\MultiCSVPlugin.rc">
+    <ResourceCompile Include="..\src\Resources\NestedDSVPlugin.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\Resources\MultiCSVUI.rc">
+    <ResourceCompile Include="..\src\Resources\NestedDSVUI.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>

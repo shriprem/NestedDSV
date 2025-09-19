@@ -1,7 +1,7 @@
 /*
  Copyright 2025 Shridhar Kumar <shriprem@gmail.com>
 
- Multi-CSV Viewer plugin forNotepad++  is free software: you can redistribute it and/or modify
+ Nested DSV Viewer plugin forNotepad++  is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
@@ -37,13 +37,13 @@ BEGIN
    BEGIN
       BLOCK "040904b0"
       BEGIN
-         VALUE "CompanyName", "https://github.com/shriprem/MultiCSV"
-         VALUE "FileDescription", "Multi-CSV Viewer plugin for Notepad++"
+         VALUE "CompanyName", "https://github.com/shriprem/NestedDSV"
+         VALUE "FileDescription", "Nested DSV Viewer plugin for Notepad++"
          VALUE "FileVersion", VERSION_VALUE
-         VALUE "InternalName",  "MultiCSV.dll"
+         VALUE "InternalName",  "NestedDSV.dll"
          VALUE "LegalCopyright", "Copyright (C) 2025 by Shridhar Kumar"
-         VALUE "OriginalFilename", "MultiCSV.dll"
-         VALUE "ProductName", "Multi-CSV Viewer"
+         VALUE "OriginalFilename", "NestedDSV.dll"
+         VALUE "ProductName", "Nested DSV Viewer"
          VALUE "ProductVersion", VERSION_VALUE
       END
    END

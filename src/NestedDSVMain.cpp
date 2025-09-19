@@ -14,12 +14,12 @@
 
 #include "PluginDefinition.h"
 #include "SubmenuManager.h"
-#include "Dialogs/MultiCSVPanel.h"
+#include "Dialogs/NestedDSVPanel.h"
 #include "Darkmode/NPP_Plugin_Darkmode.h"
 
 extern FuncItem pluginMenuItems[MI_COUNT];
 extern NppData nppData;
-extern MultiCSVPanel _csvPanel;
+extern NestedDSVPanel _dsvPanel;
 extern SubmenuManager _submenu;
 
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  reasonForCall, LPVOID /*lpReserved*/) {
@@ -65,12 +65,12 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode) {
          break;
 
       case NPPN_BUFFERACTIVATED:
-         _csvPanel.onBufferActivate();
+         _dsvPanel.onBufferActivate();
          break;
 
       case NPPN_TBMODIFICATION:
       {
-         Utils::addToolbarIcon(MI_MCVIZ_PANEL, IDB_VIZ_TOOL_BTN_STD_FIELDS, IDI_VIZ_TOOL_BTN_FLUENT_FIELDS, IDI_VIZ_TOOL_BTN_DARK_FIELDS);
+         Utils::addToolbarIcon(MI_NDVIZ_PANEL, IDB_VIZ_TOOL_BTN_STD_FIELDS, IDI_VIZ_TOOL_BTN_FLUENT_FIELDS, IDI_VIZ_TOOL_BTN_DARK_FIELDS);
 
          break;
       }
@@ -86,13 +86,13 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode) {
 
       case SCN_UPDATEUI:
          if (notifyCode->updated & SC_UPDATE_V_SCROLL)
-            _csvPanel.renderScrolledPage(notifyCode->nmhdr.hwndFrom);
+            _dsvPanel.renderScrolledPage(notifyCode->nmhdr.hwndFrom);
          else if (notifyCode->updated & (SC_UPDATE_CONTENT | SC_UPDATE_SELECTION))
-            _csvPanel.renderCurrentPage();
+            _dsvPanel.renderCurrentPage();
          break;
 
       case NPPN_FILEBEFORECLOSE:
-         _csvPanel.delDocInfo(static_cast<intptr_t>(notifyCode->nmhdr.idFrom));
+         _dsvPanel.delDocInfo(static_cast<intptr_t>(notifyCode->nmhdr.idFrom));
          break;
 
       case NPPN_SHUTDOWN:

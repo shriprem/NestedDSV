@@ -30,7 +30,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{5758e362-ff08-4d49-b6c9-9d1329f9d220}</ProjectGuid>
-    <RootNamespace>MultiCSV</RootNamespace>
+    <RootNamespace>NestedDSV</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -276,7 +276,7 @@
     <ClInclude Include="..\src\Dialogs\FieldTypeDialog.h" />
     <ClInclude Include="..\src\Dialogs\FoldStructDialog.h" />
     <ClInclude Include="..\src\Dialogs\JumpToField.h" />
-    <ClInclude Include="..\src\Dialogs\MultiCSVPanel.h" />
+    <ClInclude Include="..\src\Dialogs\NestedDSVPanel.h" />
     <ClInclude Include="..\src\Dialogs\PreferencesDialog.h" />
     <ClInclude Include="..\src\Dialogs\StyleDefComponent.h" />
     <ClInclude Include="..\src\Dialogs\ThemeDialog.h" />
@@ -312,11 +312,11 @@
     <ClCompile Include="..\src\Dialogs\FieldTypeDialog.cpp" />
     <ClCompile Include="..\src\Dialogs\FoldStructDialog.cpp" />
     <ClCompile Include="..\src\Dialogs\JumpToField.cpp" />
-    <ClCompile Include="..\src\Dialogs\MultiCSVPanel.cpp" />
+    <ClCompile Include="..\src\Dialogs\NestedDSVPanel.cpp" />
     <ClCompile Include="..\src\Dialogs\PreferencesDialog.cpp" />
     <ClCompile Include="..\src\Dialogs\StyleDefComponent.cpp" />
     <ClCompile Include="..\src\Dialogs\ThemeDialog.cpp" />
-    <ClCompile Include="..\src\MultiCSVMain.cpp" />
+    <ClCompile Include="..\src\NestedDSVMain.cpp" />
     <ClCompile Include="..\src\NPP\dpiManagerV2.cpp" />
     <ClCompile Include="..\src\NPP\StaticDialog.cpp" />
     <ClCompile Include="..\src\PluginDefinition.cpp" />
@@ -325,8 +325,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resources\AboutUI.rc" />
-    <ResourceCompile Include="..\src\Resources\MultiCSVPlugin.rc" />
-    <ResourceCompile Include="..\src\Resources\MultiCSVUI.rc" />
+    <ResourceCompile Include="..\src\Resources\NestedDSVPlugin.rc" />
+    <ResourceCompile Include="..\src\Resources\NestedDSVUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

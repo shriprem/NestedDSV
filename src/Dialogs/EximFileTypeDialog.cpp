@@ -123,7 +123,7 @@ void EximFileTypeDialog::appendExtractFile() {
    _configIO.saveConfigFile(getEditControlText(), tmpFile);
    display(FALSE);
 
-   SendMessage(hClientDlg, MCVIZMSG_APPEND_EXIM_DATA, 0, (LPARAM)tmpFile.c_str());
+   SendMessage(hClientDlg, NDVIZMSG_APPEND_EXIM_DATA, 0, (LPARAM)tmpFile.c_str());
    DeleteFile(tmpFile.c_str());
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../NPP/StaticDialog.h"
-#include "MultiCSVPanel.h"
+#include "NestedDSVPanel.h"
 
 constexpr int LINES_PER_PAGE{ 10 };
 constexpr int MAX_PAGES{ 3 };
@@ -11,7 +11,7 @@ constexpr int MAX_TEMPLATE_NAME{ 50 };
 extern NppData nppData;
 extern ConfigIO _configIO;
 
-typedef MultiCSVPanel::RecordInfo RecordInfo;
+typedef NestedDSVPanel::RecordInfo RecordInfo;
 
 class DataExtractDialog : public StaticDialog {
 public:

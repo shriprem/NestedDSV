@@ -1,6 +1,6 @@
 ﻿#include "DataExtractDialog.h"
 
-extern MultiCSVPanel _csvPanel;
+extern NestedDSVPanel _dsvPanel;
 extern DataExtractDialog _dataExtractDlg;
 
 LRESULT CALLBACK procKeyNavigation(HWND hwnd, UINT messageId, WPARAM wParam, LPARAM lParam, UINT_PTR, DWORD_PTR) {
@@ -389,7 +389,7 @@ void DataExtractDialog::initLineItemFieldList(int line) {
    resetDropDown(hFTList);
 
    string fileType{};
-   if (!_csvPanel.getDocFileType(fileType) || (initFileType != fileType)) return;
+   if (!_dsvPanel.getDocFileType(fileType) || (initFileType != fileType)) return;
 
    size_t RTIndex = SendDlgItemMessage(_hSelf, IDC_DAT_EXT_ITEM_RECORD_01 + line, CB_GETCURSEL, NULL, NULL);
    if (RTIndex == 0) return;
@@ -594,7 +594,7 @@ void DataExtractDialog::extractData() {
    if (!GetDirectScintillaFunc(sciFunc, sciPtr)) return;
 
    string fileType{};
-   if (!_csvPanel.getDocFileType(fileType) || (initFileType != fileType)) {
+   if (!_dsvPanel.getDocFileType(fileType) || (initFileType != fileType)) {
       MessageBox(_hSelf, DATA_EXTRACT_CHANGED_DOC, DATA_EXTRACT_DIALOG_TITLE, MB_OK | MB_ICONSTOP);
       return;
    }

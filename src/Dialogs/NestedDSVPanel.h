@@ -31,7 +31,7 @@ extern ConfigIO _configIO;
 using std::regex;
 using std::vector;
 
-class MultiCSVPanel : public DockingDlgInterface {
+class NestedDSVPanel : public DockingDlgInterface {
 public:
    struct RecordInfo {
       wstring label;
@@ -42,8 +42,8 @@ public:
       vector<int> fieldStyles;
    };
 
-   MultiCSVPanel() :DockingDlgInterface(IDD_VISUALIZER_DOCKPANEL) {};
-   ~MultiCSVPanel() { if (hbr != NULL) DeleteObject(hbr); };
+   NestedDSVPanel() :DockingDlgInterface(IDD_VISUALIZER_DOCKPANEL) {};
+   ~NestedDSVPanel() { if (hbr != NULL) DeleteObject(hbr); };
 
    void initPanel();
    virtual void display(bool toShow = TRUE);

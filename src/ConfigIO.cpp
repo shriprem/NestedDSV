@@ -454,7 +454,7 @@ bool ConfigIO::queryConfigFileName(HWND hwnd, bool bOpen, bool backupFolder, wst
    ofn.nFilterIndex = 2;
    ofn.lpstrFileTitle = NULL;
    ofn.nMaxFileTitle = 0;
-   ofn.lpstrTitle = bOpen ? MCVIZ_OPEN_BKUP_CONFIG_DLG : MCVIZ_SAVE_BKUP_CONFIG_DLG;
+   ofn.lpstrTitle = bOpen ? NDVIZ_OPEN_BKUP_CONFIG_DLG : NDVIZ_SAVE_BKUP_CONFIG_DLG;
    ofn.Flags = bOpen ? (OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST) : OFN_OVERWRITEPROMPT;
 
    if (backupFolder)
