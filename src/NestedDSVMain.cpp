@@ -81,7 +81,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode) {
          break;
 
       case NPPN_TOOLBARICONSETCHANGED:
-         if (_dsvPanel.isVisible()) RegisterDockPanelIcon();
+         if (_dsvPanel.isPanelMounted()) RegisterDockPanelIcon();
          break;
 
       case SCN_UPDATEUI:

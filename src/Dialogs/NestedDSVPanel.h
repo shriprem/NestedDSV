@@ -47,6 +47,7 @@ public:
 
    void initPanel();
    virtual void display(bool toShow = TRUE);
+   bool isPanelMounted() { return panelMounted; }
    void refreshDarkMode();
    void updateHopRightTip();
    void setParent(HWND parent2set);
