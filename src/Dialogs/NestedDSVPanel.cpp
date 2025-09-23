@@ -402,10 +402,11 @@ void NestedDSVPanel::display(bool toShow) {
 }
 
 void NestedDSVPanel::refreshDarkMode() {
-   NPPDM_AutoThemeChildControls(_hSelf);
-   RegisterDockPanelIcon();
-   redraw();
-   SendMessage(GetDlgItem(_hSelf, IDC_PREF_FOLD_LINE_ALPHA_SLIDER), TBM_SETRANGEMIN, FALSE, 0);
+   if (isCreated()) {
+      NPPDM_AutoThemeChildControls(_hSelf);
+      redraw();
+      SendMessage(GetDlgItem(_hSelf, IDC_PREF_FOLD_LINE_ALPHA_SLIDER), TBM_SETRANGEMIN, FALSE, 0);
+   }
 
    if (_configDlg.isCreated())
       _configDlg.refreshDarkMode();

@@ -77,11 +77,11 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode) {
 
       case NPPN_DARKMODECHANGED:
          NPPDM_QueryNPPDarkmode();
-         RefreshDarkMode();
+         _dsvPanel.refreshDarkMode();
          break;
 
       case NPPN_TOOLBARICONSETCHANGED:
-         RegisterDockPanelIcon();
+         if (_dsvPanel.isVisible()) RegisterDockPanelIcon();
          break;
 
       case SCN_UPDATEUI:

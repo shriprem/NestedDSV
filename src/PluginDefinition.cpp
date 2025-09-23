@@ -166,13 +166,13 @@ void ShowNestedDSVPanel(bool show) {
          _dockpanelData.pszModuleName = _dsvPanel.getPluginFileName();
          _dockpanelData.dlgID = MI_NDVIZ_PANEL;
          _dockpanelData.pszName = MENU_PANEL_NAME;
-         RegisterDockPanelIcon();
 
          _dsvPanel.initPanel();
       }
    }
 
    _dsvPanel.display(show);
+   if (show) RegisterDockPanelIcon();
 }
 
 void ToggleNestedDSVPanel() {
@@ -219,9 +219,3 @@ void ShowDataExtractDialog() {
 void ShowAboutDialog() {
    _dsvPanel.showAboutDialog();
 }
-
-void RefreshDarkMode() {
-   if (_dsvPanel.isCreated())
-      _dsvPanel.refreshDarkMode();
-}
-
