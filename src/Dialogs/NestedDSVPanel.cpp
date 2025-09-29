@@ -1281,7 +1281,9 @@ void NestedDSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intpt
          }
       }
 
-      fieldInfoText += newLine + CUR_POS_DATA_REC_LENGTH + to_wstring(recLength);
+      fieldInfoText += newLine + CUR_POS_DATA_REC_FIELD_NUM +
+         ((matchedField < 0) ? L"_" : to_wstring(matchedField + 1)) +
+         L"/" + to_wstring(fieldCount) + CUR_POS_DATA_CUR_DEFINED;
 
       if (matchedField < 0) {
          fieldInfoText += newLine + CUR_POS_DATA_OVERFLOW;
@@ -1293,15 +1295,15 @@ void NestedDSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intpt
          if (fieldCount == 0 || matchedField >= fieldCount)
             fieldInfoText += CUR_POS_DATA_FIELD_NUM + to_wstring(matchedField + 1);
          else if (caretColumn > caretFieldEndPositions[matchedField])
-            fieldInfoText += L"»" + FLD.fieldLabels[matchedField];
+            fieldInfoText += L">>" + FLD.fieldLabels[matchedField];
          else
             fieldInfoText += FLD.fieldLabels[matchedField];
 
          const int fieldBegin{ caretFieldStartPositions[matchedField] };
-         const int fieldLength{ caretFieldEndPositions[matchedField] };
+         const int fieldEnd{ caretFieldEndPositions[matchedField] };
 
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_START + to_wstring(fieldBegin + 1);
-         fieldInfoText += newLine + CUR_POS_DATA_FIELD_WIDTH + to_wstring(fieldLength);
+         fieldInfoText += newLine + CUR_POS_DATA_FIELD_WIDTH + to_wstring(fieldEnd - fieldBegin + 1);
          fieldInfoText += newLine + CUR_POS_DATA_FIELD_COL + to_wstring(caretColumn - fieldBegin + 1);
       }
    }
