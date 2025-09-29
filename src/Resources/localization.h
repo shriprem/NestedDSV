@@ -62,8 +62,6 @@
 
 #define CUR_POS_DATA_BLANK_LINE     L"<Blank Line>"
 #define CUR_POS_DATA_UNKOWN_REC     L"<Unknown Record Type>"
-#define CUR_POS_DATA_REC_END        L"<Record End>"
-#define CUR_POS_DATA_REC_TERM       L"<Record Terminator>"
 #define CUR_POS_DATA_REC_TYPE       L"  Record Type: "
 #define CUR_POS_DATA_REC_LENGTH     L"Record Length: "
 #define CUR_POS_DATA_CURR_DEFINED   L" [Current/Defined]"
@@ -286,7 +284,7 @@
 #define PREFERENCES_CLOSE_BTN       L"&Close"
 #define PREF_CLEARVIZ_AUTO_TIP      L"● When this box is unchecked, clicking the \"Clear\" button will redo the auto-file detection, followed by document visualization.\r\n\r\n● When this box is checked, clicking the \"Clear\" button will also uncheck the \"Auto-detect File Type\" checkbox, and also clear the document visualization."
 #define PREF_CLEARVIZ_PANEL_TIP     L"● Leave this box unchecked if you are only closing the plugin panel for more document viewing area but wish to retain the document visualization.\r\n\r\n● When this box is checked, closing the plugin panel will also clear the document visualization."
-#define PREF_HOP_RT_LEFT_EDGE_TIP   L"● When this box is unchecked, clicking the right \"Field Hop\" button will move cursor to the right edge of the current field. If already at the right edge of the field, the cursor will be moved to the right edge of the following field.\r\n\r\n● When this box is checked, clicking the right \"Field Hop\" button will move cursor to the left edge of the following field."
+#define PREF_HOP_RT_NEXT_LEFT_TIP   L"● When this box is unchecked, clicking the right \"Field Hop\" button will move cursor to the right edge of the current field. If already at the right edge of the field, the cursor will be moved to the right edge of the following field.\r\n\r\n● When this box is checked, clicking the right \"Field Hop\" button will move cursor to the left edge of the following field."
 
 
 // Jump Field Dialog

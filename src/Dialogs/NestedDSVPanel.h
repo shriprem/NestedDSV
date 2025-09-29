@@ -163,7 +163,7 @@ private:
    void displayCaretFieldInfo(const intptr_t startLine, const intptr_t endLine);
    void clearCaretFieldInfo();
    void onPanelResize(LPARAM lParam);
-   int getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos);
+   int getFieldEdges(const int fieldIdx, intptr_t& leftPos, intptr_t& width);
    void moveToFieldEdge(const int fieldIdx, bool jumpTo, bool rightEdge, bool hilite);
    void popupSamplesMenu();
 

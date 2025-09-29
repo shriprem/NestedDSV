@@ -299,7 +299,7 @@ void NestedDSVPanel::initPanel() {
 
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_LEFT_BUTTON, L"", VIZ_PANEL_FIELD_LEFT_TIP, FW_TIP_SHORT, TRUE);
    hTipHopRight = addTooltip(_hSelf, IDC_VIZPANEL_FIELD_RIGHT_BUTTON, L"",
-      _configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP,
+      _configIO.getPreferenceBool(PREF_HOP_RT_NEXT_LEFT, FALSE) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP,
       FW_TIP_SHORT, TRUE);
 
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_COPY_BUTTON, L"", VIZ_PANEL_FIELD_COPY_TIP, FW_TIP_MEDIUM, TRUE);
@@ -432,7 +432,7 @@ void NestedDSVPanel::refreshDarkMode() {
 
 void NestedDSVPanel::updateHopRightTip() {
    Utils::updateTooltip(_hSelf, IDC_VIZPANEL_FIELD_RIGHT_BUTTON, hTipHopRight,
-      (_configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE)) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP);
+      (_configIO.getPreferenceBool(PREF_HOP_RT_NEXT_LEFT, FALSE)) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP);
 }
 
 void NestedDSVPanel::setParent(HWND parent2set) {
@@ -638,8 +638,8 @@ void NestedDSVPanel::fieldLeft() {
 }
 
 void NestedDSVPanel::fieldRight() {
-   bool hopRight_LeftEdge{ _configIO.getPreferenceBool(PREF_HOP_RT_LEFT_EDGE, FALSE) };
-   moveToFieldEdge(caretFieldIndex + (hopRight_LeftEdge ? 1 : 0), FALSE, !hopRight_LeftEdge, FALSE);
+   bool hopRight_NextLeft{ _configIO.getPreferenceBool(PREF_HOP_RT_NEXT_LEFT, FALSE) };
+   moveToFieldEdge(caretFieldIndex + (hopRight_NextLeft ? 1 : 0), FALSE, !hopRight_NextLeft, FALSE);
 }
 
 void NestedDSVPanel::fieldCopy() {
@@ -648,13 +648,11 @@ void NestedDSVPanel::fieldCopy() {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
-   intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges(caretFieldIndex, TRUE, leftPos, rightPos) < 0) return;
+   intptr_t leftPos{}, width{};
+   if (getFieldEdges(caretFieldIndex, leftPos, width) < 0) return;
+   if (width < 1) return;
 
-   intptr_t fieldLen{ rightPos - leftPos + 1 };
-   if (fieldLen < 1) return;
-
-   SendMessage(hScintilla, SCI_COPYRANGE, leftPos, rightPos + 1);
+   SendMessage(hScintilla, SCI_COPYRANGE, leftPos, leftPos + width);
    return;
 }
 
@@ -664,11 +662,8 @@ void NestedDSVPanel::fieldPaste() {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return;
 
-   intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges(caretFieldIndex, TRUE, leftPos, rightPos) < 0) return;
-
-   intptr_t fieldCurrLen{ rightPos - leftPos + 1 };
-   if (fieldCurrLen < 1) return;
+   intptr_t leftPos{}, width{};
+   if (getFieldEdges(caretFieldIndex, leftPos, width) < 0) return;
 
    wstring clipText;
    Utils::getClipboardText(GetParent(_hSelf), clipText);
@@ -676,7 +671,9 @@ void NestedDSVPanel::fieldPaste() {
    int clipLength{ static_cast<int>(clipText.length()) };
    if (clipLength < 1) return;
 
-   SendMessage(hScintilla, SCI_DELETERANGE, leftPos, fieldCurrLen);
+   if (width > 0)
+      SendMessage(hScintilla, SCI_DELETERANGE, leftPos, width);
+
    SendMessage(hScintilla, SCI_INSERTTEXT, leftPos, (LPARAM)(Utils::WideToNarrow(clipText).c_str()));
 }
 
@@ -1045,8 +1042,8 @@ void NestedDSVPanel::applyLexer(const intptr_t startLine, intptr_t endLine) {
          caretFieldEndPositions.resize(fieldCount);
       }
 
-      for (size_t i{}; (i < fieldCount) && (fieldStartPos < lineLength); ++i) {
-         nextDelim = lineTextCStr.find(fileDelim, fieldStartPos);
+      for (size_t i{}; (i < fieldCount) && (fieldStartPos <= lineLength); ++i) {
+         nextDelim = lineTextChomped.find(fileDelim, fieldStartPos);
          fieldEndPos = ((nextDelim == string::npos) ? lineLength : nextDelim) - 1;
 
          if (caretLine == currentLine) {
@@ -1167,7 +1164,7 @@ void NestedDSVPanel::onPanelResize(LPARAM lParam) {
    MoveWindow(hIniBtn, (LOWORD(lParam) - aboutBtnWidth - iniBtnWidth - 4), (HIWORD(lParam) - iniBtnHeight - 3), iniBtnWidth, iniBtnHeight, TRUE);
 }
 
-int NestedDSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, intptr_t& leftPos, intptr_t& rightPos) {
+int NestedDSVPanel::getFieldEdges(const int fieldIdx, intptr_t& leftPos, intptr_t& width) {
    HWND hScintilla{ GetCurrentScintilla() };
    if (!hScintilla) return -1;
 
@@ -1175,22 +1172,11 @@ int NestedDSVPanel::getFieldEdges(const int fieldIdx, const bool rightPullback, 
 
    if (fieldIdx < 0 || fieldIdx >= static_cast<int>(FLD.fieldLabels.size())) return -1;
 
-   string fileDelim;
-   if (!getDocDelim(fileDelim)) return -1;
-
-   int delimWidth{ static_cast<int>(fileDelim.length()) };
-
-   int leftOffset{ caretFieldStartPositions[fieldIdx] };
-   int rightOffset{ caretFieldEndPositions[fieldIdx] + (rightPullback ? 0 : delimWidth + 1) };
+   const int& leftOffset{ caretFieldStartPositions[fieldIdx] };
+   const int& rightOffset{ caretFieldEndPositions[fieldIdx] };
 
    leftPos = caretRecordStartPos + leftOffset;
-   rightPos = caretRecordStartPos + rightOffset;
-
-   if (leftPos >= caretRecordEndPos)
-      leftPos = caretRecordEndPos - 1;
-
-   if (rightPos >= caretRecordEndPos)
-      rightPos = caretRecordEndPos - 1;
+   width = (rightOffset >= leftOffset) ? (rightOffset - leftOffset + 1) : 0;
 
    return 0;
 }
@@ -1209,20 +1195,23 @@ void NestedDSVPanel::moveToFieldEdge(const int fieldIdx, bool jumpTo, bool right
       return;
    }
 
-   intptr_t leftPos{}, rightPos{};
-   if (getFieldEdges(fieldIdx, TRUE, leftPos, rightPos) < 0) return;
+   intptr_t leftPos{}, rightPos{}, width{};
+
+   if (getFieldEdges(fieldIdx, leftPos, width) < 0) return;
+   rightPos = leftPos + width - (width ? 1 : 0);
 
    if (!jumpTo) {
       if (rightEdge) {
-         if (caretPos >= rightPos && caretPos < caretRecordEndPos - 1)
-            if (getFieldEdges(fieldIdx + 1, TRUE, leftPos, rightPos) < 0) return;
+         if (caretPos >= rightPos && caretPos < caretRecordEndPos)
+            if (getFieldEdges(fieldIdx + 1, leftPos, width) < 0) return;
       }
       else {
          if (caretPos == leftPos && caretPos > caretRecordStartPos)
-            if (getFieldEdges(fieldIdx - 1, FALSE, leftPos, rightPos) < 0) return;
+            if (getFieldEdges(fieldIdx - 1, leftPos, width) < 0) return;
       }
    }
 
+   rightPos = leftPos + width - (width ? 1 : 0);
    SendMessage(hScintilla, SCI_SETXCARETPOLICY, CARET_JUMPS | CARET_EVEN, 0);
    SendMessage(hScintilla, SCI_GOTOPOS, (rightEdge ? rightPos : leftPos), 0);
 
@@ -1273,12 +1262,6 @@ void NestedDSVPanel::displayCaretFieldInfo(const intptr_t startLine, const intpt
       else {
          fieldInfoText = CUR_POS_DATA_UNKOWN_REC;
       }
-   }
-   else if (caretPos == caretRecordEndPos) {
-      fieldInfoText = CUR_POS_DATA_REC_END;
-   }
-   else if (caretPos >= caretRecordEndPos) {
-      fieldInfoText = CUR_POS_DATA_REC_TERM;
    }
    else {
       RecordInfo& FLD{ vRecInfo[caretRecordRegIndex] };

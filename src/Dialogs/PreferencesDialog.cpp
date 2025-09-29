@@ -13,13 +13,13 @@ void PreferencesDialog::doDialog(HINSTANCE hInst) {
 
    initCheckbox(IDC_PREF_CLEARVIZ_AUTO, PREF_CLEARVIZ_AUTO, FALSE);
    initCheckbox(IDC_PREF_CLEARVIZ_PANEL, PREF_CLEARVIZ_PANEL, FALSE);
-   initCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_LEFT_EDGE, FALSE);
+   initCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_NEXT_LEFT, FALSE);
 
    using Utils::addTooltip;
 
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_AUTO, L"", PREF_CLEARVIZ_AUTO_TIP, PREF_TIP_LONG, TRUE);
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_PANEL, L"", PREF_CLEARVIZ_PANEL_TIP, PREF_TIP_LONG, TRUE);
-   addTooltip(_hSelf, IDC_PREF_HOP_FIELD_LEFT_EDGE, L"", PREF_HOP_RT_LEFT_EDGE_TIP, PREF_TIP_LONG, TRUE);
+   addTooltip(_hSelf, IDC_PREF_HOP_FIELD_LEFT_EDGE, L"", PREF_HOP_RT_NEXT_LEFT_TIP, PREF_TIP_LONG, TRUE);
 
    displayFoldLineColor();
    int foldLineAlpha{ _configIO.getPreferenceInt(PREF_FOLDLINE_ALPHA, MAXBYTE) };
@@ -50,7 +50,7 @@ INT_PTR PreferencesDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPara
          break;
 
       case IDC_PREF_HOP_FIELD_LEFT_EDGE:
-         setCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_LEFT_EDGE);
+         setCheckbox(IDC_PREF_HOP_FIELD_LEFT_EDGE, PREF_HOP_RT_NEXT_LEFT);
          _dsvPanel.updateHopRightTip();
          break;
 
