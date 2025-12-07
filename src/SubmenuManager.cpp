@@ -9,14 +9,8 @@ void SubmenuManager::listSampleFiles() {
    HMENU hSubMenu = getPluginSubMenu();
    if (hSubMenu == NULL) return;
 
-   HMENU hMenuSingleRec = CreatePopupMenu();
-   ModifyMenu(hSubMenu, MI_DEMO_SINGLE_REC_FILES, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hMenuSingleRec, MENU_DEMO_SINGLE_REC_FILES);
-
-   HMENU hMenuMultiRec = CreatePopupMenu();
-   ModifyMenu(hSubMenu, MI_DEMO_MULTI_REC_FILES, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hMenuMultiRec, MENU_DEMO_MULTI_REC_FILES);
-
-   HMENU hMenuMultiLine = CreatePopupMenu();
-   ModifyMenu(hSubMenu, MI_DEMO_MULTI_LINE_FILES, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hMenuMultiLine, MENU_DEMO_MULTI_LINE_FILES);
+   HMENU hMenuSampleFiles = CreatePopupMenu();
+   ModifyMenu(hSubMenu, MI_DEMO_SAMPLE_DATA_FILES, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hMenuSampleFiles, MENU_DEMO_SAMPLE_DATA_FILES);
 
    itemCount = std::size(gSampleFiles);
    if (!NppMessage(NPPM_ALLOCATECMDID, itemCount, (LPARAM)&itemIDStart)) return;
@@ -25,37 +19,18 @@ void SubmenuManager::listSampleFiles() {
    PathAppend(pluginSamplesDir, PLUGIN_FOLDER_NAME);
    PathAppend(pluginSamplesDir, L"Samples");
 
-   HMENU hWhich;
    TCHAR sampleFile[MAX_PATH];
 
    for (size_t i{}; i < itemCount; ++i) {
-      switch (gSampleFiles[i].sample_type)
-      {
-         case SINGLE_REC:
-            hWhich = hMenuSingleRec;
-            break;
-
-         case MULTI_REC:
-            hWhich = hMenuMultiRec;
-            break;
-
-         case MULTI_LINE:
-            hWhich = hMenuMultiLine;
-            break;
-
-         default:
-            continue;
-      }
-
       PathCombine(sampleFile, pluginSamplesDir, gSampleFiles[i].file_name.c_str());
       if (Utils::checkFileExists(sampleFile))
-         AppendMenu(hWhich, MF_STRING, itemIDStart + i, Utils::NarrowToWide(gSampleFiles[i].display_name).c_str());
+         AppendMenu(hMenuSampleFiles, MF_STRING, itemIDStart + i, Utils::NarrowToWide(gSampleFiles[i].display_name).c_str());
    }
 }
 
 void SubmenuManager::loadSampleFile(WPARAM wParam, LPARAM) const {
    size_t cmdID{ LOWORD(wParam) - itemIDStart };
-   if (cmdID < 0 || cmdID > itemCount) return;
+   if (cmdID < 0 || cmdID >= itemCount) return;
 
    TCHAR sampleFile[MAX_PATH];
 
@@ -70,17 +45,20 @@ void SubmenuManager::loadSampleFile(WPARAM wParam, LPARAM) const {
 }
 
 void SubmenuManager::initSamplesPopup(HMENU hPopup) {
-   HMENU hSubMenu = getPluginSubMenu();
-   if (hSubMenu == NULL) return;
+   HMENU hPluginMenu = getPluginSubMenu();
+   if (hPluginMenu == NULL) return;
 
-   HMENU hMenuSingle = GetSubMenu(hSubMenu, MI_DEMO_SINGLE_REC_FILES);
-   AppendMenu(hPopup, MF_POPUP, (UINT_PTR)hMenuSingle, MENU_DEMO_SINGLE_REC_FILES);
+   HMENU hMenuSample = GetSubMenu(hPluginMenu, MI_DEMO_SAMPLE_DATA_FILES);
+   int menuItemCount = GetMenuItemCount(hMenuSample);
 
-   HMENU hMenuMultiRec = GetSubMenu(hSubMenu, MI_DEMO_MULTI_REC_FILES);
-   AppendMenu(hPopup, MF_POPUP, (UINT_PTR)hMenuMultiRec, MENU_DEMO_MULTI_REC_FILES);
+   for (int i{}; i < menuItemCount; ++i) {
+      TCHAR pluginItemText[MAX_PATH];
 
-   HMENU hMenuMultiLine = GetSubMenu(hSubMenu, MI_DEMO_MULTI_LINE_FILES);
-   AppendMenu(hPopup, MF_POPUP, (UINT_PTR)hMenuMultiLine, MENU_DEMO_MULTI_LINE_FILES);
+      int pluginItemLen = GetMenuString(hMenuSample, i, pluginItemText, MAX_PATH, MF_BYPOSITION);
+      if (pluginItemLen < 1) continue;
+
+      AppendMenu(hPopup, MF_STRING, itemIDStart + i, pluginItemText);
+   }
 }
 
 

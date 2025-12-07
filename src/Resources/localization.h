@@ -11,9 +11,7 @@
 #define MENU_FIELD_LEFT             L"Hop to &Left edge of the Field"
 #define MENU_FIELD_RIGHT            L"Hop to &Right edge of the Field"
 #define MENU_DATA_EXTRACTION        L"&Data Extraction"
-#define MENU_DEMO_SINGLE_REC_FILES  L"Sample &Single-Record-Type Files"
-#define MENU_DEMO_MULTI_REC_FILES   L"Sample &Multiple-Record-Type Files"
-#define MENU_DEMO_MULTI_LINE_FILES  L"Sample M&ultiple-Line Record Files"
+#define MENU_DEMO_SAMPLE_DATA_FILES L"Sample Data Files"
 #define MENU_ABOUT                  L"A&bout"
 
 
