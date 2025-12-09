@@ -1,6 +1,6 @@
 # Foldable Record Blocks
 
-![image](https://raw.githubusercontent.com/shriprem/NestedDSV/master/images/foldable_apollo.png)
+![image](https://raw.githubusercontent.com/shriprem/NestedDSV/master/images/foldable_apollo_pipe.png)
 
 **Apollo Missions (Pipe) Sample File, with folding applied.**
 
