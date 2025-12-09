@@ -42,7 +42,7 @@
 #define VIZ_PANEL_FILE_SAMPLES_TIP  L"View Sample Files"
 #define VIZ_PANEL_FILE_CONFIG_TIP   L"Open File Type Metadata Editor"
 #define VIZ_PANEL_THEME_CONFIG_TIP  L"Open Viewer Theme Editor"
-#define VIZ_PANEL_CLEAR_BTN_TIP     L"If \"Auto-detect File Type\" option is:\r\n● Checked: Redo the file type detection and visualization.\r\n● Not checked: Clear the document's fixed-width visualization.\r\n\r\nTo always clear visualization, modify the setting in \"Preferences\"."
+#define VIZ_PANEL_CLEAR_BTN_TIP     L"If \"Auto-detect File Type\" option is:\r\n● Checked: Redo the file type detection and visualization.\r\n● Not checked: Clear the document's NestedDSV visualization.\r\n\r\nTo always clear visualization, modify the setting in \"Preferences\"."
 #define VIZ_PANEL_FIELD_LEFT_TIP    L"Move cursor to the left edge of the current field.\r\n\r\n● If already at the left edge of the field, the cursor will be moved to the left edge of the preceding field.\r\n\r\nAccessible via keyboard shortcut. See the plugin menu."
 #define VIZ_PANEL_FIELD_RIGHT_TIP   L"Move cursor to the right edge of the current field.\r\n\r\n● If already at the right edge of the field, the cursor will be moved to the right edge of the following field.\r\n\r\nUse 'Preferences' » 'Hop Right...' to change this behavior.\r\n\r\nAccessible via keyboard shortcut. See the plugin menu."
 #define VIZ_PANEL_FLD_ALT_RIGHT_TIP L"Move cursor to the left edge of the following field.\r\n\r\nUse 'Preferences' » 'Hop Right...' to change this behavior.\r\n\r\nAccessible via keyboard shortcut. See the plugin menu."
@@ -294,7 +294,7 @@
 
 
 // Data Extraction Dialog
-#define DATA_EXTRACT_DIALOG_TITLE   L"Fixed-Width Data Extraction"
+#define DATA_EXTRACT_DIALOG_TITLE   L"NestedDSV Data Extraction"
 #define DATA_EXTRACT_PREFIX_LABEL   L"Prefix Text¹"
 #define DATA_EXTRACT_RECORD_LABEL   L"Record Type"
 #define DATA_EXTRACT_FIELD_LABEL    L"Field"
@@ -327,16 +327,16 @@
 
 
 // Info Button Links
-#define VIZPANEL_INFO_README        L"https://github.com/shriprem/NestedDSV/blob/master/README.md"
-#define VIZPANEL_FOLD_INFO_README   L"https://github.com/shriprem/NestedDSV/blob/master/docs/foldable_record_blocks.md"
-#define NDVIZ_DEF_INFO_README       L"https://github.com/shriprem/NestedDSV/blob/master/docs/file_type_config_dialog.md"
-#define NDVIZ_DEF_ADFT_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/master/docs/auto_detect_file_type.md"
-#define NDVIZ_RT_THEME_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/master/docs/record_type_theme.md"
-#define THEME_DEF_INFO_README       L"https://github.com/shriprem/NestedDSV/blob/master/docs/theme_config_dialog.md"
-#define FOLD_DEF_INFO_README        L"https://github.com/shriprem/NestedDSV/blob/master/docs/fold_structs_editor.md"
-#define CONFIG_APPEND_INFO_README   L"https://github.com/shriprem/NestedDSV/blob/master/docs/config_append_dialog.md"
-#define CONFIG_EXTRACT_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/master/docs/config_extract_dialog.md"
-#define FIELD_TYPE_INFO_README      L"https://github.com/shriprem/NestedDSV/blob/master/docs/field_type_dialog.md"
-#define DATA_EXTRACT_INFO_README    L"https://github.com/shriprem/NestedDSV/blob/master/docs/data_extract_dialog.md"
-#define DATA_EXTRACT_KEYNAV_README  L"https://github.com/shriprem/NestedDSV/blob/master/docs/data_extract_key_shortcuts.md"
+#define VIZPANEL_INFO_README        L"https://github.com/shriprem/NestedDSV/blob/main/README.md"
+#define VIZPANEL_FOLD_INFO_README   L"https://github.com/shriprem/NestedDSV/blob/main/docs/foldable_record_blocks.md"
+#define NDVIZ_DEF_INFO_README       L"https://github.com/shriprem/NestedDSV/blob/main/docs/file_type_config_dialog.md"
+#define NDVIZ_DEF_ADFT_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/main/docs/auto_detect_file_type.md"
+#define NDVIZ_RT_THEME_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/main/docs/record_type_theme.md"
+#define THEME_DEF_INFO_README       L"https://github.com/shriprem/NestedDSV/blob/main/docs/theme_config_dialog.md"
+#define FOLD_DEF_INFO_README        L"https://github.com/shriprem/NestedDSV/blob/main/docs/fold_structs_editor.md"
+#define CONFIG_APPEND_INFO_README   L"https://github.com/shriprem/NestedDSV/blob/main/docs/config_append_dialog.md"
+#define CONFIG_EXTRACT_INFO_README  L"https://github.com/shriprem/NestedDSV/blob/main/docs/config_extract_dialog.md"
+#define FIELD_TYPE_INFO_README      L"https://github.com/shriprem/NestedDSV/blob/main/docs/field_type_dialog.md"
+#define DATA_EXTRACT_INFO_README    L"https://github.com/shriprem/NestedDSV/blob/main/docs/data_extract_dialog.md"
+#define DATA_EXTRACT_KEYNAV_README  L"https://github.com/shriprem/NestedDSV/blob/main/docs/data_extract_key_shortcuts.md"
 #define PREFERENCES_INFO_README     L"https://github.com/shriprem/NestedDSV/blob/main/docs/preferences_dialog.md"
