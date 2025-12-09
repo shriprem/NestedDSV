@@ -339,3 +339,4 @@
 #define FIELD_TYPE_INFO_README      L"https://github.com/shriprem/NestedDSV/blob/master/docs/field_type_dialog.md"
 #define DATA_EXTRACT_INFO_README    L"https://github.com/shriprem/NestedDSV/blob/master/docs/data_extract_dialog.md"
 #define DATA_EXTRACT_KEYNAV_README  L"https://github.com/shriprem/NestedDSV/blob/master/docs/data_extract_key_shortcuts.md"
+#define PREFERENCES_INFO_README     L"https://github.com/shriprem/NestedDSV/blob/main/docs/preferences_dialog.md"

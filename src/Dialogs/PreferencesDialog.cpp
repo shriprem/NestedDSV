@@ -17,6 +17,9 @@ void PreferencesDialog::doDialog(HINSTANCE hInst) {
 
    using Utils::addTooltip;
 
+   Utils::loadBitmap(_hSelf, IDC_PREF_INFO_BUTTON, IDB_VIZ_INFO_BITMAP);
+   addTooltip(_hSelf, IDC_PREF_INFO_BUTTON, L"", VIZ_PANEL_INFO_TIP, FALSE);
+
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_AUTO, L"", PREF_CLEARVIZ_AUTO_TIP, PREF_TIP_LONG, TRUE);
    addTooltip(_hSelf, IDC_PREF_CLEARVIZ_PANEL, L"", PREF_CLEARVIZ_PANEL_TIP, PREF_TIP_LONG, TRUE);
    addTooltip(_hSelf, IDC_PREF_HOP_FIELD_LEFT_EDGE, L"", PREF_HOP_RT_NEXT_LEFT_TIP, PREF_TIP_LONG, TRUE);
@@ -56,6 +59,10 @@ INT_PTR PreferencesDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPara
 
       case IDC_PREF_FOLD_LINE_COLOR:
          chooseColor();
+         break;
+
+      case IDC_PREF_INFO_BUTTON:
+         ShellExecute(NULL, L"open", PREFERENCES_INFO_README, NULL, NULL, SW_SHOW);
          break;
 
       case IDCANCEL:
