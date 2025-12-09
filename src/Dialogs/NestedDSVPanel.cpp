@@ -106,11 +106,6 @@ INT_PTR CALLBACK NestedDSVPanel::run_dlgProc(UINT message, WPARAM wParam, LPARAM
          setShowCalltip();
          break;
 
-      case IDC_VIZPANEL_FIELD_COPY_TRIM:
-         _configIO.setPreferenceBool(PREF_COPY_TRIM,
-            IsDlgButtonChecked(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM) == BST_CHECKED);
-         break;
-
       case IDC_VIZPANEL_JUMP_FIELD_BTN:
          showJumpDialog();
          break;
@@ -295,9 +290,8 @@ void NestedDSVPanel::initPanel() {
    addTooltip(_hSelf, IDC_VIZPANEL_THEME_CONFIG, L"", VIZ_PANEL_THEME_CONFIG_TIP, FALSE);
 
    addTooltip(_hSelf, IDC_VIZPANEL_CLEAR_BTN, L"", VIZ_PANEL_CLEAR_BTN_TIP, FW_TIP_MEDIUM, TRUE);
-   addTooltip(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM, L"", VIZ_PANEL_FIELD_TRIM_TIP, FW_TIP_SHORT, TRUE);
-
    addTooltip(_hSelf, IDC_VIZPANEL_FIELD_LEFT_BUTTON, L"", VIZ_PANEL_FIELD_LEFT_TIP, FW_TIP_SHORT, TRUE);
+
    hTipHopRight = addTooltip(_hSelf, IDC_VIZPANEL_FIELD_RIGHT_BUTTON, L"",
       _configIO.getPreferenceBool(PREF_HOP_RT_NEXT_LEFT, FALSE) ? VIZ_PANEL_FLD_ALT_RIGHT_TIP : VIZ_PANEL_FIELD_RIGHT_TIP,
       FW_TIP_SHORT, TRUE);
@@ -327,7 +321,6 @@ void NestedDSVPanel::localize() {
    SetDlgItemText(_hSelf, IDC_VIZPANEL_AUTO_DETECT_FT, VIZ_PANEL_AUTO_DETECT_FT);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_DEFAULT_BACKGROUND, VIZPANEL_DEFAULT_BACKGROUND);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_SHOW_CALLTIP, VIZPANEL_SHOW_CALLTIP);
-   SetDlgItemText(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM, VIZ_PANEL_FIELD_COPY_TRIM);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_FIELD_LABEL, VIZ_PANEL_FIELD_LABEL);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_JUMP_FIELD_BTN, VIZ_PANEL_JUMP_FIELD_BTN);
    SetDlgItemText(_hSelf, IDC_VIZPANEL_EXTRACT_DATA_BTN, VIZ_PANEL_EXTRACT_DATA_BTN);
@@ -388,9 +381,6 @@ void NestedDSVPanel::display(bool toShow) {
 
    CheckDlgButton(_hSelf, IDC_VIZPANEL_SHOW_CALLTIP,
       _configIO.getPreferenceBool(PREF_SHOW_CALLTIP, FALSE) ? BST_CHECKED : BST_UNCHECKED);
-
-   CheckDlgButton(_hSelf, IDC_VIZPANEL_FIELD_COPY_TRIM,
-      _configIO.getPreferenceBool(PREF_COPY_TRIM, FALSE) ? BST_CHECKED : BST_UNCHECKED);
 
    unlexed = TRUE;
    visualizeFile("", TRUE, TRUE, TRUE);

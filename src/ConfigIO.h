@@ -17,7 +17,6 @@
 #define PREF_JUMP_FIELD_SEQ   "ShowJumpFieldSeqNo"
 #define PREF_DEF_BACKGROUND   "DefaultBackground"
 #define PREF_SHOW_CALLTIP     "ShowCalltip"
-#define PREF_COPY_TRIM        "CopyFieldTrim"
 #define PREF_HOP_RT_NEXT_LEFT "HopRightLeftEdge"
 #define PREF_CLEARVIZ_AUTO    "ClearVizWithAutoDetect"
 #define PREF_CLEARVIZ_PANEL   "ClearVizOnPanelClose"

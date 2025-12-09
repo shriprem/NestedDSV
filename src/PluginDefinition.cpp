@@ -50,7 +50,7 @@ void commandMenuInit() {
    shKeyOpen->_isAlt = false;
    shKeyOpen->_isCtrl = true;
    shKeyOpen->_isShift = false;
-   shKeyOpen->_key = VK_F8;
+   shKeyOpen->_key = VK_F9;
    setCommand(MI_NDVIZ_PANEL, MENU_SHOW_PANEL, ToggleNestedDSVPanel, shKeyOpen, _dsvPanel.isVisible());
 
    setCommand(MI_CONFIG_DIALOG, MENU_CONFIG_FILE_TYPES, ShowConfigDialog);
