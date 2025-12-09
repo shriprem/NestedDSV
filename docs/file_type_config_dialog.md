@@ -10,6 +10,28 @@ This editor is organized in a three-level hierarchy:
 | **File Type » Record Types** | From the list of _Record Types_ for the _File Type_ selected in Level 1, select a _Record Type_ to modify or clone or delete. Or add a new _Record Type_ for the selected _File Type_. |
 | **Record Type » Fields** | For the _Record Type_ selected in Level 2, define or modify its _Field Labels_. |
 
+### Delimiter Choices
+
+![Delimiter Options](https://raw.githubusercontent.com/shriprem/NestedDSV/master/images/delimiter_options.png)
+
+The _File Type - Delimiter_ dropdown selection offers these immediately usable delimiters:
+* Comma (,)
+* Pipe (|)
+* Tab (ASCII 9)
+* Semicolon (;)
+* Colon (:)
+* Tilde (~)
+* Caret (^)
+* Unit Separator (ASCII 31)
+* Double Pipe (||)
+* Double Colon (::)
+
+In addition, NestedDSV supports custom delimiters that can be manually entered in the viewer configuration file [`Viewer.ini` file located either at: `%APPDATA%/Notepad++/plugins/config/NestedDSV/` or at: `NPP_INSTALL_FOLDER/plugins/config/NestedDSV/`].
+
+![Manual Delimiter](https://raw.githubusercontent.com/shriprem/NestedDSV/master/images/delimiter_manual.png)
+
+### Brief Notes
+
 * All fields in the Metadata Editor will accept multi-byte characters.
 
 * The following fields are optional:
