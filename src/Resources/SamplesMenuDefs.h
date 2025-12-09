@@ -13,42 +13,42 @@ struct SampleFileInfo {
 const SampleFileInfo gSampleFiles[] =
 {
    {
-      "Apollo Missions [Pipe]",
+      "Apollo Missions (Pipe)",
       L"ApolloMissions-pipe.dsv",
       "FT001_APOLLO_MISSIONS_-_CREWED_(PIPE)"
    },
    {
-      "Apollo Missions [Caret]",
+      "Apollo Missions (Caret)",
       L"ApolloMissions-caret.dsv",
       "FT002_APOLLO_MISSIONS_-_CREWED_(CARET)"
    },
    {
-      "Planets and Moons Sampler [Pipe]",
+      "Planets and Moons Sampler (Pipe)",
       L"PlanetsMoons-pipe.dsv",
       "FT003_PLANETS_&_MOONS_(PIPE)"
    },
    {
-      "Planets and Moons Sampler [Unit Separator]",
+      "Planets and Moons Sampler (Unit Separator)",
       L"PlanetsMoons-us.dsv",
       "FT004_PLANETS_&_MOONS_(US)"
    },
    {
-      "Geological Regions Sampler [Comma]",
+      "Geological Regions Sampler (Comma)",
       L"GeoRegions-comma.dsv",
       "FT005_GEOLOGICAL_REGIONS_(COMMA)"
    },
    {
-      "Geological Regions Sampler [Double Colons]",
+      "Geological Regions Sampler (Double Colons)",
       L"GeoRegions-dcolon.dsv",
       "FT006_GEOLOGICAL_REGIONS_(2_COLONS)"
    },
    {
-      "Linnaeus Taxonomy Sampler [Pipe]",
+      "Linnaeus Taxonomy Sampler (Pipe)",
       L"Linaeus-pipe.dsv",
       "FT007_LINNAEUS_TAXONOMY_(PIPE)"
    },
    {
-      "Linnaeus Taxonomy Sampler [Tilde]",
+      "Linnaeus Taxonomy Sampler (Tilde)",
       L"Linaeus-tilde.dsv",
       "FT008_LINNAEUS_TAXONOMY_(TILDE)"
    }
