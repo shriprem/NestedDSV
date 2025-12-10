@@ -16,7 +16,7 @@
 
 NestedDSV is a plugin for visualizing Nested (i.e., hierarchical) delimiter-separated values (DSV) data in Notepad++. For more information on NestedDSV data files, see: [Nested DSV Primer](https://github.com/shriprem/NestedDSV/blob/main/docs/nested_dsv_primer.md)
 
-In addition, NestedDSV plugin offers these features: Display cursor position data; Jump to specific fields; Folding Record Blocks; Data Extraction.
+In addition, NestedDSV plugin offers these features: Display cursor position data; Jump to specific fields; Foldable Tree View; Data Extraction.
 
 NestedDSV plugin has builtin dialogs to configure File-type, Record-type & Field metadata; Themes & Color definitions; and Folding structure.
 
@@ -38,7 +38,7 @@ NestedDSV's [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/bl
 * [Menu Items with Keyboard Shortcuts](https://github.com/shriprem/NestedDSV/blob/main/docs/menu_shortcuts.md) for quick and easy access of frequently used actions.
 
 * [Sample Data files](#sample-nesteddsv-data-files) in the plugin package demonstrating:
-   * Different delimiters
+   * Various delimiters
    * [Foldable Record Blocks](https://github.com/shriprem/NestedDSV/blob/main/docs/foldable_record_blocks.md)
 
 ### Features beyond the Panel
@@ -92,19 +92,25 @@ NestedDSV's [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/bl
 
 ## Sample NestedDSV data files
 
-__Apollo Missions (Caret delimiter)__
+The sample data files can be accessed by clicking on the _View Sample Files_ icon: ![View Sample Files](https://raw.githubusercontent.com/shriprem/NestedDSV/main/src/Resources/file_samples.bmp), and then choosing an option in the menu.
+
+![View Demo Files](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/view_demo_files.png)
+
+Here is a peek at some of the sample files:
+
+### Apollo Missions (Caret delimiter)
 
 ![Apollo Missions (Caret)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_apollo_caret.png)
 
-__Planets and Moons Sampler (Unit Separator delimiter)__
+### Planets and Moons Sampler (Unit Separator delimiter)
 
 ![Planets and Moons Sampler (Unit Separator)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_planets_us.png)
 
-__Geological Regions Sampler (Double Colon delimiter)__
+### Geological Regions Sampler (Double Colon delimiter)
 
 ![Geological Regions Sampler (Double Colon)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_regions_dcolon.png)
 
-__Linnaeus Taxonomy Sampler (Pipe delimiter)__
+### Linnaeus Taxonomy Sampler (Pipe delimiter)
 
 ![Linnaeus Taxonomy Sampler (Pipe)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_taxonomy_pipe.png)
 
@@ -118,6 +124,8 @@ __Linnaeus Taxonomy Sampler (Pipe delimiter)__
 5. Click the **Install** button.
 
 ## Attributions
+* Several of the icons used in this plugin are the originals or derivatives of the [*Fugue Icons*](https://p.yusukekamiyamane.com) designed by **Yusuke Kamiyamane**.
+
 * All screen clippings in this repository were made using [FastStone Capture](https://www.faststone.org/FSCaptureDetail.htm). Small-size application with awesome features!
 
 <a href='https://ko-fi.com/S6S417WICS' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
