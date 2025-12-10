@@ -37,7 +37,7 @@ NestedDSV's [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/bl
 
 * [Menu Items with Keyboard Shortcuts](https://github.com/shriprem/NestedDSV/blob/main/docs/menu_shortcuts.md) for quick and easy access of frequently used actions.
 
-* [Sample Data files](#sample-data-files) in the plugin package demonstrating:
+* [Sample Data files](#sample-nesteddsv-data-files) in the plugin package demonstrating:
    * Different delimiters
    * [Foldable Record Blocks](https://github.com/shriprem/NestedDSV/blob/main/docs/foldable_record_blocks.md)
 
@@ -62,7 +62,7 @@ NestedDSV's [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/bl
 ## Plugin Panel
 ![Plugin_Panel](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/plugin_panel.png)
 
-* Click on the _View Sample Files_ icon: ![View Sample Files](https://raw.githubusercontent.com/shriprem/NestedDSV/main/src/Resources/file_samples.bmp), and choose from the menu options to view various [sample files](#sample-data-files).
+* Click on the _View Sample Files_ icon: ![View Sample Files](https://raw.githubusercontent.com/shriprem/NestedDSV/main/src/Resources/file_samples.bmp), and choose from the menu options to view various [sample files](#sample-nesteddsv-data-files).
 
 * Click on the _File Type Metadata Editor_ icon: ![File Type Metadata Editor](https://raw.githubusercontent.com/shriprem/NestedDSV/main/src/Resources/file_config.bmp), to view, modify or create your custom File Type definitions. For more information, see: [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/blob/main/docs/file_type_config_dialog.md).
 
