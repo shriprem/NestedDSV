@@ -9,7 +9,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/shriprem/NestedDSV)
 
 ## NestedDSV Data Visualizer plugin for Notepad++
-[Current Version: 1.1.0.0](https://github.com/shriprem/NestedDSV/blob/main/VersionHistory.md)
+[Current Version: 1.1.0.1](https://github.com/shriprem/NestedDSV/blob/main/VersionHistory.md)
 
 ![image](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_apollo_pipe.png)
 **Apollo Missions (Pipe) Sample File, with folding applied.**
@@ -38,7 +38,7 @@ NestedDSV's [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/bl
 * [Menu Items with Keyboard Shortcuts](https://github.com/shriprem/NestedDSV/blob/main/docs/menu_shortcuts.md) for quick and easy access of frequently used actions.
 
 * [Sample Data files](#sample-nesteddsv-data-files) in the plugin package demonstrating:
-   * Various delimiters
+   * [Various delimiters](https://github.com/shriprem/NestedDSV/blob/main/docs/file_type_config_dialog.md#delimiter-choices)
    * [Foldable Record Blocks](https://github.com/shriprem/NestedDSV/blob/main/docs/foldable_record_blocks.md)
 
 ### Features beyond the Panel
@@ -98,7 +98,7 @@ The sample data files can be accessed by clicking on the _View Sample Files_ ico
 
 Here is a peek at some of the sample files:
 
-### Apollo Missions (Caret delimiter)
+### Apollo Missions (Caret delimiter; default back color)
 
 ![Apollo Missions (Caret)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_apollo_caret.png)
 
@@ -106,7 +106,7 @@ Here is a peek at some of the sample files:
 
 ![Planets and Moons Sampler (Unit Separator)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_planets_us.png)
 
-### Geological Regions Sampler (Double Colon delimiter)
+### Geological Regions Sampler (Double Colon delimiter; default back color)
 
 ![Geological Regions Sampler (Double Colon)](https://raw.githubusercontent.com/shriprem/NestedDSV/main/images/foldable_regions_dcolon.png)
 
@@ -127,5 +127,16 @@ Here is a peek at some of the sample files:
 * Several of the icons used in this plugin are the originals or derivatives of the [*Fugue Icons*](https://p.yusukekamiyamane.com) designed by **Yusuke Kamiyamane**.
 
 * All screen clippings in this repository were made using [FastStone Capture](https://www.faststone.org/FSCaptureDetail.htm). Small-size application with awesome features!
+
+## See Also
+While NestedDSV is meant for Nested DSV data files, [FWDataViz](https://github.com/shriprem/FWDataViz) is for fixed-width data files. The two plugins have similar interfaces with minimal changes. See: [Nested DSV Primer](https://github.com/shriprem/NestedDSV/blob/main/docs/nested_dsv_primer.md)
+
+* NestedDSV has a slightly simpler [File Type Metadata Editor](https://github.com/shriprem/NestedDSV/blob/main/docs/file_type_config_dialog.md) compared to the one in [FWDataViz](https://github.com/shriprem/FWDataViz/blob/master/docs/file_type_config_dialog.md).
+
+* The [sample files](https://github.com/shriprem/NestedDSV?tab=readme-ov-file#sample-nesteddsv-data-files) packaged with NestedDSV are also simpler and much more interesting.
+
+Due to their similarities and minor differences, reviewing the documentation and sample files of both these plugins may benefit some users by reinforcing the underlying concepts.
+
+---
 
 <a href='https://ko-fi.com/S6S417WICS' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
